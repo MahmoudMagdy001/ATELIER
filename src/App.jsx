@@ -8,8 +8,8 @@ import ScriptInjector from './components/layout/ScriptInjector'
 import RedirectGuard from './components/layout/RedirectGuard'
 
 const Home = lazy(() => import('./features/home/pages/Home'))
-const Services = lazy(() => import('./features/services/pages/Services'))
-const ServiceDetail = lazy(() => import('./features/services/pages/ServiceDetail'))
+const Products = lazy(() => import('./features/products/pages/Products'))
+const ProductDetail = lazy(() => import('./features/products/pages/ProductDetail'))
 const Offers = lazy(() => import('./features/offers/pages/Offers'))
 const OfferDetail = lazy(() => import('./features/offers/pages/OfferDetail'))
 const Blog = lazy(() => import('./features/blog/pages/Blog'))
@@ -19,7 +19,7 @@ const About = lazy(() => import('./features/about/pages/About'))
 const Login = lazy(() => import('./features/admin/pages/Login'))
 const AdminPosts = lazy(() => import('./features/blog/pages/AdminPosts'))
 const AdminPostPreview = lazy(() => import('./features/blog/pages/AdminPostPreview'))
-const AdminServices = lazy(() => import('./features/services/pages/AdminServices'))
+const AdminProducts = lazy(() => import('./features/products/pages/AdminProducts'))
 const AdminOffers = lazy(() => import('./features/offers/pages/AdminOffers'))
 const AdminMedia = lazy(() => import('./features/admin/pages/AdminMedia'))
 const AdminCategories = lazy(() => import('./features/admin/pages/AdminCategories'))
@@ -34,8 +34,13 @@ export default function App() {
         <Routes>
           <Route element={<Layout />}>
             <Route index element={<Home />} />
-            <Route path="services" element={<Services />} />
-            <Route path="services/:slug" element={<ServiceDetail />} />
+            
+            {/* Products (Replaces Services) */}
+            <Route path="products" element={<Products />} />
+            <Route path="products/:slug" element={<ProductDetail />} />
+            <Route path="services" element={<Navigate to="/products" replace />} />
+            <Route path="services/:slug" element={<Navigate to="/products" replace />} />
+            
             <Route path="offers" element={<Offers />} />
             <Route path="offers/:slug" element={<OfferDetail />} />
             <Route path="blog" element={<Blog />} />
@@ -50,7 +55,8 @@ export default function App() {
               <Route index element={<Navigate to="posts" replace />} />
               <Route path="posts" element={<AdminPosts />} />
               <Route path="posts/preview/:id" element={<AdminPostPreview />} />
-              <Route path="services" element={<AdminServices />} />
+              <Route path="products" element={<AdminProducts />} />
+              <Route path="services" element={<Navigate to="/admin/products" replace />} />
               <Route path="offers" element={<AdminOffers />} />
               <Route path="media" element={<AdminMedia />} />
               <Route path="categories" element={<AdminCategories />} />

@@ -7,7 +7,7 @@ import { FaPen, FaTrash, FaPlus, FaFloppyDisk, FaFolderOpen, FaXmark } from 'rea
 export default function AdminCategories() {
   const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
-  const [filterType, setFilterType] = useState('blog')
+  const [filterType, setFilterType] = useState('products')
   
   // Form State
   const [isEditing, setIsEditing] = useState(false)
@@ -15,7 +15,7 @@ export default function AdminCategories() {
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
   const [description, setDescription] = useState('')
-  const [type, setType] = useState('blog')
+  const [type, setType] = useState('products')
   const [displayOrder, setDisplayOrder] = useState(0)
   const [metaTitle, setMetaTitle] = useState('')
   const [metaDescription, setMetaDescription] = useState('')
@@ -42,7 +42,7 @@ export default function AdminCategories() {
     setName(cat.name || '')
     setSlug(cat.slug || '')
     setDescription(cat.description || '')
-    setType(cat.type || 'blog')
+    setType(cat.type || 'products')
     setDisplayOrder(cat.display_order || 0)
     setMetaTitle(cat.meta_title || '')
     setMetaDescription(cat.meta_description || '')
@@ -105,12 +105,12 @@ export default function AdminCategories() {
   if (loading) return <PageLoading text="جار تحميل التصنيفات..." />
 
   return (
-    <div className="space-y-8 max-w-6xl mx-auto" dir="rtl">
+    <div className="space-y-8 max-w-6xl mx-auto font-sans" dir="rtl">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E6E1DC] pb-6">
         <div>
           <h1 className="text-2xl font-bold text-[#14110F]">إدارة التصنيفات (Categories)</h1>
-          <p className="text-xs text-[#8C7F75] mt-1">تنظيم مقالات المدونة، أقسام التصميم الداخلي، وأنماط الأثاث</p>
+          <p className="text-xs text-[#8C7F75] mt-1">تنظيم أقسام الأثاث والمنتجات وتصنيفات المقالات المعمارية</p>
         </div>
 
         <Button onClick={handleCreateNew} icon={<FaPlus />}>
@@ -121,6 +121,16 @@ export default function AdminCategories() {
       {/* Filter Tabs */}
       <div className="flex gap-2">
         <button
+          onClick={() => setFilterType('products')}
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            filterType === 'products'
+              ? 'bg-[#C5A880] text-white shadow-md shadow-[#C5A880]/20'
+              : 'bg-white border border-[#E6E1DC] text-[#5C544E] hover:bg-[#FAF8F5]'
+          }`}
+        >
+          تصنيفات الأثاث والمنتجات (Products)
+        </button>
+        <button
           onClick={() => setFilterType('blog')}
           className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
             filterType === 'blog'
@@ -129,16 +139,6 @@ export default function AdminCategories() {
           }`}
         >
           تصنيفات المدونة (Blog)
-        </button>
-        <button
-          onClick={() => setFilterType('services')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-            filterType === 'services'
-              ? 'bg-[#C5A880] text-white shadow-md shadow-[#C5A880]/20'
-              : 'bg-white border border-[#E6E1DC] text-[#5C544E] hover:bg-[#FAF8F5]'
-          }`}
-        >
-          تصنيفات الخدمات والأنماط (Services)
         </button>
       </div>
 
@@ -202,7 +202,7 @@ export default function AdminCategories() {
                 type="text"
                 required
                 className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs focus:border-[#C5A880] focus:outline-none"
-                placeholder="مثال: الاتجاهات المعمارية"
+                placeholder="مثال: غرف معيشة فاخرة"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
@@ -214,7 +214,7 @@ export default function AdminCategories() {
                 <input
                   type="text"
                   className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs font-mono"
-                  placeholder="architectural-trends"
+                  placeholder="luxury-living-rooms"
                   value={slug}
                   onChange={(e) => setSlug(e.target.value)}
                 />
@@ -226,8 +226,8 @@ export default function AdminCategories() {
                   value={type}
                   onChange={(e) => setType(e.target.value)}
                 >
+                  <option value="products">منتجات وأثاث (Products)</option>
                   <option value="blog">مقالات المدونة (Blog)</option>
-                  <option value="services">خدمات وأنماط (Services)</option>
                 </select>
               </div>
             </div>

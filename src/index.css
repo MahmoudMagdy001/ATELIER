@@ -1,6 +1,10 @@
 @import "tailwindcss";
 
 @theme {
+  --color-brand-cream: #f2efe8;
+  --color-brand-charcoal: #1c1816;
+  --color-brand-gold: #c4a070;
+
   --color-onyx-950: #0f0d0c;
   --color-onyx-900: #141110;
   --color-onyx-800: #1c1816;
@@ -25,15 +29,25 @@
   --color-gold-100: #f9f1e7;
   --color-gold-50: #fdfaf5;
 
-  --font-serif: "Cormorant Garamond", Georgia, serif;
-  --font-sans: "Almarai", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Cinzel", "Playfair Display", "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Cairo", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #1c1816;
+  color: #f2efe8;
+}
+
+h1, h2, h3, .font-serif {
+  font-family: var(--font-serif);
 }
 
 .glass-panel-luxury {
-  background: rgba(28, 24, 22, 0.8);
+  background: rgba(28, 24, 22, 0.85);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(196, 160, 112, 0.18);
+  border: 1px solid rgba(196, 160, 112, 0.22);
 }
 
 .gold-gradient-text {
@@ -45,15 +59,21 @@
 .gold-btn-primary {
   background: linear-gradient(135deg, #c4a070 0%, #a68252 100%);
   color: #1c1816;
-  font-weight: 600;
-  box-shadow: 0 4px 20px -2px rgba(196, 160, 112, 0.35);
+  font-weight: 700;
+  box-shadow: 0 4px 25px -2px rgba(196, 160, 112, 0.4);
   transition: all 0.3s ease;
 }
 
 .gold-btn-primary:hover {
   background: linear-gradient(135deg, #d4b58c 0%, #b88f48 100%);
-  box-shadow: 0 6px 25px 0 rgba(196, 160, 112, 0.5);
-  transform: translateY(-1px);
+  box-shadow: 0 6px 30px 0 rgba(196, 160, 112, 0.55);
+  transform: translateY(-2px);
+}
+
+.brand-ribbon-bar {
+  background: linear-gradient(90deg, #141110 0%, #1c1816 50%, #141110 100%);
+  border-top: 1px solid rgba(196, 160, 112, 0.15);
+  border-bottom: 1px solid rgba(196, 160, 112, 0.15);
 }
 
 ::-webkit-scrollbar {
@@ -66,29 +86,8 @@
 ::-webkit-scrollbar-thumb {
   background: #332d2a;
   border-radius: 9999px;
-  border: 1px solid rgba(196, 160, 112, 0.15);
+  border: 1px solid rgba(196, 160, 112, 0.2);
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #c4a070;
-}
-
-.html-content h1 { font-size: 2rem; font-weight: 700; color: #c4a070; margin: 1.5rem 0 0.75rem; }
-.html-content h2 { font-size: 1.5rem; font-weight: 600; color: #f2efe8; margin: 1.25rem 0 0.5rem; }
-.html-content h3 { font-size: 1.25rem; font-weight: 600; color: #d4b58c; margin: 1rem 0 0.5rem; }
-.html-content p { margin-bottom: 1rem; color: #dedad6; line-height: 1.8; }
-.html-content ul { list-style-type: disc; padding-right: 1.5rem; margin-bottom: 1rem; color: #dedad6; }
-.html-content ol { list-style-type: decimal; padding-right: 1.5rem; margin-bottom: 1rem; color: #dedad6; }
-.html-content li { margin-bottom: 0.35rem; }
-.html-content blockquote {
-  border-right: 3px solid #c4a070;
-  padding: 0.5rem 1rem;
-  margin: 1rem 0;
-  background: rgba(196, 160, 112, 0.05);
-  font-style: italic;
-  color: #f0dec8;
-}
-.html-content img {
-  border-radius: 0.75rem;
-  margin: 1.5rem auto;
-  border: 1px solid rgba(196, 160, 112, 0.2);
 }

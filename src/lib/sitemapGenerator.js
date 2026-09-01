@@ -8,19 +8,19 @@ export async function regenerateSitemapAndRobots() {
     const siteUrl = window.location.origin || 'https://atelier-luxury.com'
 
     // Fetch all published items for sitemap urls
-    const [postsRes, servicesRes, offersRes] = await Promise.all([
+    const [postsRes, productsRes, offersRes] = await Promise.all([
       supabase.from('posts').select('slug, created_at').eq('status', 'published'),
-      supabase.from('services').select('slug, created_at').eq('status', 'published'),
+      supabase.from('products').select('slug, created_at').eq('status', 'published'),
       supabase.from('offers').select('slug, created_at').eq('status', 'published'),
     ])
 
     const posts = postsRes.data || []
-    const services = servicesRes.data || []
+    const products = productsRes.data || []
     const offers = offersRes.data || []
 
     const urls = [
       { loc: `${siteUrl}/`, priority: '1.0', changefreq: 'daily' },
-      { loc: `${siteUrl}/services`, priority: '0.9', changefreq: 'weekly' },
+      { loc: `${siteUrl}/products`, priority: '0.9', changefreq: 'weekly' },
       { loc: `${siteUrl}/offers`, priority: '0.8', changefreq: 'daily' },
       { loc: `${siteUrl}/blog`, priority: '0.8', changefreq: 'daily' },
       { loc: `${siteUrl}/about`, priority: '0.5', changefreq: 'monthly' },
@@ -35,10 +35,10 @@ export async function regenerateSitemapAndRobots() {
       })
     })
 
-    services.forEach((item) => {
+    products.forEach((item) => {
       urls.push({
-        loc: `${siteUrl}/services/${item.slug}`,
-        priority: '0.8',
+        loc: `${siteUrl}/products/${item.slug}`,
+        priority: '0.9',
         changefreq: 'weekly',
         lastmod: new Date(item.created_at || Date.now()).toISOString().split('T')[0],
       })
@@ -80,7 +80,6 @@ export async function regenerateSitemapAndRobots() {
       robotsText += `Sitemap: ${siteUrl}/sitemap.xml`
     }
 
-    // Upload to public-assets bucket if available
     const sitemapBlob = new Blob([xml], { type: 'application/xml' })
     const robotsBlob = new Blob([robotsText], { type: 'text/plain' })
 

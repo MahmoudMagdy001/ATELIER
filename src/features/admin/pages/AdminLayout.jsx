@@ -1,21 +1,21 @@
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { supabase } from '../../../lib/supabase'
+import { AtelierMonogram } from '../../../components/ui/BrandLogo'
 import { 
   FaPenToSquare, 
-  FaBellConcierge, 
+  FaCouch, 
   FaTag, 
   FaImages, 
   FaFolderOpen, 
   FaArrowRightArrowLeft, 
   FaGear, 
   FaRightFromBracket,
-  FaArrowUpRightFromSquare,
-  FaCrown
+  FaArrowUpRightFromSquare
 } from 'react-icons/fa6'
 
 const ADMIN_LINKS = [
   { to: '/admin/posts', label: 'المقالات (Posts)', Icon: FaPenToSquare },
-  { to: '/admin/services', label: 'الخدمات (Services)', Icon: FaBellConcierge },
+  { to: '/admin/products', label: 'المنتجات والأثاث (Products)', Icon: FaCouch },
   { to: '/admin/offers', label: 'العروض (Offers)', Icon: FaTag },
   { to: '/admin/media', label: 'الوسائط (Media)', Icon: FaImages },
   { to: '/admin/categories', label: 'التصنيفات (Categories)', Icon: FaFolderOpen },
@@ -29,9 +29,7 @@ export default function AdminLayout() {
   const handleSignOut = async () => {
     try {
       await supabase.auth.signOut()
-    } catch (e) {
-      // quiet logout
-    }
+    } catch (e) {}
     localStorage.removeItem('atelier_user')
     navigate('/admin/login')
   }
@@ -40,24 +38,22 @@ export default function AdminLayout() {
     <div className="h-screen bg-[#FAF8F5] flex flex-col md:flex-row overflow-hidden font-sans" dir="rtl">
       {/* Sidebar */}
       <aside className="w-full md:w-64 bg-[#14110F] text-white shrink-0 shadow-2xl flex flex-col border-l border-white/5">
-        {/* Brand */}
+        {/* Brand Header */}
         <div className="p-6 border-b border-white/10 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#C5A880] to-[#E5C9A3] flex items-center justify-center text-[#14110F] shadow-lg shadow-[#C5A880]/20">
-              <FaCrown className="w-4 h-4" />
-            </div>
+            <AtelierMonogram className="w-9 h-9" />
             <div className="flex flex-col">
-              <span className="font-bold text-sm tracking-wide text-white">لوحة تحكم أتيليه</span>
-              <span className="text-[10px] text-[#C5A880] tracking-widest uppercase font-semibold">ATELIER CONTROL</span>
+              <span className="font-bold text-sm tracking-wide text-white font-['Cinzel']">ATELIER</span>
+              <span className="text-[9px] text-[#C4A070] tracking-widest uppercase font-semibold">CONTROL PANEL</span>
             </div>
           </div>
           <Link 
             to="/" 
             target="_blank"
-            className="text-xs text-[#C5A880] hover:text-white flex items-center gap-1 transition-colors"
-            title="معاينة الموقع"
+            className="text-xs text-[#C4A070] hover:text-white flex items-center gap-1 transition-colors"
+            title="معاينة المتجر"
           >
-            <span>الموقع</span>
+            <span>المتجر</span>
             <FaArrowUpRightFromSquare className="w-2.5 h-2.5" />
           </Link>
         </div>
@@ -71,7 +67,7 @@ export default function AdminLayout() {
               className={({ isActive }) =>
                 `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
                   isActive
-                    ? 'bg-[#C5A880] text-[#14110F] font-bold shadow-lg shadow-[#C5A880]/25'
+                    ? 'bg-[#C4A070] text-[#14110F] font-bold shadow-lg shadow-[#C4A070]/25'
                     : 'text-[#D6CDC4] hover:bg-white/5 hover:text-white'
                 }`
               }

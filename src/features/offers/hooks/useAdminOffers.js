@@ -1,15 +1,18 @@
 import { useState, useEffect } from 'react'
 import { offerService } from '../services/offerService'
+import { productService } from '../../products/services/productService'
 import { regenerateSitemapAndRobots } from '../../../lib/sitemapGenerator'
 import { supabase } from '../../../lib/supabase'
 
 export function useAdminOffers() {
   const [offers, setOffers] = useState([])
+  const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [isEditing, setIsEditing] = useState(false)
   const [currentOffer, setCurrentOffer] = useState(null)
 
-  // Form states
+  // Basic Form States
+  const [selectedProductId, setSelectedProductId] = useState('')
   const [title, setTitle] = useState('')
   const [slug, setSlug] = useState('')
   const [description, setDescription] = useState('')
@@ -21,7 +24,10 @@ export function useAdminOffers() {
   const [imageUrl, setImageUrl] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
-  // SEO specific states
+  // Dynamic Variants State
+  const [variants, setVariants] = useState([])
+
+  // SEO States
   const [metaTitle, setMetaTitle] = useState('')
   const [metaDescription, setMetaDescription] = useState('')
   const [keywords, setKeywords] = useState('')
@@ -39,6 +45,7 @@ export function useAdminOffers() {
 
   useEffect(() => {
     fetchOffers()
+    fetchProducts()
   }, [])
 
   const fetchOffers = async () => {
@@ -53,8 +60,108 @@ export function useAdminOffers() {
     }
   }
 
+  const fetchProducts = async () => {
+    try {
+      const data = await productService.fetchAllProducts()
+      setProducts(data)
+    } catch (err) {
+      console.warn('Fetch products fallback:', err.message)
+    }
+  }
+
+  // Auto-fill from selected Product
+  const handleSelectProduct = (productId) => {
+    setSelectedProductId(productId)
+    if (!productId) return
+
+    const product = products.find((p) => p.id === productId)
+    if (!product) return
+
+    setTitle(`عرض حصري: ${product.title}`)
+    setSlug(`offer-${product.slug}`)
+    setDescription(product.description || '')
+    setImageUrl(product.main_image || '')
+    setImageFile(null)
+    setBadge(product.badge ? `عرض ${product.badge}` : 'عرض خاص لفترة محدودة')
+    setDiscountLabel('خصم 15% لفترة محدودة')
+    
+    // Copy variants with original_price and default 15% discount
+    if (Array.isArray(product.variants) && product.variants.length > 0) {
+      const copiedVariants = product.variants.map((v) => {
+        const origPrice = Number(v.price) || 0
+        const discountedPrice = origPrice > 0 ? Math.round(origPrice * 0.85) : 0
+        return {
+          id: `off-var-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+          name: v.name,
+          original_price: origPrice,
+          price: discountedPrice,
+          image: v.image || product.main_image || '',
+          sku: v.sku ? `OFF-${v.sku}` : '',
+          in_stock: true,
+        }
+      })
+      setVariants(copiedVariants)
+    }
+
+    setMetaTitle(`عرض ${product.title} | تخفيضات ATELIER`)
+    setMetaDescription(`استفد من العرض الحصري على ${product.title}. خصومات خاصة مع شحن وتركيب مجاني.`)
+    setKeywords(product.keywords ? `عروض, ${product.keywords}` : 'عروض أثاث, تخفيضات')
+  }
+
+  // Bulk Discount Applier (e.g. apply 20% discount on all variant prices)
+  const applyBulkDiscount = (percent) => {
+    if (!percent || isNaN(percent)) return
+    const factor = (100 - Number(percent)) / 100
+    setVariants((prev) =>
+      prev.map((v) => {
+        const base = Number(v.original_price) || Number(v.price) || 0
+        return {
+          ...v,
+          original_price: Number(v.original_price) || base,
+          price: Math.round(base * factor),
+        }
+      })
+    )
+    setDiscountLabel(`خصم ${percent}% لفترة محدودة`)
+  }
+
+  // Variant Helpers
+  const addVariant = () => {
+    const newVariant = {
+      id: `off-var-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+      name: '',
+      price: '',
+      original_price: '',
+      image: '',
+      sku: '',
+      in_stock: true,
+    }
+    setVariants((prev) => [...prev, newVariant])
+  }
+
+  const updateVariant = (id, field, value) => {
+    setVariants((prev) =>
+      prev.map((v) => (v.id === id ? { ...v, [field]: value } : v))
+    )
+  }
+
+  const removeVariant = (id) => {
+    setVariants((prev) => prev.filter((v) => v.id !== id))
+  }
+
+  const handleVariantImageUpload = async (id, file) => {
+    if (!file) return
+    try {
+      const url = await offerService.uploadImage(file)
+      updateVariant(id, 'image', url)
+    } catch (err) {
+      alert('فشل رفع صورة الخيار: ' + err.message)
+    }
+  }
+
   const handleEdit = (offer) => {
     setCurrentOffer(offer)
+    setSelectedProductId(offer.product_id || '')
     setTitle(offer.title || '')
     setSlug(offer.slug || '')
     setDescription(offer.description || '')
@@ -65,7 +172,22 @@ export function useAdminOffers() {
     setImageUrl(offer.cover_image || offer.banner_image || '')
     setImageFile(null)
 
-    // Populate SEO states
+    if (Array.isArray(offer.variants) && offer.variants.length > 0) {
+      setVariants(offer.variants)
+    } else {
+      setVariants([
+        {
+          id: `off-var-${Date.now()}`,
+          name: 'الخيار القياسي المشمول بالعرض',
+          price: 0,
+          original_price: 0,
+          image: offer.cover_image || '',
+          sku: '',
+          in_stock: true,
+        },
+      ])
+    }
+
     setMetaTitle(offer.meta_title || '')
     setMetaDescription(offer.meta_description || '')
     setKeywords(offer.keywords || '')
@@ -86,6 +208,7 @@ export function useAdminOffers() {
 
   const handleCreateNew = () => {
     setCurrentOffer(null)
+    setSelectedProductId('')
     setTitle('')
     setSlug('')
     setDescription('')
@@ -96,7 +219,18 @@ export function useAdminOffers() {
     setImageUrl('')
     setImageFile(null)
 
-    // Reset SEO states
+    setVariants([
+      {
+        id: `off-var-${Date.now()}`,
+        name: 'الخيار الأول (مثال: طقم كامل VIP مع التركيب)',
+        price: '',
+        original_price: '',
+        image: '',
+        sku: '',
+        in_stock: true,
+      },
+    ])
+
     setMetaTitle('')
     setMetaDescription('')
     setKeywords('')
@@ -116,7 +250,7 @@ export function useAdminOffers() {
   }
 
   const handleDelete = async (id) => {
-    if (!window.confirm('هل أنت متأكد من رغبتك في حذف هذا العرض؟')) return
+    if (!window.confirm('هل أنت متأكد من حذف هذا العرض نهائياً؟')) return
     try {
       await offerService.deleteOffer(id)
       fetchOffers()
@@ -131,22 +265,50 @@ export function useAdminOffers() {
     setSubmitting(true)
 
     try {
-      let finalImageUrl = imageUrl
-      if (imageFile) {
-        finalImageUrl = await offerService.uploadImage(imageFile)
+      if (variants.length === 0) {
+        alert('يرجى إضافة خيار واحد على الأقل للعرض وتحديد سعره.')
+        setSubmitting(false)
+        return
       }
 
-      const targetSlug = slug || title.toLowerCase().replace(/[^a-z0-9\u0600-\u06FF]+/g, '-').replace(/(^-|-$)/g, '')
+      const hasEmptyPrice = variants.some((v) => v.price === '' || isNaN(Number(v.price)))
+      if (hasEmptyPrice) {
+        alert('يرجى تحديد سعر العرض لكل خيار / Variant.')
+        setSubmitting(false)
+        return
+      }
+
+      let finalCoverImage = imageUrl
+      if (imageFile) {
+        finalCoverImage = await offerService.uploadImage(imageFile)
+      }
+
+      const targetSlug =
+        slug ||
+        title
+          .toLowerCase()
+          .replace(/[^a-z0-9\u0600-\u06FF]+/g, '-')
+          .replace(/(^-|-$)/g, '')
 
       if (currentOffer && currentOffer.slug !== targetSlug) {
-        await supabase.from('redirects').insert([
-          {
-            source_path: `/offers/${currentOffer.slug}`,
-            target_path: `/offers/${targetSlug}`,
-            status_code: 301,
-          },
-        ]).catch(() => {})
+        await supabase
+          .from('redirects')
+          .insert([
+            {
+              source_path: `/offers/${currentOffer.slug}`,
+              target_path: `/offers/${targetSlug}`,
+              status_code: 301,
+            },
+          ])
+          .catch(() => {})
       }
+
+      const cleanedVariants = variants.map((v) => ({
+        ...v,
+        price: Number(v.price),
+        original_price: v.original_price ? Number(v.original_price) : null,
+        image: v.image || finalCoverImage,
+      }))
 
       const offerData = {
         title,
@@ -156,7 +318,9 @@ export function useAdminOffers() {
         valid_until: validUntil || null,
         badge,
         status,
-        cover_image: finalImageUrl,
+        cover_image: finalCoverImage,
+        product_id: selectedProductId || null,
+        variants: cleanedVariants,
         meta_title: metaTitle,
         meta_description: metaDescription,
         keywords,
@@ -191,9 +355,13 @@ export function useAdminOffers() {
 
   return {
     offers,
+    products,
     loading,
     isEditing,
     currentOffer,
+    selectedProductId,
+    handleSelectProduct,
+    applyBulkDiscount,
     title,
     setTitle,
     slug,
@@ -212,6 +380,12 @@ export function useAdminOffers() {
     setImageFile,
     imageUrl,
     setImageUrl,
+    variants,
+    setVariants,
+    addVariant,
+    updateVariant,
+    removeVariant,
+    handleVariantImageUpload,
     submitting,
     handleEdit,
     handleCreateNew,

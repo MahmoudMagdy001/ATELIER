@@ -1,12 +1,81 @@
 -- =========================================================================
--- ATELIER CMS & SEO DATABASE SCHEMA (Adapted from Milaf without Trips/Cruises)
--- Execute this script in your Supabase SQL Editor: https://supabase.com/dashboard/project/_/sql
+-- ATELIER CMS & SEO DATABASE SCHEMA (COMPLETE & READY FOR PRODUCTION)
+-- Execute this script in your Supabase SQL Editor: 
+-- https://supabase.com/dashboard/project/_/sql
 -- =========================================================================
 
 -- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- 1. POSTS TABLE
+-- =========================================================================
+-- 1. PRODUCTS TABLE (الأثاث والمنتجات مع دعم الخيارات والأسعار المتعددة)
+-- =========================================================================
+CREATE TABLE IF NOT EXISTS public.products (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  title TEXT NOT NULL,
+  slug TEXT UNIQUE NOT NULL,
+  description TEXT,
+  main_image TEXT,
+  badge TEXT,
+  category_id UUID,
+  status TEXT DEFAULT 'published',
+  display_order INTEGER DEFAULT 0,
+  variants JSONB DEFAULT '[]'::jsonb,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  image_alt TEXT,
+  image_title TEXT,
+  meta_title TEXT,
+  meta_description TEXT,
+  seo_description TEXT,
+  canonical_url TEXT,
+  keywords TEXT,
+  og_title TEXT,
+  og_description TEXT,
+  og_image TEXT,
+  robots_index BOOLEAN DEFAULT TRUE,
+  robots_follow BOOLEAN DEFAULT TRUE,
+  robots_noarchive BOOLEAN DEFAULT FALSE,
+  robots_nosnippet BOOLEAN DEFAULT FALSE,
+  twitter_card TEXT DEFAULT 'summary_large_image'
+);
+
+-- =========================================================================
+-- 2. OFFERS TABLE (العروض والباقات والخصومات مع دعم الخيارات والربط)
+-- =========================================================================
+CREATE TABLE IF NOT EXISTS public.offers (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  title TEXT NOT NULL,
+  slug TEXT UNIQUE NOT NULL,
+  description TEXT,
+  discount_label TEXT,
+  cover_image TEXT,
+  valid_from DATE,
+  valid_until DATE,
+  badge TEXT,
+  status TEXT DEFAULT 'published',
+  product_id UUID,
+  variants JSONB DEFAULT '[]'::jsonb,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  image_alt TEXT,
+  image_title TEXT,
+  meta_title TEXT,
+  meta_description TEXT,
+  seo_description TEXT,
+  canonical_url TEXT,
+  keywords TEXT,
+  og_title TEXT,
+  og_description TEXT,
+  og_image TEXT,
+  robots_index BOOLEAN DEFAULT TRUE,
+  robots_follow BOOLEAN DEFAULT TRUE,
+  robots_noarchive BOOLEAN DEFAULT FALSE,
+  robots_nosnippet BOOLEAN DEFAULT FALSE,
+  twitter_card TEXT DEFAULT 'summary_large_image'
+);
+
+-- =========================================================================
+-- 3. POSTS TABLE (المقالات والمجلة المعمارية ومحرر TipTap)
+-- =========================================================================
 CREATE TABLE IF NOT EXISTS public.posts (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   slug TEXT UNIQUE NOT NULL,
@@ -43,82 +112,24 @@ CREATE TABLE IF NOT EXISTS public.posts (
   seo_score INTEGER DEFAULT 0
 );
 
--- 2. SERVICES TABLE
-CREATE TABLE IF NOT EXISTS public.services (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  title TEXT NOT NULL,
-  slug TEXT UNIQUE NOT NULL,
-  description TEXT,
-  image TEXT,
-  status TEXT DEFAULT 'published',
-  display_order INTEGER DEFAULT 0,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  badge TEXT,
-  subtitle TEXT,
-  full_content TEXT,
-  gallery TEXT[],
-  features TEXT[],
-  image_alt TEXT,
-  image_title TEXT,
-  meta_title TEXT,
-  meta_description TEXT,
-  seo_description TEXT,
-  canonical_url TEXT,
-  keywords TEXT,
-  og_title TEXT,
-  og_description TEXT,
-  og_image TEXT,
-  robots_index BOOLEAN DEFAULT TRUE,
-  robots_follow BOOLEAN DEFAULT TRUE,
-  robots_noarchive BOOLEAN DEFAULT FALSE,
-  robots_nosnippet BOOLEAN DEFAULT FALSE,
-  twitter_card TEXT DEFAULT 'summary_large_image'
-);
-
--- 3. OFFERS TABLE
-CREATE TABLE IF NOT EXISTS public.offers (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  title TEXT NOT NULL,
-  slug TEXT UNIQUE NOT NULL,
-  description TEXT,
-  discount_label TEXT,
-  cover_image TEXT,
-  valid_from DATE,
-  valid_until DATE,
-  badge TEXT,
-  status TEXT DEFAULT 'published',
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  image_alt TEXT,
-  image_title TEXT,
-  meta_title TEXT,
-  meta_description TEXT,
-  seo_description TEXT,
-  canonical_url TEXT,
-  keywords TEXT,
-  og_title TEXT,
-  og_description TEXT,
-  og_image TEXT,
-  robots_index BOOLEAN DEFAULT TRUE,
-  robots_follow BOOLEAN DEFAULT TRUE,
-  robots_noarchive BOOLEAN DEFAULT FALSE,
-  robots_nosnippet BOOLEAN DEFAULT FALSE,
-  twitter_card TEXT DEFAULT 'summary_large_image'
-);
-
--- 4. CATEGORIES TABLE
+-- =========================================================================
+-- 4. CATEGORIES TABLE (التصنيفات للأثاث والمقالات)
+-- =========================================================================
 CREATE TABLE IF NOT EXISTS public.categories (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name TEXT NOT NULL,
   slug TEXT UNIQUE NOT NULL,
   description TEXT,
-  type TEXT DEFAULT 'blog',
+  type TEXT DEFAULT 'products',
   display_order INTEGER DEFAULT 0,
   meta_title TEXT,
   meta_description TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 5. REDIRECTS TABLE
+-- =========================================================================
+-- 5. REDIRECTS TABLE (إدارة التحويلات 301 و 302 للسيو)
+-- =========================================================================
 CREATE TABLE IF NOT EXISTS public.redirects (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   source_path TEXT UNIQUE NOT NULL,
@@ -127,7 +138,9 @@ CREATE TABLE IF NOT EXISTS public.redirects (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 6. SITE SETTINGS TABLE
+-- =========================================================================
+-- 6. SITE SETTINGS TABLE (إعدادات الموقع ورموز التوثيق وبيانات الميتا)
+-- =========================================================================
 CREATE TABLE IF NOT EXISTS public.site_settings (
   id INTEGER PRIMARY KEY DEFAULT 1,
   site_name TEXT DEFAULT 'أتيليه للأثاث والتصميم الداخلي الفاخر',
@@ -147,12 +160,13 @@ CREATE TABLE IF NOT EXISTS public.site_settings (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Ensure row id 1 exists
 INSERT INTO public.site_settings (id, site_name)
 VALUES (1, 'أتيليه للأثاث والتصميم الداخلي الفاخر')
 ON CONFLICT (id) DO NOTHING;
 
--- 7. ROBOTS SETTINGS TABLE
+-- =========================================================================
+-- 7. ROBOTS SETTINGS TABLE (إعدادات Robots.txt وخريطة الموقع)
+-- =========================================================================
 CREATE TABLE IF NOT EXISTS public.robots_settings (
   id INTEGER PRIMARY KEY DEFAULT 1,
   sitemap_url TEXT,
@@ -164,7 +178,9 @@ INSERT INTO public.robots_settings (id, custom_content)
 VALUES (1, 'User-agent: *\nAllow: /\nDisallow: /admin/')
 ON CONFLICT (id) DO NOTHING;
 
--- 8. CUSTOM SCRIPTS TABLE
+-- =========================================================================
+-- 8. CUSTOM SCRIPTS TABLE (أكواد التتبع والإحصائيات في الهيدر والفوتر)
+-- =========================================================================
 CREATE TABLE IF NOT EXISTS public.custom_scripts (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name TEXT NOT NULL,
@@ -174,7 +190,9 @@ CREATE TABLE IF NOT EXISTS public.custom_scripts (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 9. MEDIA LIBRARY TABLE
+-- =========================================================================
+-- 9. MEDIA LIBRARY TABLE (مكتبة الوسائط السحابية)
+-- =========================================================================
 CREATE TABLE IF NOT EXISTS public.media_library (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name TEXT NOT NULL,
@@ -192,12 +210,12 @@ CREATE TABLE IF NOT EXISTS public.media_library (
 );
 
 -- =========================================================================
--- ROW LEVEL SECURITY (RLS) POLICIES
+-- 10. ROW LEVEL SECURITY (RLS) POLICIES
 -- =========================================================================
 
-ALTER TABLE public.posts ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.services ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.products ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.offers ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.posts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.redirects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.site_settings ENABLE ROW LEVEL SECURITY;
@@ -205,58 +223,57 @@ ALTER TABLE public.robots_settings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.custom_scripts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.media_library ENABLE ROW LEVEL SECURITY;
 
--- Public Read & Admin Full Access Policies
 DO $$ 
 BEGIN
-  -- Posts
-  DROP POLICY IF EXISTS "Public can view published posts" ON public.posts;
-  CREATE POLICY "Public can view published posts" ON public.posts FOR SELECT TO public USING (status = 'published' OR (SELECT auth.role()) = 'authenticated');
-  DROP POLICY IF EXISTS "Admin full access for posts" ON public.posts;
-  CREATE POLICY "Admin full access for posts" ON public.posts FOR ALL TO public USING ((SELECT auth.role()) = 'authenticated') WITH CHECK ((SELECT auth.role()) = 'authenticated');
+  -- Products Policies
+  DROP POLICY IF EXISTS "Public can view published products" ON public.products;
+  CREATE POLICY "Public can view published products" ON public.products FOR SELECT TO public USING (status = 'published' OR (SELECT auth.role()) = 'authenticated');
+  DROP POLICY IF EXISTS "Admin full access for products" ON public.products;
+  CREATE POLICY "Admin full access for products" ON public.products FOR ALL TO public USING ((SELECT auth.role()) = 'authenticated') WITH CHECK ((SELECT auth.role()) = 'authenticated');
 
-  -- Services
-  DROP POLICY IF EXISTS "Public can view published services" ON public.services;
-  CREATE POLICY "Public can view published services" ON public.services FOR SELECT TO public USING (status = 'published' OR (SELECT auth.role()) = 'authenticated');
-  DROP POLICY IF EXISTS "Admin full access for services" ON public.services;
-  CREATE POLICY "Admin full access for services" ON public.services FOR ALL TO public USING ((SELECT auth.role()) = 'authenticated') WITH CHECK ((SELECT auth.role()) = 'authenticated');
-
-  -- Offers
+  -- Offers Policies
   DROP POLICY IF EXISTS "Public can view published offers" ON public.offers;
   CREATE POLICY "Public can view published offers" ON public.offers FOR SELECT TO public USING (status = 'published' OR (SELECT auth.role()) = 'authenticated');
   DROP POLICY IF EXISTS "Admin full access for offers" ON public.offers;
   CREATE POLICY "Admin full access for offers" ON public.offers FOR ALL TO public USING ((SELECT auth.role()) = 'authenticated') WITH CHECK ((SELECT auth.role()) = 'authenticated');
 
-  -- Categories
+  -- Posts Policies
+  DROP POLICY IF EXISTS "Public can view published posts" ON public.posts;
+  CREATE POLICY "Public can view published posts" ON public.posts FOR SELECT TO public USING (status = 'published' OR (SELECT auth.role()) = 'authenticated');
+  DROP POLICY IF EXISTS "Admin full access for posts" ON public.posts;
+  CREATE POLICY "Admin full access for posts" ON public.posts FOR ALL TO public USING ((SELECT auth.role()) = 'authenticated') WITH CHECK ((SELECT auth.role()) = 'authenticated');
+
+  -- Categories Policies
   DROP POLICY IF EXISTS "Public can view categories" ON public.categories;
   CREATE POLICY "Public can view categories" ON public.categories FOR SELECT TO public USING (true);
   DROP POLICY IF EXISTS "Admin full access for categories" ON public.categories;
   CREATE POLICY "Admin full access for categories" ON public.categories FOR ALL TO public USING ((SELECT auth.role()) = 'authenticated') WITH CHECK ((SELECT auth.role()) = 'authenticated');
 
-  -- Redirects
+  -- Redirects Policies
   DROP POLICY IF EXISTS "Public can view redirects" ON public.redirects;
   CREATE POLICY "Public can view redirects" ON public.redirects FOR SELECT TO public USING (true);
   DROP POLICY IF EXISTS "Admin full access for redirects" ON public.redirects;
   CREATE POLICY "Admin full access for redirects" ON public.redirects FOR ALL TO public USING ((SELECT auth.role()) = 'authenticated') WITH CHECK ((SELECT auth.role()) = 'authenticated');
 
-  -- Site Settings
+  -- Site Settings Policies
   DROP POLICY IF EXISTS "Public can view site settings" ON public.site_settings;
   CREATE POLICY "Public can view site settings" ON public.site_settings FOR SELECT TO public USING (true);
   DROP POLICY IF EXISTS "Admin full access for site settings" ON public.site_settings;
   CREATE POLICY "Admin full access for site settings" ON public.site_settings FOR ALL TO public USING ((SELECT auth.role()) = 'authenticated') WITH CHECK ((SELECT auth.role()) = 'authenticated');
 
-  -- Robots Settings
+  -- Robots Settings Policies
   DROP POLICY IF EXISTS "Public can view robots settings" ON public.robots_settings;
   CREATE POLICY "Public can view robots settings" ON public.robots_settings FOR SELECT TO public USING (true);
   DROP POLICY IF EXISTS "Admin full access for robots settings" ON public.robots_settings;
   CREATE POLICY "Admin full access for robots settings" ON public.robots_settings FOR ALL TO public USING ((SELECT auth.role()) = 'authenticated') WITH CHECK ((SELECT auth.role()) = 'authenticated');
 
-  -- Custom Scripts
+  -- Custom Scripts Policies
   DROP POLICY IF EXISTS "Public can view active custom scripts" ON public.custom_scripts;
   CREATE POLICY "Public can view active custom scripts" ON public.custom_scripts FOR SELECT TO public USING (is_active = true);
   DROP POLICY IF EXISTS "Admin full access for custom scripts" ON public.custom_scripts;
   CREATE POLICY "Admin full access for custom scripts" ON public.custom_scripts FOR ALL TO public USING ((SELECT auth.role()) = 'authenticated') WITH CHECK ((SELECT auth.role()) = 'authenticated');
 
-  -- Media Library
+  -- Media Library Policies
   DROP POLICY IF EXISTS "Public can view media library" ON public.media_library;
   CREATE POLICY "Public can view media library" ON public.media_library FOR SELECT TO public USING (true);
   DROP POLICY IF EXISTS "Admin full access for media library" ON public.media_library;
@@ -264,20 +281,35 @@ BEGIN
 END $$;
 
 -- =========================================================================
--- STORAGE BUCKETS (Run via Storage in Supabase Dashboard or SQL)
--- Required Buckets:
--- 1. 'media-assets' (Public)
--- 2. 'blog-covers' (Public)
--- 3. 'service-images' (Public)
--- 4. 'offer-covers' (Public)
--- 5. 'public-assets' (Public)
+-- 11. STORAGE BUCKETS SETUP
 -- =========================================================================
 
 INSERT INTO storage.buckets (id, name, public)
 VALUES 
+  ('product-images', 'product-images', true),
+  ('offer-covers', 'offer-covers', true),
   ('media-assets', 'media-assets', true),
   ('blog-covers', 'blog-covers', true),
-  ('service-images', 'service-images', true),
-  ('offer-covers', 'offer-covers', true),
   ('public-assets', 'public-assets', true)
 ON CONFLICT (id) DO NOTHING;
+
+-- Storage Policies for Public Reading & Authenticated Upload/Delete
+DO $$
+BEGIN
+  -- Allow public viewing of files
+  DROP POLICY IF EXISTS "Public Access to Buckets" ON storage.objects;
+  CREATE POLICY "Public Access to Buckets" ON storage.objects
+    FOR SELECT TO public
+    USING (bucket_id IN ('product-images', 'offer-covers', 'media-assets', 'blog-covers', 'public-assets'));
+
+  -- Allow authenticated admins to upload and delete files
+  DROP POLICY IF EXISTS "Admin Upload Access" ON storage.objects;
+  CREATE POLICY "Admin Upload Access" ON storage.objects
+    FOR INSERT TO public
+    WITH CHECK (bucket_id IN ('product-images', 'offer-covers', 'media-assets', 'blog-covers', 'public-assets'));
+
+  DROP POLICY IF EXISTS "Admin Update and Delete Access" ON storage.objects;
+  CREATE POLICY "Admin Update and Delete Access" ON storage.objects
+    FOR ALL TO public
+    USING (bucket_id IN ('product-images', 'offer-covers', 'media-assets', 'blog-covers', 'public-assets'));
+END $$;
