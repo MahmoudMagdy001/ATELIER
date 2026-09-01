@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+@theme {
+  --color-onyx-950: #0f0d0c;
+  --color-onyx-900: #141110;
+  --color-onyx-800: #1c1816;
+  --color-onyx-700: #26211f;
+  --color-onyx-600: #332d2a;
+  --color-onyx-500: #423b37;
+  --color-onyx-400: #5c534e;
+  --color-onyx-300: #827771;
+  --color-onyx-200: #b3a9a3;
+  --color-onyx-100: #dedad6;
+  --color-onyx-50: #f2efe8;
+
+  --color-gold-950: #3d2d14;
+  --color-gold-900: #59431f;
+  --color-gold-800: #7a5d2b;
+  --color-gold-700: #9e7939;
+  --color-gold-600: #b88f48;
+  --color-gold-500: #c4a070;
+  --color-gold-400: #d4b58c;
+  --color-gold-300: #e3caa9;
+  --color-gold-200: #f0dec8;
+  --color-gold-100: #f9f1e7;
+  --color-gold-50: #fdfaf5;
+
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Almarai", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+}
+
+.glass-panel-luxury {
+  background: rgba(28, 24, 22, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(196, 160, 112, 0.18);
+}
+
+.gold-gradient-text {
+  background: linear-gradient(135deg, #f0dec8 0%, #c4a070 50%, #9e7939 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-btn-primary {
+  background: linear-gradient(135deg, #c4a070 0%, #a68252 100%);
+  color: #1c1816;
+  font-weight: 600;
+  box-shadow: 0 4px 20px -2px rgba(196, 160, 112, 0.35);
+  transition: all 0.3s ease;
+}
+
+.gold-btn-primary:hover {
+  background: linear-gradient(135deg, #d4b58c 0%, #b88f48 100%);
+  box-shadow: 0 6px 25px 0 rgba(196, 160, 112, 0.5);
+  transform: translateY(-1px);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #141110;
+}
+::-webkit-scrollbar-thumb {
+  background: #332d2a;
+  border-radius: 9999px;
+  border: 1px solid rgba(196, 160, 112, 0.15);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c4a070;
+}
+
+.html-content h1 { font-size: 2rem; font-weight: 700; color: #c4a070; margin: 1.5rem 0 0.75rem; }
+.html-content h2 { font-size: 1.5rem; font-weight: 600; color: #f2efe8; margin: 1.25rem 0 0.5rem; }
+.html-content h3 { font-size: 1.25rem; font-weight: 600; color: #d4b58c; margin: 1rem 0 0.5rem; }
+.html-content p { margin-bottom: 1rem; color: #dedad6; line-height: 1.8; }
+.html-content ul { list-style-type: disc; padding-right: 1.5rem; margin-bottom: 1rem; color: #dedad6; }
+.html-content ol { list-style-type: decimal; padding-right: 1.5rem; margin-bottom: 1rem; color: #dedad6; }
+.html-content li { margin-bottom: 0.35rem; }
+.html-content blockquote {
+  border-right: 3px solid #c4a070;
+  padding: 0.5rem 1rem;
+  margin: 1rem 0;
+  background: rgba(196, 160, 112, 0.05);
+  font-style: italic;
+  color: #f0dec8;
+}
+.html-content img {
+  border-radius: 0.75rem;
+  margin: 1.5rem auto;
+  border: 1px solid rgba(196, 160, 112, 0.2);
+}
