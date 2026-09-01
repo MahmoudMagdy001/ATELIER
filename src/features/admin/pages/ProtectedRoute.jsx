@@ -8,17 +8,23 @@ export default function ProtectedRoute() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      const localUser = localStorage.getItem('atelier_user')
-      if (session || localUser) {
-        setIsAuthenticated(true)
-      } else {
-        setIsAuthenticated(false)
-      }
-      setLoading(false)
-    })
+    supabase.auth.getSession()
+      .then(({ data: { session } = { data: {} } }) => {
+        const localUser = localStorage.getItem('atelier_user')
+        if (session || localUser) {
+          setIsAuthenticated(true)
+        } else {
+          setIsAuthenticated(false)
+        }
+        setLoading(false)
+      })
+      .catch(() => {
+        const localUser = localStorage.getItem('atelier_user')
+        setIsAuthenticated(Boolean(localUser))
+        setLoading(false)
+      })
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } = { data: {} } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session || localStorage.getItem('atelier_user')) {
         setIsAuthenticated(true)
       } else {
@@ -27,7 +33,11 @@ export default function ProtectedRoute() {
       setLoading(false)
     })
 
-    return () => subscription.unsubscribe()
+    return () => {
+      if (subscription?.unsubscribe) {
+        subscription.unsubscribe()
+      }
+    }
   }, [])
 
   if (loading) return <PageLoading text="جار التحقق من الصلاحيات..." />
