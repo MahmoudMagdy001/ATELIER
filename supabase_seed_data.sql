@@ -7,6 +7,8 @@
 INSERT INTO public.site_settings (
   id,
   site_name,
+  logo_url,
+  favicon_url,
   site_description,
   default_meta_title,
   default_meta_description,
@@ -15,15 +17,19 @@ INSERT INTO public.site_settings (
 )
 VALUES (
   1,
-  'أتيليه | دار الأثاث الفاخر والتصميم المعماري',
+  'ATELIER',
+  '/logo.png',
+  '/logo.png',
   'دار أثاث فاخر متخصصة في ابتكار وتصنيع القطع الحصرية للقصور والفيلات العصرية بالطلب بأيدي كبار الحرفيين الإيطاليين من أجود أنواع خشب الجوز والرخام الطبيعي.',
-  'ATELIER | صياغة الأثاث الفاخر والتصميم الداخلي للقصور',
+  'ATELIER | صياغة الأثاث الفاخر والتصميم الداخلي',
   'استكشف أرقى تشكيلات الأثاث الإيطالي المصنوع بالطلب من الصالونات وغرف الطعام والمجالس الملكية المصممة خصيصاً لمساحتك.',
   'index, follow',
-  'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1600&q=85'
+  '/assets/hero-banner.jpg'
 )
 ON CONFLICT (id) DO UPDATE SET
   site_name = EXCLUDED.site_name,
+  logo_url = EXCLUDED.logo_url,
+  favicon_url = EXCLUDED.favicon_url,
   site_description = EXCLUDED.site_description,
   default_meta_title = EXCLUDED.default_meta_title,
   default_meta_description = EXCLUDED.default_meta_description,

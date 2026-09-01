@@ -9,7 +9,7 @@ export const Spinner = memo(function Spinner({ size = 'md', className = '' }) {
 
   return (
     <div
-      className={`rounded-full border-[#C5A880]/20 border-t-[#C5A880] animate-spin ${sizeClasses[size] || sizeClasses.md} ${className}`}
+      className={`rounded-full border-[#C4A070]/20 border-t-[#C4A070] animate-spin ${sizeClasses[size] || sizeClasses.md} ${className}`}
       role="status"
       aria-label="جار التحميل..."
     />
@@ -20,7 +20,33 @@ export const PageLoading = memo(function PageLoading({ text = 'جار تحميل
   return (
     <div className="flex flex-col items-center justify-center min-h-[300px] gap-3 p-8">
       <Spinner size="lg" />
-      <p className="text-xs text-[#8C7F75] font-medium">{text}</p>
+      <p className="text-xs text-[#827771] font-medium">{text}</p>
+    </div>
+  )
+})
+
+export const CardSkeleton = memo(function CardSkeleton({ aspect = 'aspect-square' }) {
+  return (
+    <div className="rounded-3xl bg-[#141110] border border-[#C4A070]/10 p-6 space-y-4 animate-pulse">
+      <div className={`w-full ${aspect} bg-white/5 rounded-2xl`} />
+      <div className="space-y-2">
+        <div className="h-4 bg-white/10 rounded-full w-3/4" />
+        <div className="h-3 bg-white/5 rounded-full w-1/2" />
+      </div>
+      <div className="pt-2 flex justify-between items-center">
+        <div className="h-4 bg-[#C4A070]/20 rounded-full w-20" />
+        <div className="h-4 bg-white/5 rounded-full w-12" />
+      </div>
+    </div>
+  )
+})
+
+export const GridSkeleton = memo(function GridSkeleton({ count = 6, cols = 'sm:grid-cols-2 lg:grid-cols-3' }) {
+  return (
+    <div className={`grid grid-cols-1 ${cols} gap-8 max-w-7xl mx-auto px-6`}>
+      {Array.from({ length: count }).map((_, i) => (
+        <CardSkeleton key={i} />
+      ))}
     </div>
   )
 })

@@ -1,9 +1,19 @@
 import { useState, useEffect } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { productService } from '../services/productService'
 import { adminService } from '../../admin/services/adminService'
 import SEO from '../../../components/ui/SEO'
-import { PageLoading } from '../../../components/ui/Loading'
+import { PageLoading, GridSkeleton } from '../../../components/ui/Loading'
+import { 
+  fadeUp, 
+  heroStagger, 
+  staggerContainer, 
+  viewportOnce, 
+  springHover, 
+  cardHover, 
+  hoverScale 
+} from '../../../constants/animations'
 import { FaCouch, FaArrowLeft, FaLayerGroup } from 'react-icons/fa6'
 
 export default function Products() {
@@ -63,8 +73,6 @@ export default function Products() {
     return Math.min(...validPrices)
   }
 
-  if (loading) return <PageLoading text="جار تحميل تشكيلة الأثاث الفاخر..." />
-
   return (
     <div className="bg-[#1C1816] text-[#F2EFE8] min-h-screen font-sans" dir="rtl">
       <SEO
@@ -78,33 +86,43 @@ export default function Products() {
         {/* Ambient Brand Identity Glow */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(196,160,112,0.15),rgba(20,17,16,0))] pointer-events-none" />
 
-        <div className="relative max-w-4xl mx-auto text-center space-y-6">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#C4A070]/10 border border-[#C4A070]/30 shadow-sm backdrop-blur-md">
+        <motion.div 
+          variants={heroStagger}
+          initial="hidden"
+          animate="visible"
+          className="relative max-w-4xl mx-auto text-center space-y-6"
+        >
+          <motion.div variants={fadeUp} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#C4A070]/10 border border-[#C4A070]/30 shadow-sm backdrop-blur-md">
             <FaCouch className="w-3.5 h-3.5 text-[#C4A070]" />
             <span className="text-xs tracking-[0.25em] text-[#C4A070] uppercase font-bold">
               BESPOKE LUXURY COLLECTION
             </span>
-          </div>
+          </motion.div>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-[#F2EFE8] leading-tight tracking-normal">
+          <motion.h1 variants={fadeUp} className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-[#F2EFE8] leading-tight tracking-normal">
             مجموعة الأثاث و<span className="gold-gradient-text">القطع المصممة بالطلب</span>
-          </h1>
+          </motion.h1>
 
-          <p className="text-sm sm:text-base md:text-lg text-[#DEDAD6] max-w-2xl mx-auto leading-relaxed md:leading-8 font-light">
+          <motion.p variants={fadeUp} className="text-sm sm:text-base md:text-lg text-[#DEDAD6] max-w-2xl mx-auto leading-relaxed md:leading-8 font-light">
             قطع استثنائية تُصنع يدوياً بأرقى الخامات الطبيعية من خشب الجوز الإيطالي والرخام النادر مع خيارات واسعة ومخصصة للألوان والمقاسات.
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
       </div>
 
       {/* Categories Filter */}
       {categories.length > 0 && (
-        <div className="max-w-7xl mx-auto px-6 pt-10">
+        <motion.div 
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+          className="max-w-7xl mx-auto px-6 pt-10"
+        >
           <div className="flex flex-wrap gap-2 justify-center">
             <button
               onClick={() => handleCategorySelect('all')}
               className={`px-5 py-2.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                 selectedCategory === 'all'
-                  ? 'bg-[#C4A070] text-[#1C1816] font-bold shadow-lg shadow-[#C4A070]/20'
+                  ? 'bg-[#C4A070] text-[#1C1816] font-bold shadow-lg shadow-[#C4A070]/20 scale-105'
                   : 'bg-white/5 text-[#B3A9A3] hover:bg-white/10 hover:text-white border border-white/5'
               }`}
             >
@@ -116,7 +134,7 @@ export default function Products() {
                 onClick={() => handleCategorySelect(c.id, c.slug)}
                 className={`px-5 py-2.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                   selectedCategory === c.id
-                    ? 'bg-[#C4A070] text-[#1C1816] font-bold shadow-lg shadow-[#C4A070]/20'
+                    ? 'bg-[#C4A070] text-[#1C1816] font-bold shadow-lg shadow-[#C4A070]/20 scale-105'
                     : 'bg-white/5 text-[#B3A9A3] hover:bg-white/10 hover:text-white border border-white/5'
                 }`}
               >
@@ -124,78 +142,93 @@ export default function Products() {
               </button>
             ))}
           </div>
-        </div>
+        </motion.div>
       )}
 
-      {/* Products Grid */}
+      {/* Products Content Area */}
       <div className="max-w-7xl mx-auto px-6 py-12">
-        {filteredProducts.length === 0 ? (
+        {loading ? (
+          <GridSkeleton count={6} />
+        ) : filteredProducts.length === 0 ? (
           <div className="text-center py-16 text-xs text-[#827771]">
             <FaCouch className="w-12 h-12 mx-auto text-[#C4A070]/30 mb-3" />
             لا توجد منتجات ضمن هذا القسم حالياً.
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredProducts.map((product) => {
+          <motion.div 
+            key={selectedCategory}
+            variants={staggerContainer}
+            initial="hidden"
+            animate="visible"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
+            {filteredProducts.map((product, idx) => {
               const startPrice = getStartingPrice(product.variants)
               return (
-                <Link
+                <motion.div
                   key={product.id}
-                  to={`/products/${product.slug}`}
-                  className="group rounded-3xl bg-[#141110] border border-[#C4A070]/20 overflow-hidden hover:border-[#C4A070] transition-all duration-300 flex flex-col shadow-xl hover:-translate-y-1"
+                  variants={fadeUp}
+                  custom={idx}
+                  whileHover={cardHover}
+                  transition={springHover}
                 >
-                  <div className="relative aspect-[4/3] bg-[#1C1816] overflow-hidden">
-                    <img
-                      src={product.main_image || product.variants?.[0]?.image}
-                      alt={product.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      loading="lazy"
-                    />
-                    {product.badge && (
-                      <span className="absolute top-4 right-4 px-3 py-1 rounded-full text-[11px] font-bold bg-[#C4A070] text-[#1C1816] shadow-md">
-                        {product.badge}
-                      </span>
-                    )}
-                    {Array.isArray(product.variants) && product.variants.length > 0 && (
-                      <span className="absolute bottom-4 left-4 px-2.5 py-1 rounded-lg text-[10px] font-semibold bg-black/60 backdrop-blur-md text-white border border-white/10 flex items-center gap-1.5">
-                        <FaLayerGroup className="w-3 h-3 text-[#C4A070]" />
-                        <span>{product.variants.length} خيارات متاحة</span>
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
-                    <div>
-                      <h3 className="text-lg font-bold font-serif text-[#F2EFE8] group-hover:text-[#C4A070] transition-colors leading-snug">
-                        {product.title}
-                      </h3>
-                      <p className="text-xs text-[#827771] line-clamp-2 leading-relaxed">
-                        {product.description}
-                      </p>
+                  <Link
+                    to={`/products/${product.slug}`}
+                    className="group rounded-3xl bg-[#141110] border border-[#C4A070]/20 overflow-hidden hover:border-[#C4A070] transition-all duration-300 flex flex-col shadow-xl block h-full hover:shadow-[#C4A070]/10"
+                  >
+                    <div className="relative aspect-[4/3] bg-[#1C1816] overflow-hidden">
+                      <img
+                        src={product.main_image || product.variants?.[0]?.image}
+                        alt={product.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                      />
+                      {product.badge && (
+                        <span className="absolute top-4 right-4 px-3 py-1 rounded-full text-[11px] font-bold bg-[#C4A070] text-[#1C1816] shadow-md">
+                          {product.badge}
+                        </span>
+                      )}
+                      {Array.isArray(product.variants) && product.variants.length > 0 && (
+                        <span className="absolute bottom-4 left-4 px-2.5 py-1 rounded-lg text-[10px] font-semibold bg-black/60 backdrop-blur-md text-white border border-white/10 flex items-center gap-1.5">
+                          <FaLayerGroup className="w-3 h-3 text-[#C4A070]" />
+                          <span>{product.variants.length} خيارات</span>
+                        </span>
+                      )}
                     </div>
 
-                    <div className="pt-4 border-t border-white/5 flex items-center justify-between">
+                    <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
                       <div>
-                        <span className="text-[10px] text-[#827771] block font-medium">السعر</span>
-                        {startPrice ? (
-                          <div className="text-base font-extrabold font-serif text-[#E3CAA9] tracking-wide">
-                            يبدأ من {startPrice.toLocaleString()} <span className="text-xs text-[#C4A070] font-sans font-normal">ر.س</span>
-                          </div>
-                        ) : (
-                          <span className="text-xs text-[#C4A070] font-bold">حسب التخصيص</span>
-                        )}
+                        <h3 className="text-lg font-bold font-serif text-[#F2EFE8] group-hover:text-[#C4A070] transition-colors leading-snug">
+                          {product.title}
+                        </h3>
+                        <p className="text-xs text-[#827771] mt-2 line-clamp-2 leading-relaxed">
+                          {product.description}
+                        </p>
                       </div>
 
-                      <div className="flex items-center gap-1.5 text-xs font-bold text-[#C4A070] group-hover:translate-x-[-4px] transition-transform">
-                        <span>عرض التفاصيل</span>
-                        <FaArrowLeft className="w-3 h-3" />
+                      <div className="pt-4 border-t border-white/5 flex items-center justify-between">
+                        <div>
+                          <span className="text-[10px] text-[#827771] block font-medium">السعر</span>
+                          {startPrice ? (
+                            <div className="text-base font-extrabold font-serif text-[#E3CAA9] tracking-wide">
+                              يبدأ من {startPrice.toLocaleString()} <span className="text-xs text-[#C4A070] font-sans font-normal">ر.س</span>
+                            </div>
+                          ) : (
+                            <span className="text-xs text-[#C4A070] font-bold">حسب التخصيص</span>
+                          )}
+                        </div>
+
+                        <div className="flex items-center gap-1.5 text-xs font-bold text-[#C4A070] group-hover:translate-x-[-4px] transition-transform">
+                          <span>التفاصيل</span>
+                          <FaArrowLeft className="w-3 h-3" />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </Link>
+                  </Link>
+                </motion.div>
               )
             })}
-          </div>
+          </motion.div>
         )}
       </div>
     </div>

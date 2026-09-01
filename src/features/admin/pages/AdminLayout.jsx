@@ -1,4 +1,5 @@
-import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { useRef, useEffect } from 'react'
+import { Link, NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { supabase } from '../../../lib/supabase'
 import { AtelierMonogram } from '../../../components/ui/BrandLogo'
 import { 
@@ -25,6 +26,14 @@ const ADMIN_LINKS = [
 
 export default function AdminLayout() {
   const navigate = useNavigate()
+  const location = useLocation()
+  const mainRef = useRef(null)
+
+  useEffect(() => {
+    if (mainRef.current) {
+      mainRef.current.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+    }
+  }, [location.pathname])
 
   const handleSignOut = async () => {
     try {
@@ -91,7 +100,7 @@ export default function AdminLayout() {
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 p-6 md:p-10 overflow-y-auto overflow-x-hidden bg-[#FAF8F5] text-[#14110F]">
+      <main ref={mainRef} className="flex-1 p-6 md:p-10 overflow-y-auto overflow-x-hidden bg-[#FAF8F5] text-[#14110F]">
         <Outlet />
       </main>
     </div>

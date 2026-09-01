@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import { motion } from 'framer-motion'
+import { fadeUp, staggerContainer, viewportOnce } from '../../../constants/animations'
+import { CONTACT_INFO } from '../../../constants/contactInfo'
 import { 
   FaLocationDot, 
   FaPhone, 
@@ -18,14 +21,12 @@ export default function ContactShowroomSection({ settings }) {
   const [copiedPhone, setCopiedPhone] = useState(false)
   const [copiedAddress, setCopiedAddress] = useState(false)
 
-  const primaryPhone = settings?.contact_phone || ''
-  const secondaryPhone = settings?.contact_phone_secondary || null
-  const whatsappNum = (settings?.whatsapp_number || settings?.contact_phone || '').replace(/[^0-9]/g, '')
-  const address = settings?.showroom_address || ''
-  const email = settings?.contact_email || ''
-  
-  // Google Maps directions link for showroom
-  const googleMapsUrl = settings?.google_maps_url || (address ? 'https://maps.google.com/?q=' + encodeURIComponent(address) : 'https://maps.google.com')
+  const primaryPhone = CONTACT_INFO.phone
+  const secondaryPhone = CONTACT_INFO.vipLine
+  const whatsappNum = CONTACT_INFO.whatsappRaw
+  const address = CONTACT_INFO.address
+  const email = CONTACT_INFO.email
+  const googleMapsUrl = CONTACT_INFO.googleMapsUrl
   const mapsEmbedSrc = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d115949.33649557673!2d46.6752959!3d24.7135517!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e2f03890d48939b%3A0x62953e5e40a04910!2sRiyadh%20Saudi%20Arabia!5e0!3m2!1sar!2ssa!4v1709300000000!5m2!1sar!2ssa'
 
   const handleCopyPhone = () => {
@@ -43,10 +44,17 @@ export default function ContactShowroomSection({ settings }) {
   }
 
   return (
-    <section className="w-full space-y-8" aria-labelledby="contact-showroom-heading">
+    <motion.section 
+      initial="hidden"
+      whileInView="visible"
+      viewport={viewportOnce}
+      variants={staggerContainer}
+      className="w-full space-y-8" 
+      aria-labelledby="contact-showroom-heading"
+    >
       {/* Header Matching Exactly with Home Sections (max-w-7xl px-6) */}
       <div className="max-w-7xl mx-auto px-6">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#C4A070]/20 pb-6">
+        <motion.div variants={fadeUp} className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#C4A070]/20 pb-6">
           <div className="space-y-2">
             <span className="text-xs text-[#C4A070] tracking-widest uppercase font-bold flex items-center gap-2">
               <FaMapLocationDot className="w-3.5 h-3.5" /> صالة العرض والتواصل
@@ -59,17 +67,17 @@ export default function ContactShowroomSection({ settings }) {
             href={googleMapsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs font-bold text-[#C4A070] hover:text-[#E5C9A3] flex items-center gap-1.5 transition-colors"
+            className="text-xs font-bold text-[#C4A070] hover:text-[#E5C9A3] flex items-center gap-1.5 transition-colors group"
           >
             <span>عرض الاتجاهات في خرائط Google</span>
-            <FaArrowLeft className="w-3 h-3" />
+            <FaArrowLeft className="w-3 h-3 group-hover:translate-x-[-4px] transition-transform" />
           </a>
-        </div>
+        </motion.div>
       </div>
 
       {/* Main Container: Wide container with custom padding */}
       <div className="w-full px-3 sm:px-4 lg:px-6">
-        <div className="flex flex-col lg:flex-row items-stretch gap-5 lg:gap-6 w-full">
+        <motion.div variants={fadeUp} className="flex flex-col lg:flex-row items-stretch gap-5 lg:gap-6 w-full">
         
         {/* RIGHT COLUMN: Compact Contact Cards */}
         <div className="w-full lg:w-[380px] xl:w-[430px] shrink-0 flex flex-col justify-between gap-3">
@@ -324,8 +332,8 @@ export default function ContactShowroomSection({ settings }) {
             </div>
           </div>
 
-        </div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   )
 }

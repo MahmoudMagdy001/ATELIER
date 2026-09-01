@@ -147,15 +147,15 @@ CREATE TABLE IF NOT EXISTS public.redirects (
 -- =========================================================================
 CREATE TABLE IF NOT EXISTS public.site_settings (
   id INTEGER PRIMARY KEY DEFAULT 1,
-  site_name TEXT DEFAULT 'أتيليه للأثاث والتصميم الداخلي الفاخر',
-  logo_url TEXT,
-  favicon_url TEXT,
-  site_description TEXT,
-  default_meta_title TEXT,
-  default_meta_description TEXT,
+  site_name TEXT DEFAULT 'ATELIER',
+  logo_url TEXT DEFAULT '/logo.png',
+  favicon_url TEXT DEFAULT '/logo.png',
+  site_description TEXT DEFAULT 'دار أثاث فاخر متخصصة في ابتكار وتصنيع القطع الحصرية للقصور والفيلات العصرية بالطلب بأيدي كبار الحرفيين الإيطاليين.',
+  default_meta_title TEXT DEFAULT 'ATELIER | صياغة الأثاث الفاخر والتصميم الداخلي',
+  default_meta_description TEXT DEFAULT 'استكشف أرقى تشكيلات الأثاث الإيطالي المصنوع بالطلب من الصالونات وغرف الطعام والمجالس الملكية المصممة خصيصاً لمساحتك.',
   default_canonical TEXT,
   default_robots TEXT DEFAULT 'index, follow',
-  default_og_image TEXT,
+  default_og_image TEXT DEFAULT '/assets/hero-banner.jpg',
   google_verification TEXT,
   bing_verification TEXT,
   facebook_verification TEXT,
@@ -164,9 +164,25 @@ CREATE TABLE IF NOT EXISTS public.site_settings (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-INSERT INTO public.site_settings (id, site_name)
-VALUES (1, 'أتيليه للأثاث والتصميم الداخلي الفاخر')
-ON CONFLICT (id) DO NOTHING;
+INSERT INTO public.site_settings (id, site_name, logo_url, favicon_url, default_meta_title, default_meta_description, default_robots, default_og_image)
+VALUES (
+  1, 
+  'ATELIER', 
+  '/logo.png', 
+  '/logo.png', 
+  'ATELIER | صياغة الأثاث الفاخر والتصميم الداخلي', 
+  'استكشف أرقى تشكيلات الأثاث الإيطالي المصنوع بالطلب من الصالونات وغرف الطعام والمجالس الملكية المصممة خصيصاً لمساحتك.', 
+  'index, follow', 
+  '/assets/hero-banner.jpg'
+)
+ON CONFLICT (id) DO UPDATE SET
+  site_name = EXCLUDED.site_name,
+  logo_url = EXCLUDED.logo_url,
+  favicon_url = EXCLUDED.favicon_url,
+  default_meta_title = EXCLUDED.default_meta_title,
+  default_meta_description = EXCLUDED.default_meta_description,
+  default_robots = EXCLUDED.default_robots,
+  default_og_image = EXCLUDED.default_og_image;
 
 -- =========================================================================
 -- 7. ROBOTS SETTINGS TABLE (إعدادات Robots.txt وخريطة الموقع)

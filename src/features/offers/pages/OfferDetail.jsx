@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { offerService } from '../services/offerService'
 import { adminService } from '../../admin/services/adminService'
 import SEO from '../../../components/ui/SEO'
 import { PageLoading } from '../../../components/ui/Loading'
+import { CONTACT_INFO } from '../../../constants/contactInfo'
 import { 
   FaArrowRight, 
   FaWhatsapp, 
@@ -64,10 +66,10 @@ export default function OfferDetail() {
     return (
       <div className="min-h-screen bg-[#1C1816] text-[#F2EFE8] flex items-center justify-center p-6 text-center pt-20" dir="rtl">
         <div className="space-y-4">
-          <h2 className="text-xl font-bold font-serif text-[#C4A070]">العرض غير متوفر أو قد انتهت صلاحيته</h2>
-          <p className="text-xs text-[#827771]">تفضل بزيارة صفحة العروض للاطلاع على أحدث الباقات الحالية.</p>
+          <h2 className="text-xl font-bold font-serif text-[#C4A070]">العرض غير متوفر</h2>
+          <p className="text-xs text-[#827771]">قد يكون انتهى موعد العرض أو تم تحديثه.</p>
           <Link to="/offers" className="inline-block px-5 py-2 rounded-xl bg-[#C4A070] text-[#1C1816] text-xs font-bold">
-            العودة لقائمة العروض
+            العودة للعروض الحالية
           </Link>
         </div>
       </div>
@@ -78,7 +80,7 @@ export default function OfferDetail() {
   const originalPrice = Number(selectedVariant?.original_price) || 0
   const savings = originalPrice > currentPrice ? originalPrice - currentPrice : 0
 
-  const rawWhatsapp = (settings?.whatsapp_number || settings?.contact_whatsapp || '966501234567').replace(/[^0-9]/g, '')
+  const rawWhatsapp = CONTACT_INFO.whatsappRaw
   const whatsappMessage = encodeURIComponent(
     `مرحباً أتيليه، أرغب في حجز والاستفادة من العرض الحصري: "${offer.title}"` +
     (selectedVariant ? `\nالخيار المختار: ${selectedVariant.name}\nسعر العرض: ${currentPrice.toLocaleString()} ر.س` : '') +
@@ -86,7 +88,7 @@ export default function OfferDetail() {
     `\nالرابط: ${typeof window !== 'undefined' ? window.location.href : ''}`
   )
   const whatsappUrl = `https://wa.me/${rawWhatsapp}?text=${whatsappMessage}`
-  const contactPhone = settings?.contact_phone || '+966501234567'
+  const contactPhone = CONTACT_INFO.phone
 
   return (
     <div className="bg-[#1C1816] text-[#F2EFE8] min-h-screen font-sans pt-28 md:pt-32" dir="rtl">
@@ -119,12 +121,21 @@ export default function OfferDetail() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
           
           {/* Gallery View */}
-          <div className="lg:col-span-7 space-y-4">
+          <motion.div 
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
+            className="lg:col-span-7 space-y-4"
+          >
             <div className="relative aspect-[4/3] rounded-3xl bg-[#141110] border border-[#C4A070]/30 overflow-hidden shadow-2xl">
-              <img
+              <motion.img
+                key={activeImage}
+                initial={{ opacity: 0.8, scale: 1.02 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.35 }}
                 src={activeImage || offer.cover_image || offer.banner_image}
                 alt={offer.title}
-                className="w-full h-full object-cover transition-all duration-500"
+                className="w-full h-full object-cover"
               />
               
               {offer.discount_label && (
@@ -167,10 +178,15 @@ export default function OfferDetail() {
                 ))}
               </div>
             )}
-          </div>
+          </motion.div>
 
           {/* Details & Interactive Offer Variant Selector */}
-          <div className="lg:col-span-5 space-y-6 bg-[#141110] p-8 rounded-3xl border border-[#C4A070]/20 shadow-xl">
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
+            className="lg:col-span-5 space-y-6 bg-[#141110] p-8 rounded-3xl border border-[#C4A070]/20 shadow-xl"
+          >
             
             <div>
               <span className="text-[11px] font-bold tracking-widest text-[#C4A070] uppercase flex items-center gap-1.5">
@@ -277,7 +293,7 @@ export default function OfferDetail() {
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 transition-all cursor-pointer"
+                className="w-full py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
               >
                 <FaWhatsapp className="w-4 h-4" />
                 <span>حجز العرض وتثبيت الخصم عبر واتساب</span>
@@ -285,7 +301,7 @@ export default function OfferDetail() {
 
               <a
                 href={`tel:${contactPhone.replace(/\s+/g, '')}`}
-                className="w-full py-3 rounded-2xl bg-white/5 hover:bg-white/10 text-[#F2EFE8] border border-white/10 font-semibold text-xs flex items-center justify-center gap-2 transition-all"
+                className="w-full py-3 rounded-2xl bg-white/5 hover:bg-white/10 text-[#F2EFE8] border border-white/10 font-semibold text-xs flex items-center justify-center gap-2 transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
                 <FaPhone className="w-3.5 h-3.5 text-[#C4A070]" />
                 <span>استفسار هاتفي فوري</span>
@@ -308,7 +324,7 @@ export default function OfferDetail() {
               </div>
             </div>
 
-          </div>
+          </motion.div>
 
         </div>
       </div>

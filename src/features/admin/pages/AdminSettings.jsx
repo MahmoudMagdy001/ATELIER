@@ -14,7 +14,6 @@ import {
   FaGlobe, 
   FaRobot, 
   FaCode, 
-  FaPlug,
   FaCheck,
   FaPen
 } from 'react-icons/fa6'
@@ -56,18 +55,6 @@ export default function AdminSettings() {
   const [editingScriptId, setEditingScriptId] = useState(null)
   const [scriptFormOpen, setScriptFormOpen] = useState(false)
 
-  // 5. Integrations & Contact State
-  const [whatsappNumber, setWhatsappNumber] = useState('')
-  const [whatsappEnabled, setWhatsappEnabled] = useState(true)
-  const [contactEmail, setContactEmail] = useState('')
-  const [contactPhone, setContactPhone] = useState('')
-  const [contactPhoneSecondary, setContactPhoneSecondary] = useState('')
-  const [showroomAddress, setShowroomAddress] = useState('')
-  const [googleMapsUrl, setGoogleMapsUrl] = useState('')
-  const [socialInstagram, setSocialInstagram] = useState('')
-  const [socialPinterest, setSocialPinterest] = useState('')
-  const [socialLinkedin, setSocialLinkedin] = useState('')
-
   useEffect(() => {
     fetchSettingsAndScripts()
   }, [])
@@ -82,31 +69,20 @@ export default function AdminSettings() {
       ])
 
       if (settings) {
-        setSiteName(settings.site_name || '')
-        setLogoUrl(settings.logo_url || '')
-        setFaviconUrl(settings.favicon_url || '')
-        setSiteDescription(settings.site_description || '')
-        setDefaultMetaTitle(settings.default_meta_title || '')
-        setDefaultMetaDescription(settings.default_meta_description || '')
+        setSiteName(settings.site_name || 'ATELIER')
+        setLogoUrl(settings.logo_url || '/logo.png')
+        setFaviconUrl(settings.favicon_url || '/logo.png')
+        setSiteDescription(settings.site_description || 'دار أثاث فاخر متخصصة في ابتكار وتصنيع القطع الحصرية للقصور والفيلات العصرية بالطلب.')
+        setDefaultMetaTitle(settings.default_meta_title || 'ATELIER | صياغة الأثاث الفاخر والتصميم الداخلي')
+        setDefaultMetaDescription(settings.default_meta_description || 'استكشف أرقى تشكيلات الأثاث الإيطالي المصنوع بالطلب من الصالونات وغرف الطعام والمجالس الملكية.')
         setDefaultCanonical(settings.default_canonical || '')
         setDefaultRobots(settings.default_robots || 'index, follow')
-        setDefaultOgImage(settings.default_og_image || '')
+        setDefaultOgImage(settings.default_og_image || '/assets/hero-banner.jpg')
         setGoogleVerification(settings.google_verification || '')
         setBingVerification(settings.bing_verification || '')
         setFacebookVerification(settings.facebook_verification || '')
         setPinterestVerification(settings.pinterest_verification || '')
         setYandexVerification(settings.yandex_verification || '')
-
-        // Integrations & Socials
-        setWhatsappNumber(settings.whatsapp_number || '')
-        setContactEmail(settings.contact_email || '')
-        setContactPhone(settings.contact_phone || '')
-        setContactPhoneSecondary(settings.contact_phone_secondary || '')
-        setShowroomAddress(settings.showroom_address || '')
-        setGoogleMapsUrl(settings.google_maps_url || '')
-        setSocialInstagram(settings.social_instagram || '')
-        setSocialPinterest(settings.social_pinterest || '')
-        setSocialLinkedin(settings.social_linkedin || '')
       }
 
       if (robots) {
@@ -180,29 +156,6 @@ export default function AdminSettings() {
         custom_content: robotsCustomContent,
       })
       alert('تم تحديث إعدادات Robots.txt بنجاح!')
-    } catch (err) {
-      alert('حدث خطأ أثناء الحفظ: ' + err.message)
-    } finally {
-      setSubmitting(false)
-    }
-  }
-
-  const handleSaveIntegrations = async (e) => {
-    e?.preventDefault()
-    setSubmitting(true)
-    try {
-      await adminService.updateSettings({
-        whatsapp_number: whatsappNumber,
-        contact_phone: contactPhone,
-        contact_phone_secondary: contactPhoneSecondary,
-        contact_email: contactEmail,
-        showroom_address: showroomAddress,
-        google_maps_url: googleMapsUrl,
-        social_instagram: socialInstagram,
-        social_pinterest: socialPinterest,
-        social_linkedin: socialLinkedin,
-      })
-      alert('تم حفظ بيانات التواصل والفروع بنجاح!')
     } catch (err) {
       alert('حدث خطأ أثناء الحفظ: ' + err.message)
     } finally {
@@ -292,7 +245,6 @@ export default function AdminSettings() {
           { id: 'seo', label: 'الـ SEO ومحركات البحث', Icon: FaGlobe },
           { id: 'robots', label: 'Robots.txt & Sitemap', Icon: FaRobot },
           { id: 'scripts', label: 'السكريبتات وأكواد التتبع', Icon: FaCode },
-          { id: 'integrations', label: 'معلومات الاتصال والفروع', Icon: FaPlug },
         ].map((tab) => (
           <button
             key={tab.id}
@@ -676,123 +628,6 @@ export default function AdminSettings() {
             )}
           </div>
         </div>
-      )}
-
-      {/* TAB 5: Integrations & Showrooms */}
-      {activeTab === 'integrations' && (
-        <form onSubmit={handleSaveIntegrations} className="bg-white rounded-2xl border border-[#E6E1DC] p-6 shadow-sm space-y-6">
-          <h3 className="font-bold text-base text-[#14110F] border-b border-[#E6E1DC] pb-3">قنوات الاتصال المباشر وخدمة كبار العملاء</h3>
-
-          <div className="grid gap-6 md:grid-cols-2">
-            <div>
-              <label className="block text-xs font-bold text-[#5C544E] mb-1.5">رقم واتساب VIP (مع كود الدولة)</label>
-              <input
-                type="text"
-                className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F]"
-                value={whatsappNumber}
-                onChange={(e) => setWhatsappNumber(e.target.value)}
-                placeholder="+966501234567"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-[#5C544E] mb-1.5">الهاتف الرئيسي / المعرض</label>
-              <input
-                type="text"
-                className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F]"
-                value={contactPhone}
-                onChange={(e) => setContactPhone(e.target.value)}
-                placeholder="+966 50 123 4567"
-              />
-            </div>
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-2">
-            <div>
-              <label className="block text-xs font-bold text-[#5C544E] mb-1.5">هاتف خط المشاريع والقصور (VIP Line)</label>
-              <input
-                type="text"
-                className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F]"
-                value={contactPhoneSecondary}
-                onChange={(e) => setContactPhoneSecondary(e.target.value)}
-                placeholder="+966 11 456 7890"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-[#5C544E] mb-1.5">البريد الإلكتروني للكونسيرج</label>
-              <input
-                type="email"
-                className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F]"
-                value={contactEmail}
-                onChange={(e) => setContactEmail(e.target.value)}
-                placeholder="concierge@atelier-luxury.com"
-              />
-            </div>
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-2">
-            <div>
-              <label className="block text-xs font-bold text-[#5C544E] mb-1.5">عنوان صالة العرض الرئيسية</label>
-              <input
-                type="text"
-                className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F]"
-                value={showroomAddress}
-                onChange={(e) => setShowroomAddress(e.target.value)}
-                placeholder="طريق الملك فهد، حي العليا، الرياض"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-[#5C544E] mb-1.5">رابط موقع المعرض على خرائط Google</label>
-              <input
-                type="url"
-                className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F]"
-                value={googleMapsUrl}
-                onChange={(e) => setGoogleMapsUrl(e.target.value)}
-                placeholder="https://maps.google.com/..."
-              />
-            </div>
-          </div>
-
-          <h3 className="font-bold text-base text-[#14110F] border-b border-[#E6E1DC] pb-3 pt-4">حسابات التواصل الاجتماعي</h3>
-
-          <div className="grid gap-6 md:grid-cols-3">
-            <div>
-              <label className="block text-xs font-bold text-[#5C544E] mb-1.5">رابط إنستغرام (Instagram)</label>
-              <input
-                type="url"
-                className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F]"
-                value={socialInstagram}
-                onChange={(e) => setSocialInstagram(e.target.value)}
-                placeholder="https://instagram.com/..."
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-[#5C544E] mb-1.5">رابط بنترست (Pinterest)</label>
-              <input
-                type="url"
-                className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F]"
-                value={socialPinterest}
-                onChange={(e) => setSocialPinterest(e.target.value)}
-                placeholder="https://pinterest.com/..."
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-[#5C544E] mb-1.5">رابط لينكد إن (LinkedIn)</label>
-              <input
-                type="url"
-                className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F]"
-                value={socialLinkedin}
-                onChange={(e) => setSocialLinkedin(e.target.value)}
-                placeholder="https://linkedin.com/company/..."
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-end pt-4 border-t border-[#E6E1DC]">
-            <Button type="submit" disabled={submitting} icon={<FaFloppyDisk />}>
-              {submitting ? 'جار الحفظ...' : 'حفظ بيانات التواصل والفروع'}
-            </Button>
-          </div>
-        </form>
       )}
     </div>
   )

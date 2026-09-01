@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { blogService } from '../services/blogService'
 import SEO from '../../../components/ui/SEO'
 import { PageLoading } from '../../../components/ui/Loading'
+import { fadeUp, staggerContainer, viewportOnce, springHover, cardHover } from '../../../constants/animations'
 import { 
   FaArrowRight, 
   FaArrowLeft, 
@@ -373,58 +375,71 @@ export default function BlogDetail() {
                 </Link>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {relatedPosts.map((rPost) => (
-                  <Link
+              <motion.div 
+                variants={staggerContainer}
+                initial="hidden"
+                whileInView="visible"
+                viewport={viewportOnce}
+                className="grid grid-cols-1 md:grid-cols-3 gap-6"
+              >
+                {relatedPosts.map((rPost, idx) => (
+                  <motion.div
                     key={rPost.id}
-                    to={`/blog/${rPost.slug}`}
-                    className="group rounded-2xl bg-[#141110] border border-[#C4A070]/20 overflow-hidden hover:border-[#C4A070] transition-all duration-300 flex flex-col shadow-lg hover:-translate-y-1"
+                    variants={fadeUp}
+                    custom={idx}
+                    whileHover={cardHover}
+                    transition={springHover}
                   >
-                    <div className="relative aspect-[16/10] overflow-hidden bg-[#1C1816]">
-                      {rPost.cover_image ? (
-                        <img
-                          src={rPost.cover_image}
-                          alt={rPost.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          loading="lazy"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-[#C4A070]/30">
-                          <FaBookOpen className="w-8 h-8" />
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2 text-[10px] text-[#C4A070]">
-                          <FaCalendarDays className="w-2.5 h-2.5" />
-                          <span>{new Date(rPost.published_at || rPost.created_at || Date.now()).toLocaleDateString('ar-SA')}</span>
-                          {rPost.reading_time && (
-                            <>
-                              <span>•</span>
-                              <span>{rPost.reading_time} د</span>
-                            </>
-                          )}
-                        </div>
-
-                        <h4 className="text-sm font-bold font-serif text-[#F2EFE8] group-hover:text-[#C4A070] transition-colors leading-snug line-clamp-2">
-                          {rPost.title}
-                        </h4>
-
-                        <p className="text-[11px] text-[#827771] line-clamp-2 leading-relaxed">
-                          {rPost.excerpt}
-                        </p>
+                    <Link
+                      to={`/blog/${rPost.slug}`}
+                      className="group rounded-2xl bg-[#141110] border border-[#C4A070]/20 overflow-hidden hover:border-[#C4A070] transition-all duration-300 flex flex-col shadow-lg block h-full hover:shadow-[#C4A070]/10"
+                    >
+                      <div className="relative aspect-[16/10] overflow-hidden bg-[#1C1816]">
+                        {rPost.cover_image ? (
+                          <img
+                            src={rPost.cover_image}
+                            alt={rPost.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-[#C4A070]/30">
+                            <FaBookOpen className="w-8 h-8" />
+                          </div>
+                        )}
                       </div>
 
-                      <div className="pt-3 border-t border-white/5 flex items-center justify-between text-[11px] font-bold text-[#C4A070]">
-                        <span>قراءة المقال</span>
-                        <FaArrowLeft className="w-2.5 h-2.5 group-hover:translate-x-[-3px] transition-transform" />
+                      <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2 text-[10px] text-[#C4A070]">
+                            <FaCalendarDays className="w-2.5 h-2.5" />
+                            <span>{new Date(rPost.published_at || rPost.created_at || Date.now()).toLocaleDateString('ar-SA')}</span>
+                            {rPost.reading_time && (
+                              <>
+                                <span>•</span>
+                                <span>{rPost.reading_time} د</span>
+                              </>
+                            )}
+                          </div>
+
+                          <h4 className="text-sm font-bold font-serif text-[#F2EFE8] group-hover:text-[#C4A070] transition-colors leading-snug line-clamp-2">
+                            {rPost.title}
+                          </h4>
+
+                          <p className="text-[11px] text-[#827771] line-clamp-2 leading-relaxed">
+                            {rPost.excerpt}
+                          </p>
+                        </div>
+
+                        <div className="pt-3 border-t border-white/5 flex items-center justify-between text-[11px] font-bold text-[#C4A070]">
+                          <span>قراءة المقال</span>
+                          <FaArrowLeft className="w-2.5 h-2.5 group-hover:translate-x-[-3px] transition-transform" />
+                        </div>
                       </div>
-                    </div>
-                  </Link>
+                    </Link>
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
             </div>
           )}
 
