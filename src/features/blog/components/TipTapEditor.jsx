@@ -21,14 +21,16 @@ import {
   FaArrowRotateLeft, FaArrowRotateRight, FaBold, FaItalic, FaUnderline, FaStrikethrough, FaHighlighter, 
   FaAlignLeft, FaAlignCenter, FaAlignRight, FaAlignJustify, 
   FaListUl, FaListOl, FaSquareCheck, FaQuoteRight, FaCode, 
-  FaLink, FaImage, FaYoutube, FaMinus, FaTable, FaEraser, FaUpload, FaXmark 
+  FaLink, FaImage, FaYoutube, FaMinus, FaTable, FaEraser, FaUpload, FaXmark, FaPhotoFilm 
 } from 'react-icons/fa6'
+import MediaPickerModal from '../../../components/admin/MediaPickerModal'
 import '../../../styles/article.css'
 
 export default function TipTapEditor({ value = '', onChange }) {
   const [activeModal, setActiveModal] = useState(null)
   const [modalData, setModalData] = useState({})
   const [imageUploadLoading, setImageUploadLoading] = useState(false)
+  const [isMediaPickerOpen, setIsMediaPickerOpen] = useState(false)
 
   const editor = useEditor({
     extensions: [
@@ -85,7 +87,7 @@ export default function TipTapEditor({ value = '', onChange }) {
     content: value,
     editorProps: {
       attributes: {
-        class: 'prose prose-lg max-w-none focus:outline-none article-content min-h-[420px] p-4',
+        class: 'prose prose-lg max-w-none focus:outline-none article-content article-theme-light min-h-[420px] p-4',
         dir: 'auto'
       },
       handleDrop: (view, event, slice, moved) => {
@@ -253,11 +255,11 @@ export default function TipTapEditor({ value = '', onChange }) {
   }
 
   const fonts = [
-    { label: 'الافتراضي (Almarai / Cairo)', value: 'Almarai' },
-    { label: 'تاهوماس (Tahoma)', value: 'Tahoma' },
-    { label: 'إنتر (Inter)', value: 'Inter' },
-    { label: 'جورجيا (Georgia)', value: 'Georgia' },
-    { label: 'بلاي فير (Playfair)', value: 'Playfair Display' }
+    { label: 'الافتراضي (Alexandria - الإسكندرية)', value: 'Alexandria' },
+    { label: 'المسيري الفاخر (El Messiri)', value: 'El Messiri' },
+    { label: 'سينزل الفندقي (Cinzel Serif)', value: 'Cinzel' },
+    { label: 'كورمورانت الملكي (Cormorant Garamond)', value: 'Cormorant Garamond' },
+    { label: 'جاكرتا الحديث (Plus Jakarta Sans)', value: 'Plus Jakarta Sans' }
   ]
 
   const sizes = [
@@ -536,7 +538,7 @@ export default function TipTapEditor({ value = '', onChange }) {
                 <label className="block text-xs font-semibold text-[#5C544E] mb-1">عنوان الويب (URL)</label>
                 <input
                   type="url"
-                  className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-sm focus:outline-none focus:border-[#C5A880]"
+                  className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-sm text-[#14110F] bg-white placeholder-[#8C7F75] focus:outline-none focus:border-[#C5A880]"
                   placeholder="https://example.com"
                   value={modalData.url}
                   onChange={(e) => setModalData(prev => ({ ...prev, url: e.target.value }))}
@@ -579,20 +581,32 @@ export default function TipTapEditor({ value = '', onChange }) {
             <h3 className="text-base font-bold text-[#14110F] mb-4">إدراج صورة مقال متطورة</h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-[#5C544E] mb-1">رفع صورة أو رابط مباشر</label>
+                <label className="block text-xs font-semibold text-[#5C544E] mb-1">مصدر الصورة</label>
+                <div className="flex flex-wrap gap-2 mb-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsMediaPickerOpen(true)}
+                    className="px-3.5 py-2 bg-[#C5A880] text-white hover:bg-[#B59362] rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
+                  >
+                    <FaPhotoFilm className="w-3.5 h-3.5" />
+                    <span>اختيار من مكتبة الوسائط</span>
+                  </button>
+
+                  <label className="px-3.5 py-2 bg-[#FAF8F5] border border-[#E6E1DC] hover:bg-[#F3EFEA] rounded-xl text-xs font-bold text-[#5C544E] cursor-pointer flex items-center gap-1.5">
+                    <FaUpload className="w-3.5 h-3.5 text-[#C5A880]" />
+                    <span>{imageUploadLoading ? 'جار الرفع...' : 'رفع من الجهاز'}</span>
+                    <input type="file" accept="image/*" className="hidden" onChange={handleModalImageUpload} />
+                  </label>
+                </div>
+
                 <div className="flex gap-2">
                   <input
                     type="text"
-                    className="flex-1 px-3 py-2 rounded-xl border border-[#E6E1DC] text-sm focus:outline-none focus:border-[#C5A880]"
-                    placeholder="https://..."
+                    className="flex-1 px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs text-[#14110F] bg-white placeholder-[#8C7F75] focus:outline-none focus:border-[#C5A880]"
+                    placeholder="أو الصق رابط صورة خارجي مباشر (https://...)"
                     value={modalData.src}
                     onChange={(e) => setModalData(prev => ({ ...prev, src: e.target.value }))}
                   />
-                  <label className="px-3 py-2 bg-[#FAF8F5] border border-[#E6E1DC] hover:bg-[#F3EFEA] rounded-xl text-xs font-bold text-[#5C544E] cursor-pointer flex items-center gap-1.5">
-                    <FaUpload className="w-3.5 h-3.5" />
-                    <span>{imageUploadLoading ? 'جار الرفع...' : 'رفع'}</span>
-                    <input type="file" accept="image/*" className="hidden" onChange={handleModalImageUpload} />
-                  </label>
                 </div>
               </div>
 
@@ -601,7 +615,7 @@ export default function TipTapEditor({ value = '', onChange }) {
                   <label className="block text-xs font-semibold text-[#5C544E] mb-1">النص البديل (Alt)</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs"
+                    className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs text-[#14110F] bg-white placeholder-[#8C7F75] focus:border-[#C5A880] focus:outline-none"
                     value={modalData.alt}
                     onChange={(e) => setModalData(prev => ({ ...prev, alt: e.target.value }))}
                   />
@@ -610,7 +624,7 @@ export default function TipTapEditor({ value = '', onChange }) {
                   <label className="block text-xs font-semibold text-[#5C544E] mb-1">عنوان الصورة (Title)</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs"
+                    className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs text-[#14110F] bg-white placeholder-[#8C7F75] focus:border-[#C5A880] focus:outline-none"
                     value={modalData.title}
                     onChange={(e) => setModalData(prev => ({ ...prev, title: e.target.value }))}
                   />
@@ -621,7 +635,7 @@ export default function TipTapEditor({ value = '', onChange }) {
                 <label className="block text-xs font-semibold text-[#5C544E] mb-1">شرح الصورة (Caption)</label>
                 <input
                   type="text"
-                  className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs"
+                  className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs text-[#14110F] bg-white placeholder-[#8C7F75] focus:border-[#C5A880] focus:outline-none"
                   placeholder="وصف اختياري يظهر أسفل الصورة"
                   value={modalData.caption}
                   onChange={(e) => setModalData(prev => ({ ...prev, caption: e.target.value }))}
@@ -632,7 +646,7 @@ export default function TipTapEditor({ value = '', onChange }) {
                 <div>
                   <label className="block text-xs font-semibold text-[#5C544E] mb-1">العرض</label>
                   <select
-                    className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs"
+                    className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs text-[#14110F] bg-white focus:border-[#C5A880] focus:outline-none cursor-pointer"
                     value={modalData.width}
                     onChange={(e) => setModalData(prev => ({ ...prev, width: e.target.value }))}
                   >
@@ -645,7 +659,7 @@ export default function TipTapEditor({ value = '', onChange }) {
                 <div>
                   <label className="block text-xs font-semibold text-[#5C544E] mb-1">المحاذاة</label>
                   <select
-                    className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs"
+                    className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs text-[#14110F] bg-white focus:border-[#C5A880] focus:outline-none cursor-pointer"
                     value={modalData.align}
                     onChange={(e) => setModalData(prev => ({ ...prev, align: e.target.value }))}
                   >
@@ -688,7 +702,7 @@ export default function TipTapEditor({ value = '', onChange }) {
                 <label className="block text-xs font-semibold text-[#5C544E] mb-1">رابط الفيديو</label>
                 <input
                   type="url"
-                  className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-sm"
+                  className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-sm text-[#14110F] bg-white placeholder-[#8C7F75] focus:outline-none focus:border-[#C5A880]"
                   placeholder="https://www.youtube.com/watch?v=..."
                   value={modalData.url}
                   onChange={(e) => setModalData(prev => ({ ...prev, url: e.target.value }))}
@@ -714,6 +728,23 @@ export default function TipTapEditor({ value = '', onChange }) {
           </div>
         </div>
       )}
+
+      {/* Media Picker Modal */}
+      <MediaPickerModal
+        isOpen={isMediaPickerOpen}
+        onClose={() => setIsMediaPickerOpen(false)}
+        onSelect={(mediaItem) => {
+          setModalData(prev => ({
+            ...prev,
+            src: mediaItem.url,
+            alt: prev.alt || mediaItem.alt || mediaItem.name,
+            title: prev.title || mediaItem.title || mediaItem.name
+          }))
+          setIsMediaPickerOpen(false)
+        }}
+        selectedUrl={modalData.src}
+        title="اختر صورة لإدراجها في المقال"
+      />
     </div>
   )
 }

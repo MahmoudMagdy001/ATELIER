@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { productService } from '../services/productService'
 import { adminService } from '../../admin/services/adminService'
 import SEO from '../../../components/ui/SEO'
@@ -11,6 +11,8 @@ export default function Products() {
   const [categories, setCategories] = useState([])
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [loading, setLoading] = useState(true)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const categoryParam = searchParams.get('category')
 
   useEffect(() => {
     async function loadData() {
@@ -30,6 +32,26 @@ export default function Products() {
     loadData()
   }, [])
 
+  useEffect(() => {
+    if (categoryParam && categories.length > 0) {
+      const matched = categories.find((c) => c.slug === categoryParam || c.id === categoryParam)
+      if (matched) {
+        setSelectedCategory(matched.id)
+      }
+    } else if (!categoryParam) {
+      setSelectedCategory('all')
+    }
+  }, [categoryParam, categories])
+
+  const handleCategorySelect = (catId, catSlug) => {
+    setSelectedCategory(catId)
+    if (catId === 'all') {
+      setSearchParams({})
+    } else {
+      setSearchParams({ category: catSlug || catId })
+    }
+  }
+
   const filteredProducts = selectedCategory === 'all'
     ? products
     : products.filter(p => p.category_id === selectedCategory)
@@ -44,7 +66,7 @@ export default function Products() {
   if (loading) return <PageLoading text="جار تحميل تشكيلة الأثاث الفاخر..." />
 
   return (
-    <div className="bg-[#1C1816] text-[#F2EFE8] min-h-screen font-sans pt-20" dir="rtl">
+    <div className="bg-[#1C1816] text-[#F2EFE8] min-h-screen font-sans" dir="rtl">
       <SEO
         title="مجموعة الأثاث الفاخر والتصميم المخصص | ATELIER"
         description="استكشف أرقى تشكيلات الأثاث الإيطالي المصنوع بالطلب من الصالونات وغرف الطعام والمجالس الفاخرة."
@@ -52,16 +74,24 @@ export default function Products() {
       />
 
       {/* Hero Header */}
-      <div className="relative py-16 px-6 border-b border-[#C4A070]/20 bg-gradient-to-b from-[#141110] to-[#1C1816]">
-        <div className="max-w-7xl mx-auto text-center space-y-4">
-          <span className="text-xs tracking-[0.25em] text-[#C4A070] uppercase font-bold">
-            BESPOKE LUXURY COLLECTION
-          </span>
-          <h1 className="text-3xl md:text-5xl font-serif font-bold text-[#F2EFE8]">
-            مجموعة الأثاث والقطع المصممة بالطلب
+      <div className="relative pt-32 pb-16 md:pt-36 md:pb-20 px-6 border-b border-[#C4A070]/20 bg-[#141110] overflow-hidden">
+        {/* Ambient Brand Identity Glow */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(196,160,112,0.15),rgba(20,17,16,0))] pointer-events-none" />
+
+        <div className="relative max-w-4xl mx-auto text-center space-y-6">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#C4A070]/10 border border-[#C4A070]/30 shadow-sm backdrop-blur-md">
+            <FaCouch className="w-3.5 h-3.5 text-[#C4A070]" />
+            <span className="text-xs tracking-[0.25em] text-[#C4A070] uppercase font-bold">
+              BESPOKE LUXURY COLLECTION
+            </span>
+          </div>
+
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-[#F2EFE8] leading-tight tracking-normal">
+            مجموعة الأثاث و<span className="gold-gradient-text">القطع المصممة بالطلب</span>
           </h1>
-          <p className="text-sm md:text-base text-[#B3A9A3] max-w-2xl mx-auto leading-relaxed">
-            قطع استثنائية تصنع يدوياً بأرقى الخامات الطبيعية من خشب الجوز الإيطالي والرخام النادر مع خيارات متعددة للألوان والمقاسات.
+
+          <p className="text-sm sm:text-base md:text-lg text-[#DEDAD6] max-w-2xl mx-auto leading-relaxed md:leading-8 font-light">
+            قطع استثنائية تُصنع يدوياً بأرقى الخامات الطبيعية من خشب الجوز الإيطالي والرخام النادر مع خيارات واسعة ومخصصة للألوان والمقاسات.
           </p>
         </div>
       </div>
@@ -71,7 +101,7 @@ export default function Products() {
         <div className="max-w-7xl mx-auto px-6 pt-10">
           <div className="flex flex-wrap gap-2 justify-center">
             <button
-              onClick={() => setSelectedCategory('all')}
+              onClick={() => handleCategorySelect('all')}
               className={`px-5 py-2.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                 selectedCategory === 'all'
                   ? 'bg-[#C4A070] text-[#1C1816] font-bold shadow-lg shadow-[#C4A070]/20'
@@ -83,7 +113,7 @@ export default function Products() {
             {categories.map((c) => (
               <button
                 key={c.id}
-                onClick={() => setSelectedCategory(c.id)}
+                onClick={() => handleCategorySelect(c.id, c.slug)}
                 className={`px-5 py-2.5 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                   selectedCategory === c.id
                     ? 'bg-[#C4A070] text-[#1C1816] font-bold shadow-lg shadow-[#C4A070]/20'
@@ -146,13 +176,13 @@ export default function Products() {
 
                     <div className="pt-4 border-t border-white/5 flex items-center justify-between">
                       <div>
-                        <span className="text-[10px] text-[#827771] block">السعر</span>
+                        <span className="text-[10px] text-[#827771] block font-medium">السعر</span>
                         {startPrice ? (
-                          <div className="text-sm font-bold text-[#C4A070]">
-                            يبدأ من {startPrice.toLocaleString()} <span className="text-[10px] text-[#B3A9A3]">ر.س</span>
+                          <div className="text-base font-extrabold font-serif text-[#E3CAA9] tracking-wide">
+                            يبدأ من {startPrice.toLocaleString()} <span className="text-xs text-[#C4A070] font-sans font-normal">ر.س</span>
                           </div>
                         ) : (
-                          <span className="text-xs text-[#B3A9A3]">حسب التخصيص</span>
+                          <span className="text-xs text-[#C4A070] font-bold">حسب التخصيص</span>
                         )}
                       </div>
 

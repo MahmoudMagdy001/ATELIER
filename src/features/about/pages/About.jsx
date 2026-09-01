@@ -25,23 +25,31 @@ export default function About() {
   if (loading) return <PageLoading text="جار تحميل بيانات الدار..." />
 
   return (
-    <div className="bg-[#1C1816] text-[#F2EFE8] min-h-screen font-sans pt-20" dir="rtl">
+    <div className="bg-[#1C1816] text-[#F2EFE8] min-h-screen font-sans relative" dir="rtl">
       <SEO
         title={`عن ${settings?.site_name || 'أتيليه للأثاث الفاخر'} | الحرفية والرؤية المعمارية`}
         description={settings?.site_description || 'دار أثاث فاخرة رائدة تجمع بين الحرفية الإيطالية والتصاميم المعمارية المصنوعة بالطلب.'}
         slug="about"
       />
 
-      <div className="max-w-5xl mx-auto px-6 py-12 space-y-16">
+      {/* Top Ambient Glow */}
+      <div className="absolute top-0 inset-x-0 h-96 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(196,160,112,0.15),transparent)] pointer-events-none" />
+
+      <div className="max-w-5xl mx-auto px-6 pt-32 pb-16 md:pt-36 md:pb-20 space-y-16 relative z-10">
         {/* Header */}
-        <div className="text-center max-w-2xl mx-auto space-y-4">
-          <span className="text-xs text-[#C4A070] tracking-[0.25em] font-bold uppercase">
-            THE HOUSE OF BESPOKE ELEGANCE
-          </span>
-          <h1 className="font-serif text-3xl md:text-5xl font-bold text-[#F2EFE8]">
-            {settings?.site_name || 'أتيليه (ATELIER)'}
+        <div className="relative text-center max-w-3xl mx-auto space-y-6 pt-4">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#C4A070]/10 border border-[#C4A070]/30 shadow-sm backdrop-blur-md">
+            <FaBuildingColumns className="w-3.5 h-3.5 text-[#C4A070]" />
+            <span className="text-xs text-[#C4A070] tracking-[0.25em] font-bold uppercase">
+              THE HOUSE OF BESPOKE ELEGANCE
+            </span>
+          </div>
+
+          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#F2EFE8] leading-tight">
+            دار <span className="gold-gradient-text">{settings?.site_name || 'أتيليه (ATELIER)'}</span>
           </h1>
-          <p className="text-xs md:text-sm text-[#B3A9A3] leading-relaxed">
+
+          <p className="text-sm sm:text-base md:text-lg text-[#DEDAD6] leading-relaxed md:leading-8 font-light">
             حيث تلتقي الرؤية المعمارية بالأثاث المصنوع بالطلب لأرقى القصور والفيلات.
           </p>
         </div>
@@ -87,22 +95,26 @@ export default function About() {
             </div>
 
             <div className="flex gap-3">
-              <a
-                href="https://wa.me/966501234567?text=مرحباً%20أتيليه،%20أود%20حجز%20موعد%20استشارة%20معمارية"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-2"
-              >
-                <FaWhatsapp className="w-3.5 h-3.5" />
-                <span>حجز موعد</span>
-              </a>
-              <a
-                href="tel:+966501234567"
-                className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-[#F2EFE8] text-xs font-bold flex items-center gap-2 border border-white/10"
-              >
-                <FaPhone className="w-3.5 h-3.5 text-[#C4A070]" />
-                <span>اتصال</span>
-              </a>
+              {settings?.whatsapp_number && (
+                <a
+                  href={`https://wa.me/${settings.whatsapp_number.replace(/[^0-9]/g, '')}?text=${encodeURIComponent('مرحباً أتيليه، أود حجز موعد استشارة معمارية')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-2"
+                >
+                  <FaWhatsapp className="w-3.5 h-3.5" />
+                  <span>حجز موعد</span>
+                </a>
+              )}
+              {settings?.contact_phone && (
+                <a
+                  href={`tel:${settings.contact_phone.replace(/\s+/g, '')}`}
+                  className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-[#F2EFE8] text-xs font-bold flex items-center gap-2 border border-white/10"
+                >
+                  <FaPhone className="w-3.5 h-3.5 text-[#C4A070]" />
+                  <span>اتصال</span>
+                </a>
+              )}
             </div>
           </div>
         </div>

@@ -40,7 +40,7 @@ export default function Offers() {
   if (loading) return <PageLoading text="جار تحميل العروض الحصرية..." />
 
   return (
-    <div className="bg-[#1C1816] text-[#F2EFE8] min-h-screen font-sans pt-20" dir="rtl">
+    <div className="bg-[#1C1816] text-[#F2EFE8] min-h-screen font-sans" dir="rtl">
       <SEO
         title="العروض والتخفيضات الحصرية للأثاث الفاخر | ATELIER"
         description="استفد من باقات الأثاث المخفضة والخصومات الحصرية لفترة محدودة على أطقم الصالونات وغرف الطعام."
@@ -48,15 +48,23 @@ export default function Offers() {
       />
 
       {/* Hero Header */}
-      <div className="relative py-16 px-6 border-b border-[#C4A070]/20 bg-gradient-to-b from-[#141110] to-[#1C1816]">
-        <div className="max-w-7xl mx-auto text-center space-y-4">
-          <span className="text-xs tracking-[0.25em] text-[#C4A070] uppercase font-bold flex items-center justify-center gap-2">
-            <FaPercent className="w-3 h-3" /> EXCLUSIVE BESPOKE OFFERS
-          </span>
-          <h1 className="text-3xl md:text-5xl font-serif font-bold text-[#F2EFE8]">
-            العروض والباقات الحصرية لفترة محدودة
+      <div className="relative pt-32 pb-16 md:pt-36 md:pb-20 px-6 border-b border-[#C4A070]/20 bg-[#141110] overflow-hidden">
+        {/* Ambient Brand Identity Glow */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(196,160,112,0.15),rgba(20,17,16,0))] pointer-events-none" />
+
+        <div className="relative max-w-4xl mx-auto text-center space-y-6">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#C4A070]/10 border border-[#C4A070]/30 shadow-sm backdrop-blur-md">
+            <FaPercent className="w-3.5 h-3.5 text-[#C4A070]" />
+            <span className="text-xs tracking-[0.25em] text-[#C4A070] uppercase font-bold">
+              EXCLUSIVE BESPOKE OFFERS
+            </span>
+          </div>
+
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-[#F2EFE8] leading-tight tracking-normal">
+            العروض و<span className="gold-gradient-text">الباقات الحصرية</span> لفترة محدودة
           </h1>
-          <p className="text-sm md:text-base text-[#B3A9A3] max-w-2xl mx-auto leading-relaxed">
+
+          <p className="text-sm sm:text-base md:text-lg text-[#DEDAD6] max-w-2xl mx-auto leading-relaxed md:leading-8 font-light">
             فرص استثنائية لاقتناء أفخر قطع الأثاث الإيطالي بأسعار ترويجية وباقات تأثيث متكاملة مع استشارة تصميم مجانية.
           </p>
         </div>
@@ -125,13 +133,13 @@ export default function Offers() {
                       <div>
                         {startPrice ? (
                           <div className="space-y-0.5">
-                            <span className="text-[10px] text-[#827771] block">سعر العرض يبدأ من</span>
+                            <span className="text-[10px] text-[#827771] block font-medium">سعر العرض يبدأ من</span>
                             <div className="flex items-baseline gap-2">
-                              <span className="text-base font-bold text-emerald-400">
-                                {startPrice.toLocaleString()} <span className="text-xs text-[#B3A9A3]">ر.س</span>
+                              <span className="text-lg font-black font-serif text-[#E3CAA9] tracking-wide">
+                                {startPrice.toLocaleString()} <span className="text-xs text-[#C4A070] font-sans font-normal">ر.س</span>
                               </span>
                               {startOrigPrice && startOrigPrice > startPrice && (
-                                <span className="text-xs text-[#827771] line-through">
+                                <span className="text-xs text-[#827771] line-through font-mono">
                                   {startOrigPrice.toLocaleString()} ر.س
                                 </span>
                               )}

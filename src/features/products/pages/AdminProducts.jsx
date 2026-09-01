@@ -20,6 +20,7 @@ import {
 } from 'react-icons/fa6'
 import SEOSection from '../../../components/admin/SEOSection'
 import SEOAnalyzer from '../../../components/admin/SEOAnalyzer'
+import ImagePicker from '../../../components/admin/ImagePicker'
 
 export default function AdminProducts() {
   const {
@@ -223,35 +224,15 @@ export default function AdminProducts() {
             </div>
 
             {/* Main Image Upload */}
-            <div>
-              <label className="block text-xs font-bold text-[#5C544E] mb-1.5">الصورة الرئيسية للمنتج (الغلاف)</label>
-              <div className="flex flex-col sm:flex-row gap-4 items-start">
-                {mainImagePreview && (
-                  <div className="w-36 h-28 rounded-xl overflow-hidden border border-[#E6E1DC] bg-[#FAF8F5] shrink-0">
-                    <img src={mainImagePreview} alt="Preview" className="w-full h-full object-cover" />
-                  </div>
-                )}
-                <div className="flex-1 space-y-2">
-                  <label className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#FAF8F5] border border-[#E6E1DC] hover:bg-[#F3EFEA] text-xs font-bold text-[#5C544E] cursor-pointer">
-                    <FaUpload className="w-3.5 h-3.5" />
-                    <span>اختر ملف صورة رئيسية (ضغط WebP تلقائي)</span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={(e) => setMainImageFile(e.target.files[0])}
-                    />
-                  </label>
-                  <input
-                    type="url"
-                    placeholder="أو أدخل رابط صورة خارجي مباشر..."
-                    className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2 text-xs text-[#14110F]"
-                    value={mainImageUrl}
-                    onChange={(e) => setMainImageUrl(e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
+            <ImagePicker
+              label="الصورة الرئيسية للمنتج (الغلاف)"
+              value={mainImageUrl}
+              onChange={setMainImageUrl}
+              file={mainImageFile}
+              onFileChange={setMainImageFile}
+              hint="صورة بارزة تظهر في واجهة المتجر وتفاصيل المنتج"
+              title="اختر صورة للمنتج من مكتبة الوسائط"
+            />
           </div>
 
           {/* SECTION 2: Dynamic Variants Builder */}
@@ -337,34 +318,14 @@ export default function AdminProducts() {
 
                   {/* Variant Image & SKU */}
                   <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 items-center pt-2 border-t border-[#E6E1DC]/60">
-                    <div className="sm:col-span-2 space-y-1.5">
-                      <label className="block text-xs font-bold text-[#5C544E]">
-                        صورة مخصصة لهذا الخيار (تتغير تلقائياً عند اختيار العميل لهذا اللون/المقاس)
-                      </label>
-                      <div className="flex items-center gap-3">
-                        {v.image && (
-                          <div className="w-12 h-12 rounded-lg overflow-hidden border border-[#E6E1DC] bg-white shrink-0">
-                            <img src={v.image} alt={v.name} className="w-full h-full object-cover" />
-                          </div>
-                        )}
-                        <label className="px-3 py-1.5 bg-white border border-[#E6E1DC] hover:bg-[#FAF8F5] rounded-xl text-xs font-bold text-[#5C544E] cursor-pointer flex items-center gap-1.5">
-                          <FaUpload className="w-3 h-3 text-[#C5A880]" />
-                          <span>رفع صورة الخيار</span>
-                          <input
-                            type="file"
-                            accept="image/*"
-                            className="hidden"
-                            onChange={(e) => handleVariantImageUpload(v.id, e.target.files[0])}
-                          />
-                        </label>
-                        <input
-                          type="url"
-                          placeholder="أو ضع رابط صورة مباشر..."
-                          className="flex-1 rounded-xl border border-[#E6E1DC] bg-white px-3 py-1.5 text-xs text-[#14110F]"
-                          value={v.image || ''}
-                          onChange={(e) => updateVariant(v.id, 'image', e.target.value)}
-                        />
-                      </div>
+                    <div className="sm:col-span-2">
+                      <ImagePicker
+                        compact
+                        label="صورة مخصصة لهذا الخيار (تتغير عند اختيار العميل لهذا اللون/المقاس)"
+                        value={v.image || ''}
+                        onChange={(url) => updateVariant(v.id, 'image', url)}
+                        title={`اختر صورة للخيار: ${v.name || 'خيار المنتج'}`}
+                      />
                     </div>
 
                     <div>

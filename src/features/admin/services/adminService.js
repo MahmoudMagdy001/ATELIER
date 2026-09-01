@@ -127,13 +127,38 @@ export const adminService = {
     let query = supabase
       .from('categories')
       .select('*')
-      .order('created_at', { ascending: false })
+      .order('display_order', { ascending: true })
     if (type) {
       query = query.eq('type', type)
     }
     const { data, error } = await query
     if (error) throw error
     return data || []
+  },
+
+  async uploadCategoryImage(file) {
+    const compressed = await compressImage(file)
+    const fileExt = compressed.name.split('.').pop()
+    const uniqueName = `cat-${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`
+    const filePath = `categories/${uniqueName}`
+
+    const { error: uploadError } = await supabase.storage
+      .from('public-assets')
+      .upload(filePath, compressed)
+
+    if (!uploadError) {
+      const { data } = supabase.storage.from('public-assets').getPublicUrl(filePath)
+      return data.publicUrl
+    }
+
+    const { error: uploadError2 } = await supabase.storage
+      .from('media-assets')
+      .upload(filePath, compressed)
+
+    if (uploadError2) throw uploadError2
+
+    const { data } = supabase.storage.from('media-assets').getPublicUrl(filePath)
+    return data.publicUrl
   },
 
   async insertCategory(categoryData) {
@@ -205,27 +230,29 @@ export const adminService = {
       })
     }
 
+    const newMediaItem = {
+      name: file.name,
+      file_path: filePath,
+      file_url: fileUrl,
+      url: fileUrl,
+      file_size: file.size,
+      file_type: file.type,
+      width,
+      height,
+      alt_text: altText || file.name.split('.')[0],
+      title: title || file.name.split('.')[0],
+      caption,
+      folder,
+    }
+
     const { data, error } = await supabase
       .from('media_library')
-      .insert([
-        {
-          name: file.name,
-          file_path: filePath,
-          file_url: fileUrl,
-          file_size: file.size,
-          file_type: file.type,
-          width,
-          height,
-          alt_text: altText || file.name.split('.')[0],
-          title: title || file.name.split('.')[0],
-          caption,
-          folder,
-        },
-      ])
+      .insert([newMediaItem])
       .select()
       .single()
-
     if (error) throw error
+
+    window.dispatchEvent(new CustomEvent('atelier:media-updated', { detail: { action: 'upload', item: data } }))
     return data
   },
 
@@ -237,6 +264,7 @@ export const adminService = {
       .select()
       .single()
     if (error) throw error
+    window.dispatchEvent(new CustomEvent('atelier:media-updated', { detail: { action: 'update', item: data } }))
     return data
   },
 
@@ -258,6 +286,8 @@ export const adminService = {
       .delete()
       .eq('id', id)
     if (error) throw error
+
+    window.dispatchEvent(new CustomEvent('atelier:media-updated', { detail: { action: 'delete', id } }))
   },
 }
 

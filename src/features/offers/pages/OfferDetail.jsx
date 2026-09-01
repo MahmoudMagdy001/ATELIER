@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { offerService } from '../services/offerService'
+import { adminService } from '../../admin/services/adminService'
 import SEO from '../../../components/ui/SEO'
 import { PageLoading } from '../../../components/ui/Loading'
 import { 
@@ -19,6 +20,7 @@ import {
 export default function OfferDetail() {
   const { slug } = useParams()
   const [offer, setOffer] = useState(null)
+  const [settings, setSettings] = useState(null)
   const [loading, setLoading] = useState(true)
   const [selectedVariant, setSelectedVariant] = useState(null)
   const [activeImage, setActiveImage] = useState('')
@@ -27,14 +29,18 @@ export default function OfferDetail() {
     async function loadOffer() {
       setLoading(true)
       try {
-        const data = await offerService.fetchOfferBySlug(slug)
-        setOffer(data)
-        if (Array.isArray(data?.variants) && data.variants.length > 0) {
-          const first = data.variants[0]
+        const [oData, sData] = await Promise.all([
+          offerService.fetchOfferBySlug(slug),
+          adminService.fetchSettings().catch(() => null)
+        ])
+        setOffer(oData)
+        if (sData) setSettings(sData)
+        if (Array.isArray(oData?.variants) && oData.variants.length > 0) {
+          const first = oData.variants[0]
           setSelectedVariant(first)
-          setActiveImage(first.image || data.cover_image || data.banner_image)
+          setActiveImage(first.image || oData.cover_image || oData.banner_image)
         } else {
-          setActiveImage(data?.cover_image || data?.banner_image || '')
+          setActiveImage(oData?.cover_image || oData?.banner_image || '')
         }
       } catch (err) {
         console.warn('Failed to load offer:', err.message)
@@ -72,17 +78,18 @@ export default function OfferDetail() {
   const originalPrice = Number(selectedVariant?.original_price) || 0
   const savings = originalPrice > currentPrice ? originalPrice - currentPrice : 0
 
-  const whatsappNumber = '966501234567'
+  const rawWhatsapp = (settings?.whatsapp_number || settings?.contact_whatsapp || '966501234567').replace(/[^0-9]/g, '')
   const whatsappMessage = encodeURIComponent(
     `مرحباً أتيليه، أرغب في حجز والاستفادة من العرض الحصري: "${offer.title}"` +
     (selectedVariant ? `\nالخيار المختار: ${selectedVariant.name}\nسعر العرض: ${currentPrice.toLocaleString()} ر.س` : '') +
     (offer.discount_label ? `\nكود/شارة الخصم: ${offer.discount_label}` : '') +
     `\nالرابط: ${typeof window !== 'undefined' ? window.location.href : ''}`
   )
-  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`
+  const whatsappUrl = `https://wa.me/${rawWhatsapp}?text=${whatsappMessage}`
+  const contactPhone = settings?.contact_phone || '+966501234567'
 
   return (
-    <div className="bg-[#1C1816] text-[#F2EFE8] min-h-screen font-sans pt-20" dir="rtl">
+    <div className="bg-[#1C1816] text-[#F2EFE8] min-h-screen font-sans pt-28 md:pt-32" dir="rtl">
       <SEO
         title={offer.meta_title || `${offer.title} | تخفيضات ATELIER`}
         description={offer.meta_description || offer.description}
@@ -178,19 +185,19 @@ export default function OfferDetail() {
             <div className="p-4 rounded-2xl bg-[#1C1816] border border-[#C4A070]/30 space-y-2">
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] text-[#827771] block">سعر العرض للخيار المحدد</span>
+                  <span className="text-[10px] text-[#827771] block font-medium">سعر العرض للخيار المحدد</span>
                   <div className="flex items-baseline gap-2">
-                    <span className="text-2xl font-serif font-bold text-emerald-400">
+                    <span className="text-2xl md:text-3xl font-serif font-black text-[#E3CAA9] tracking-wide">
                       {currentPrice > 0 ? (
                         <>
-                          {currentPrice.toLocaleString()} <span className="text-xs text-[#B3A9A3] font-sans">ر.س</span>
+                          {currentPrice.toLocaleString()} <span className="text-sm text-[#C4A070] font-sans font-normal">ر.س</span>
                         </>
                       ) : (
                         <span className="text-base text-[#B3A9A3]">حسب الباقة</span>
                       )}
                     </span>
                     {originalPrice > currentPrice && (
-                      <span className="text-sm text-[#827771] line-through">
+                      <span className="text-sm text-[#827771] line-through font-mono">
                         {originalPrice.toLocaleString()} ر.س
                       </span>
                     )}
@@ -198,7 +205,7 @@ export default function OfferDetail() {
                 </div>
 
                 {savings > 0 && (
-                  <span className="px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                  <span className="px-3.5 py-1.5 rounded-full text-xs font-black bg-[#C4A070]/20 text-[#F0DEC8] border border-[#C4A070]/40 shadow-md">
                     وفر {savings.toLocaleString()} ر.س
                   </span>
                 )}
@@ -248,11 +255,11 @@ export default function OfferDetail() {
                         </div>
 
                         <div className="text-left">
-                          <span className="text-xs font-bold text-emerald-400 block">
-                            {vPrice.toLocaleString()} ر.س
+                          <span className="text-sm font-black font-serif text-[#E3CAA9] block">
+                            {vPrice.toLocaleString()} <span className="text-[10px] text-[#C4A070] font-sans font-normal">ر.س</span>
                           </span>
                           {vOrig > vPrice && (
-                            <span className="text-[10px] text-[#827771] line-through block">
+                            <span className="text-[10px] text-[#827771] line-through block font-mono">
                               {vOrig.toLocaleString()} ر.س
                             </span>
                           )}
@@ -277,7 +284,7 @@ export default function OfferDetail() {
               </a>
 
               <a
-                href="tel:+966501234567"
+                href={`tel:${contactPhone.replace(/\s+/g, '')}`}
                 className="w-full py-3 rounded-2xl bg-white/5 hover:bg-white/10 text-[#F2EFE8] border border-white/10 font-semibold text-xs flex items-center justify-center gap-2 transition-all"
               >
                 <FaPhone className="w-3.5 h-3.5 text-[#C4A070]" />

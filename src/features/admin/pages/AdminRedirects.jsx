@@ -192,7 +192,7 @@ export default function AdminRedirects() {
               <input
                 type="text"
                 required
-                className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs font-mono"
+                className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs font-mono text-[#14110F] bg-white placeholder-[#8C7F75] focus:border-[#C5A880] focus:outline-none"
                 placeholder="/old-luxury-villa-offer"
                 value={sourcePath}
                 onChange={(e) => setSourcePath(e.target.value)}
@@ -204,7 +204,7 @@ export default function AdminRedirects() {
               <input
                 type="text"
                 required
-                className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs font-mono"
+                className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs font-mono text-[#14110F] bg-white placeholder-[#8C7F75] focus:border-[#C5A880] focus:outline-none"
                 placeholder="/offers/exclusive-villa-design-consultation"
                 value={targetPath}
                 onChange={(e) => setTargetPath(e.target.value)}
@@ -214,7 +214,7 @@ export default function AdminRedirects() {
             <div>
               <label className="block text-xs font-semibold text-[#5C544E] mb-1">نوع كود التحويل (Status Code)</label>
               <select
-                className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs"
+                className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs text-[#14110F] bg-white focus:border-[#C5A880] focus:outline-none"
                 value={statusCode}
                 onChange={(e) => setStatusCode(e.target.value)}
               >

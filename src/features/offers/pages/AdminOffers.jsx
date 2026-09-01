@@ -15,10 +15,13 @@ import {
   FaCouch, 
   FaPercent,
   FaArrowDownLong,
-  FaCalendarDays
+  FaCalendarDays,
+  FaCircleExclamation,
+  FaClockRotateLeft
 } from 'react-icons/fa6'
 import SEOSection from '../../../components/admin/SEOSection'
 import SEOAnalyzer from '../../../components/admin/SEOAnalyzer'
+import ImagePicker from '../../../components/admin/ImagePicker'
 
 export default function AdminOffers() {
   const {
@@ -111,6 +114,18 @@ export default function AdminOffers() {
     return `${min.toLocaleString()} - ${max.toLocaleString()} ر.س`
   }
 
+  const isOfferExpired = (dateStr) => {
+    if (!dateStr) return false
+    const today = new Date().toISOString().split('T')[0]
+    return dateStr < today
+  }
+
+  const setExpiryDays = (days) => {
+    const d = new Date()
+    d.setDate(d.getDate() + days)
+    setValidUntil(d.toISOString().split('T')[0])
+  }
+
   if (loading && !isEditing) return <PageLoading text="جار تحميل العروض الترويجية..." />
 
   return (
@@ -201,13 +216,48 @@ export default function AdminOffers() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[#5C544E] mb-1.5">تاريخ انتهاء صلاحية العرض</label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-xs font-bold text-[#5C544E]">تاريخ انتهاء صلاحية العرض</label>
+                  <div className="flex items-center gap-1.5 text-[10px]">
+                    <button
+                      type="button"
+                      onClick={() => setExpiryDays(30)}
+                      className="px-2 py-0.5 rounded bg-[#FAF8F5] border border-[#E6E1DC] hover:bg-[#C5A880] hover:text-white transition-colors"
+                    >
+                      +30 يوم
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setExpiryDays(60)}
+                      className="px-2 py-0.5 rounded bg-[#FAF8F5] border border-[#E6E1DC] hover:bg-[#C5A880] hover:text-white transition-colors"
+                    >
+                      +60 يوم
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setValidUntil('')}
+                      className="px-2 py-0.5 rounded bg-[#FAF8F5] border border-[#E6E1DC] hover:bg-[#C5A880] hover:text-white transition-colors"
+                    >
+                      دائم
+                    </button>
+                  </div>
+                </div>
                 <input
                   type="date"
-                  className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+                  className={`w-full rounded-xl border px-4 py-2.5 text-sm text-[#14110F] focus:outline-none ${
+                    validUntil && isOfferExpired(validUntil)
+                      ? 'border-rose-300 bg-rose-50/50 focus:border-rose-500'
+                      : 'border-[#E6E1DC] focus:border-[#C5A880]'
+                  }`}
                   value={validUntil}
                   onChange={(e) => setValidUntil(e.target.value)}
                 />
+                {validUntil && isOfferExpired(validUntil) && (
+                  <div className="mt-1.5 p-2 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-[11px] flex items-start gap-1.5">
+                    <FaCircleExclamation className="w-3.5 h-3.5 text-rose-600 shrink-0 mt-0.5" />
+                    <span>تنبيه: هذا التاريخ في الماضي (منتهي)، لذلك لن يظهر العرض في الموقع للعملاء حتى تمديده أو إزالته ليصبح دائماً.</span>
+                  </div>
+                )}
               </div>
 
               <div>
@@ -247,35 +297,15 @@ export default function AdminOffers() {
             </div>
 
             {/* Cover Image Upload */}
-            <div>
-              <label className="block text-xs font-bold text-[#5C544E] mb-1.5">صورة / بانر العرض</label>
-              <div className="flex flex-col sm:flex-row gap-4 items-start">
-                {imagePreview && (
-                  <div className="w-36 h-28 rounded-xl overflow-hidden border border-[#E6E1DC] bg-[#FAF8F5] shrink-0">
-                    <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
-                  </div>
-                )}
-                <div className="flex-1 space-y-2">
-                  <label className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#FAF8F5] border border-[#E6E1DC] hover:bg-[#F3EFEA] text-xs font-bold text-[#5C544E] cursor-pointer">
-                    <FaUpload className="w-3.5 h-3.5" />
-                    <span>اختر ملف صورة للعرض (WebP تلقائي)</span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={(e) => setImageFile(e.target.files[0])}
-                    />
-                  </label>
-                  <input
-                    type="url"
-                    placeholder="أو أدخل رابط صورة مباشر..."
-                    className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2 text-xs text-[#14110F]"
-                    value={imageUrl}
-                    onChange={(e) => setImageUrl(e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
+            <ImagePicker
+              label="صورة / بانر العرض"
+              value={imageUrl}
+              onChange={setImageUrl}
+              file={imageFile}
+              onFileChange={setImageFile}
+              hint="بانر تسويقي جذاب يبرز خصومات ومزايا العرض الحصري"
+              title="اختر صورة للعرض من مكتبة الوسائط"
+            />
           </div>
 
           {/* SECTION 2: Dynamic Offer Variants Builder */}
@@ -413,34 +443,14 @@ export default function AdminOffers() {
 
                   {/* Variant Image & SKU */}
                   <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 items-center pt-2 border-t border-[#E6E1DC]/60">
-                    <div className="sm:col-span-2 space-y-1.5">
-                      <label className="block text-xs font-bold text-[#5C544E]">
-                        صورة مخصصة لهذا الخيار
-                      </label>
-                      <div className="flex items-center gap-3">
-                        {v.image && (
-                          <div className="w-12 h-12 rounded-lg overflow-hidden border border-[#E6E1DC] bg-white shrink-0">
-                            <img src={v.image} alt={v.name} className="w-full h-full object-cover" />
-                          </div>
-                        )}
-                        <label className="px-3 py-1.5 bg-white border border-[#E6E1DC] hover:bg-[#FAF8F5] rounded-xl text-xs font-bold text-[#5C544E] cursor-pointer flex items-center gap-1.5">
-                          <FaUpload className="w-3 h-3 text-[#C5A880]" />
-                          <span>رفع صورة الخيار</span>
-                          <input
-                            type="file"
-                            accept="image/*"
-                            className="hidden"
-                            onChange={(e) => handleVariantImageUpload(v.id, e.target.files[0])}
-                          />
-                        </label>
-                        <input
-                          type="url"
-                          placeholder="أو ضع رابط صورة مباشر..."
-                          className="flex-1 rounded-xl border border-[#E6E1DC] bg-white px-3 py-1.5 text-xs text-[#14110F]"
-                          value={v.image || ''}
-                          onChange={(e) => updateVariant(v.id, 'image', e.target.value)}
-                        />
-                      </div>
+                    <div className="sm:col-span-2">
+                      <ImagePicker
+                        compact
+                        label="صورة مخصصة لهذا الخيار"
+                        value={v.image || ''}
+                        onChange={(url) => updateVariant(v.id, 'image', url)}
+                        title={`اختر صورة لخيار العرض: ${v.name || 'خيار العرض'}`}
+                      />
                     </div>
 
                     <div>
@@ -561,15 +571,31 @@ export default function AdminOffers() {
                           {Array.isArray(off.variants) ? off.variants.length : 0} خيارات / Variants
                         </span>
 
-                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                          off.status === 'published' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
-                        }`}>
-                          {off.status === 'published' ? 'نشط' : 'مسودة'}
-                        </span>
+                        {off.status === 'published' ? (
+                          isOfferExpired(off.valid_until) ? (
+                            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200 flex items-center gap-1">
+                              <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
+                              <span>منتهي (مخفي من الموقع)</span>
+                            </span>
+                          ) : (
+                            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1">
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                              <span>نشط وساري في الموقع</span>
+                            </span>
+                          )
+                        ) : (
+                          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                            مسودة
+                          </span>
+                        )}
 
                         {off.valid_until && (
-                          <span className="text-[10px] text-[#8C7F75] flex items-center gap-1">
-                            <FaCalendarDays className="w-2.5 h-2.5 text-[#C5A880]" /> ينتهي: {off.valid_until}
+                          <span className={`text-[10px] flex items-center gap-1 font-mono ${
+                            isOfferExpired(off.valid_until) ? 'text-rose-600 font-bold' : 'text-[#8C7F75]'
+                          }`}>
+                            <FaCalendarDays className="w-2.5 h-2.5 text-[#C5A880]" />
+                            <span>ينتهي: {off.valid_until}</span>
+                            {isOfferExpired(off.valid_until) && <span>(انتهى)</span>}
                           </span>
                         )}
                       </div>

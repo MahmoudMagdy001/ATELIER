@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { FaChevronDown, FaChevronUp, FaMagnifyingGlass, FaCircleInfo } from 'react-icons/fa6'
+import ImagePicker from './ImagePicker'
 
 export default function SEOSection({
   metaTitle,
@@ -194,13 +195,13 @@ export default function SEOSection({
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-[#5C544E] mb-1">رابط صورة المشاركة (OG Image)</label>
-                <input
-                  type="text"
-                  className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2 text-xs text-[#14110F]"
-                  placeholder="رابط صورة مخصصة تظهر عند مشاركة الرابط"
+                <ImagePicker
+                  compact
+                  label="رابط صورة المشاركة (OG Image)"
                   value={ogImage}
-                  onChange={(e) => setOgImage(e.target.value)}
+                  onChange={setOgImage}
+                  placeholder="رابط صورة مخصصة تظهر عند مشاركة الرابط"
+                  title="اختر صورة لمشاركتها على شبكات التواصل"
                 />
               </div>
             </div>

@@ -74,7 +74,7 @@ export default function AdminPostPreview() {
         )}
 
         <div 
-          className="article-content pt-4 border-t border-[#E6E1DC]"
+          className="article-content article-theme-light pt-4 border-t border-[#E6E1DC]"
           dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content || '') }}
         />
       </article>

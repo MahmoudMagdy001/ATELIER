@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { productService } from '../services/productService'
+import { adminService } from '../../admin/services/adminService'
 import SEO from '../../../components/ui/SEO'
 import { PageLoading } from '../../../components/ui/Loading'
 import { 
@@ -18,6 +19,7 @@ import {
 export default function ProductDetail() {
   const { slug } = useParams()
   const [product, setProduct] = useState(null)
+  const [settings, setSettings] = useState(null)
   const [loading, setLoading] = useState(true)
   const [selectedVariant, setSelectedVariant] = useState(null)
   const [activeImage, setActiveImage] = useState('')
@@ -26,14 +28,18 @@ export default function ProductDetail() {
     async function loadProduct() {
       setLoading(true)
       try {
-        const data = await productService.fetchProductBySlug(slug)
-        setProduct(data)
-        if (Array.isArray(data?.variants) && data.variants.length > 0) {
-          const first = data.variants[0]
+        const [pData, sData] = await Promise.all([
+          productService.fetchProductBySlug(slug),
+          adminService.fetchSettings().catch(() => null)
+        ])
+        setProduct(pData)
+        if (sData) setSettings(sData)
+        if (Array.isArray(pData?.variants) && pData.variants.length > 0) {
+          const first = pData.variants[0]
           setSelectedVariant(first)
-          setActiveImage(first.image || data.main_image)
+          setActiveImage(first.image || pData.main_image)
         } else {
-          setActiveImage(data?.main_image || '')
+          setActiveImage(pData?.main_image || '')
         }
       } catch (err) {
         console.warn('Failed to load product:', err.message)
@@ -68,16 +74,17 @@ export default function ProductDetail() {
   }
 
   const currentPrice = selectedVariant?.price || 0
-  const whatsappNumber = '966501234567'
+  const rawWhatsapp = (settings?.whatsapp_number || settings?.contact_whatsapp || '966501234567').replace(/[^0-9]/g, '')
   const whatsappMessage = encodeURIComponent(
     `مرحباً أتيليه، أود الاستفسار وحجز القطعة الفاخرة: "${product.title}"` +
-    (selectedVariant ? `\nالخيار المحدد: ${selectedVariant.name}\nالسعر: ${currentPrice.toLocaleString()} ر.س` : '') +
+    (selectedVariant ? `\nالخيار المحدد: ${selectedVariant.name}\nالسعر: ${Number(currentPrice).toLocaleString()} ر.س` : '') +
     `\nالرابط: ${typeof window !== 'undefined' ? window.location.href : ''}`
   )
-  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`
+  const whatsappUrl = `https://wa.me/${rawWhatsapp}?text=${whatsappMessage}`
+  const contactPhone = settings?.contact_phone || '+966501234567'
 
   return (
-    <div className="bg-[#1C1816] text-[#F2EFE8] min-h-screen font-sans pt-20" dir="rtl">
+    <div className="bg-[#1C1816] text-[#F2EFE8] min-h-screen font-sans pt-28 md:pt-32" dir="rtl">
       <SEO
         title={product.meta_title || `${product.title} | ATELIER`}
         description={product.meta_description || product.description}
@@ -164,18 +171,18 @@ export default function ProductDetail() {
             {/* Dynamic Active Price */}
             <div className="p-4 rounded-2xl bg-[#1C1816] border border-[#C4A070]/30 flex items-center justify-between">
               <div>
-                <span className="text-[10px] text-[#827771] block">السعر للخيارات المحددة</span>
-                <div className="text-2xl font-serif font-bold text-[#C4A070]">
+                <span className="text-[10px] text-[#827771] block font-medium">السعر للخيارات المحددة</span>
+                <div className="text-2xl font-serif font-black text-[#E3CAA9] tracking-wide">
                   {currentPrice > 0 ? (
                     <>
-                      {Number(currentPrice).toLocaleString()} <span className="text-sm text-[#B3A9A3] font-sans">ر.س</span>
+                      {Number(currentPrice).toLocaleString()} <span className="text-sm text-[#C4A070] font-sans font-normal">ر.س</span>
                     </>
                   ) : (
                     <span className="text-base text-[#B3A9A3]">حسب التخصيص والمقاس</span>
                   )}
                 </div>
               </div>
-              <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-[#C4A070]/15 text-[#E3CAA9] border border-[#C4A070]/30">
                 شامل التصنيع والضمان
               </span>
             </div>
@@ -219,9 +226,11 @@ export default function ProductDetail() {
                           </div>
                         </div>
 
-                        <span className="text-xs font-bold text-[#C4A070]">
-                          {Number(variant.price).toLocaleString()} ر.س
-                        </span>
+                        <div className="text-left">
+                          <span className="text-sm font-black font-serif text-[#E3CAA9] block">
+                            {Number(variant.price).toLocaleString()} <span className="text-[10px] text-[#C4A070] font-sans font-normal">ر.س</span>
+                          </span>
+                        </div>
                       </button>
                     )
                   })}
@@ -242,7 +251,7 @@ export default function ProductDetail() {
               </a>
 
               <a
-                href="tel:+966501234567"
+                href={`tel:${contactPhone.replace(/\s+/g, '')}`}
                 className="w-full py-3 rounded-2xl bg-white/5 hover:bg-white/10 text-[#F2EFE8] border border-white/10 font-semibold text-xs flex items-center justify-center gap-2 transition-all"
               >
                 <FaPhone className="w-3.5 h-3.5 text-[#C4A070]" />

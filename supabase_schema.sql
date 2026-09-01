@@ -120,12 +120,16 @@ CREATE TABLE IF NOT EXISTS public.categories (
   name TEXT NOT NULL,
   slug TEXT UNIQUE NOT NULL,
   description TEXT,
+  image_url TEXT,
   type TEXT DEFAULT 'products',
   display_order INTEGER DEFAULT 0,
   meta_title TEXT,
   meta_description TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Ensure image_url column exists for existing setups
+ALTER TABLE public.categories ADD COLUMN IF NOT EXISTS image_url TEXT;
 
 -- =========================================================================
 -- 5. REDIRECTS TABLE (إدارة التحويلات 301 و 302 للسيو)

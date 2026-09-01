@@ -91,7 +91,7 @@ export default function AdminLayout() {
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 p-6 md:p-10 overflow-y-auto overflow-x-hidden bg-[#FAF8F5]">
+      <main className="flex-1 p-6 md:p-10 overflow-y-auto overflow-x-hidden bg-[#FAF8F5] text-[#14110F]">
         <Outlet />
       </main>
     </div>

@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../../../lib/supabase'
 import Button from '../../../components/ui/Button'
-import { FaCrown, FaLock, FaEnvelope } from 'react-icons/fa6'
+import logoImg from '../../../assets/logo.png'
+import { FaLock, FaEnvelope } from 'react-icons/fa6'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -67,8 +68,8 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center bg-[#FAF8F5] py-12 px-4 sm:px-6 lg:px-8 font-sans" dir="rtl">
       <div className="max-w-md w-full space-y-8 bg-white p-8 sm:p-10 rounded-3xl border border-[#E6E1DC] shadow-xl">
         <div className="text-center">
-          <div className="mx-auto w-16 h-16 rounded-2xl bg-[#14110F] flex items-center justify-center text-[#C5A880] shadow-lg shadow-[#C5A880]/20 mb-4">
-            <FaCrown className="w-8 h-8" />
+          <div className="mx-auto w-20 h-20 rounded-2xl bg-[#14110F] flex items-center justify-center p-3 shadow-lg shadow-[#C5A880]/20 mb-4 border border-[#C4A070]/30">
+            <img src={logoImg} alt="ATELIER Logo" className="w-full h-full object-contain" />
           </div>
           <h2 className="text-2xl font-bold text-[#14110F]">
             تسجيل الدخول للوحة التحكم

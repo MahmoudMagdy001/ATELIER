@@ -6,6 +6,7 @@ import { useAdminPosts } from '../hooks/useAdminPosts'
 import { FaPen, FaTrash, FaPlus, FaUpload, FaEye, FaFloppyDisk, FaNewspaper } from 'react-icons/fa6'
 import SEOSection from '../../../components/admin/SEOSection'
 import SEOAnalyzer from '../../../components/admin/SEOAnalyzer'
+import ImagePicker from '../../../components/admin/ImagePicker'
 import TipTapEditor from '../components/TipTapEditor'
 import DOMPurify from 'dompurify'
 import '../../../styles/article.css'
@@ -197,35 +198,15 @@ export default function AdminPosts() {
             </div>
 
             {/* Cover Image Upload */}
-            <div>
-              <label className="block text-xs font-bold text-[#5C544E] mb-1.5">صورة الغلاف البارزة</label>
-              <div className="flex flex-col sm:flex-row gap-4 items-start">
-                {imagePreview && (
-                  <div className="w-36 h-24 rounded-xl overflow-hidden border border-[#E6E1DC] bg-[#FAF8F5] shrink-0">
-                    <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
-                  </div>
-                )}
-                <div className="flex-1 space-y-2">
-                  <label className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#FAF8F5] border border-[#E6E1DC] hover:bg-[#F3EFEA] text-xs font-bold text-[#5C544E] cursor-pointer">
-                    <FaUpload className="w-3.5 h-3.5" />
-                    <span>اختر ملف صورة للغلاف (ضغط WebP تلقائي)</span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={(e) => setImageFile(e.target.files[0])}
-                    />
-                  </label>
-                  <input
-                    type="url"
-                    placeholder="أو أدخل رابط صورة خارجي مباشر..."
-                    className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2 text-xs text-[#14110F]"
-                    value={imageUrl}
-                    onChange={(e) => setImageUrl(e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
+            <ImagePicker
+              label="صورة الغلاف البارزة"
+              value={imageUrl}
+              onChange={setImageUrl}
+              file={imageFile}
+              onFileChange={setImageFile}
+              hint="صورة عالية الجودة تظهر في بطاقة المقال والواجهة الرئيسية"
+              title="اختر صورة للغلاف من مكتبة الوسائط"
+            />
           </div>
 
           {/* TipTap Rich Content Editor */}

@@ -4,6 +4,7 @@ import { useHomeData } from '../hooks/useHomeData'
 import SEO from '../../../components/ui/SEO'
 import { PageLoading } from '../../../components/ui/Loading'
 import { AtelierMonogram } from '../../../components/ui/BrandLogo'
+import LuxuryStatsSection from '../components/LuxuryStatsSection'
 import heroBannerImg from '../../../assets/hero-banner.jpg'
 import { 
   FaArrowLeft, 
@@ -11,12 +12,10 @@ import {
   FaCouch, 
   FaTag, 
   FaBookOpen, 
-  FaWhatsapp, 
   FaLayerGroup, 
   FaCalendarDays, 
   FaShieldHalved, 
-  FaTruckFast,
-  FaPhone
+  FaTruckFast
 } from 'react-icons/fa6'
 
 export default function Home() {
@@ -67,35 +66,72 @@ export default function Home() {
           <p className="text-sm sm:text-base text-[#D6CDC4] max-w-2xl mx-auto leading-relaxed drop-shadow-md">
             {settings?.site_description || 'نبتكر قطع أثاث فريدة وتصاميم داخلية استثنائية تعكس الفخامة المطلقة للقصور والمساحات الراقية بأيدي أمهر الحرفيين الإيطاليين والعالميين.'}
           </p>
-
-          {/* CTAs */}
-          <div className="flex flex-wrap items-center justify-center gap-4 pt-3">
-            <Link to="/products" className="gold-btn-primary px-8 py-3.5 rounded-xl text-sm font-bold flex items-center gap-2.5 shadow-2xl">
-              <span>استكشف مجموعة الأثاث</span>
-              <FaArrowLeft className="w-3.5 h-3.5" />
-            </Link>
-            <Link to="/offers" className="px-8 py-3.5 rounded-xl text-sm font-bold border border-[#C4A070]/50 bg-black/40 backdrop-blur-md text-[#F2EFE8] hover:bg-[#C4A070] hover:text-[#1C1816] transition-all">
-              العروض الحصرية
-            </Link>
-          </div>
         </div>
       </section>
 
 
 
-      {/* 3. CATEGORIES RIBBON */}
+      {/* 3. LUXURY CATEGORIES SHOWCASE SECTION */}
       {categories.length > 0 && (
-        <section className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            {categories.map((cat) => (
-              <Link
-                key={cat.id}
-                to={`/products?category=${cat.slug}`}
-                className="px-5 py-2.5 rounded-2xl bg-[#141110] border border-[#C4A070]/20 text-xs font-semibold text-[#D6CDC4] hover:text-[#C4A070] hover:border-[#C4A070] transition-all cursor-pointer shadow-md"
-              >
-                {cat.name}
-              </Link>
-            ))}
+        <section className="max-w-7xl mx-auto px-6 space-y-10">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#C4A070]/20 pb-6">
+            <div className="space-y-2">
+              <span className="text-xs text-[#C4A070] tracking-widest uppercase font-bold flex items-center gap-2">
+                <FaLayerGroup className="w-3.5 h-3.5" /> عوالم وتصاميم الأثاث
+              </span>
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#F2EFE8]">
+                التصنيفات والتشكيلات الحصرية
+              </h2>
+            </div>
+            <Link to="/products" className="text-xs font-bold text-[#C4A070] hover:text-[#E5C9A3] flex items-center gap-1.5 group">
+              <span>استعراض كافة الأقسام</span>
+              <FaArrowLeft className="w-3 h-3 group-hover:translate-x-[-4px] transition-transform" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {categories.map((cat) => {
+              const catImage = cat.image_url
+
+              return (
+                <Link
+                  key={cat.id}
+                  to={`/products?category=${cat.slug || cat.id}`}
+                  className="group relative rounded-3xl overflow-hidden aspect-[4/5] bg-[#141110] border border-[#C4A070]/20 hover:border-[#C4A070] transition-all duration-500 flex flex-col justify-end p-6 shadow-2xl hover:-translate-y-1.5 hover:shadow-[#C4A070]/15"
+                >
+                  {/* Background Image Layer with Zoom */}
+                  <div className="absolute inset-0 z-0 overflow-hidden">
+                    {catImage ? (
+                      <img
+                        src={catImage}
+                        alt={cat.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 brightness-[0.85] group-hover:brightness-95"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-[#1C1816] to-[#141110] flex items-center justify-center">
+                        <FaLayerGroup className="w-12 h-12 text-[#C4A070]/20" />
+                      </div>
+                    )}
+                    {/* Gradients */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#141110] via-[#141110]/55 to-black/25"></div>
+                    <div className="absolute inset-0 bg-[#1C1816]/20 backdrop-blur-[0.5px]"></div>
+                  </div>
+
+                  {/* Bottom Content */}
+                  <div className="relative z-10 space-y-1.5">
+                    <h3 className="font-serif text-xl font-bold text-[#F2EFE8] group-hover:text-[#C4A070] transition-colors leading-snug">
+                      {cat.name}
+                    </h3>
+                    {cat.description && (
+                      <p className="text-xs text-[#D6CDC4]/80 line-clamp-2 leading-relaxed font-light">
+                        {cat.description}
+                      </p>
+                    )}
+                  </div>
+                </Link>
+              )
+            })}
           </div>
         </section>
       )}
@@ -159,13 +195,13 @@ export default function Home() {
 
                     <div className="pt-4 border-t border-white/5 flex items-center justify-between">
                       <div>
-                        <span className="text-[10px] text-[#827771] block">السعر</span>
+                        <span className="text-[10px] text-[#827771] block font-medium">السعر</span>
                         {startPrice ? (
-                          <div className="text-sm font-bold text-[#C4A070]">
-                            يبدأ من {startPrice.toLocaleString()} <span className="text-[10px] text-[#B3A9A3]">ر.س</span>
+                          <div className="text-base font-extrabold font-serif text-[#E3CAA9] tracking-wide">
+                            يبدأ من {startPrice.toLocaleString()} <span className="text-xs text-[#C4A070] font-sans font-normal">ر.س</span>
                           </div>
                         ) : (
-                          <span className="text-xs text-[#B3A9A3]">حسب التخصيص</span>
+                          <span className="text-xs text-[#C4A070] font-bold">حسب التخصيص</span>
                         )}
                       </div>
 
@@ -236,8 +272,8 @@ export default function Home() {
                     <div className="pt-4 border-t border-white/5 flex items-center justify-between">
                       <div>
                         {startPrice ? (
-                          <div className="text-sm font-bold text-emerald-400">
-                            سعر العرض يبدأ من {startPrice.toLocaleString()} <span className="text-[10px] text-[#B3A9A3]">ر.س</span>
+                          <div className="text-base font-extrabold font-serif text-[#E3CAA9] tracking-wide">
+                            سعر العرض يبدأ من {startPrice.toLocaleString()} <span className="text-xs text-[#C4A070] font-sans font-normal">ر.س</span>
                           </div>
                         ) : (
                           <span className="text-xs text-[#C4A070] font-bold">باقة خاصة</span>
@@ -294,7 +330,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 7. LATEST ARCHITECTURAL BLOG POSTS */}
+      {/* 7. LUXURY STATS & ACHIEVEMENTS SECTION (Full-width edge-to-edge, matching title padding) */}
+      <LuxuryStatsSection />
+
+      {/* 8. LATEST ARCHITECTURAL BLOG POSTS */}
       {posts.length > 0 && (
         <section className="max-w-7xl mx-auto px-6 space-y-12">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#C4A070]/20 pb-6">
@@ -357,42 +396,6 @@ export default function Home() {
           </div>
         </section>
       )}
-
-      {/* 8. VIP BESPOKE CONSULTATION CTA */}
-      <section className="max-w-7xl mx-auto px-6">
-        <div className="rounded-3xl bg-gradient-to-r from-[#7A5D2B] via-[#C4A070] to-[#E5C9A3] p-10 md:p-16 text-[#1C1816] shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="space-y-3 text-center md:text-right max-w-xl">
-            <span className="text-xs tracking-widest font-extrabold uppercase bg-black/10 px-3 py-1 rounded-full inline-block">
-              VIP BESPOKE SERVICE
-            </span>
-            <h3 className="text-2xl md:text-4xl font-serif font-bold leading-tight">
-              هل تبحث عن تأثيث مخصص لقصرك أو فيلتك؟
-            </h3>
-            <p className="text-xs md:text-sm font-medium text-[#2B2623] leading-relaxed">
-              تواصل مباشرة مع فريق كبار المصممين المعماريين لحجز جلسة استشارية ومعاينة خامات الأخشاب والرخام الطبيعي.
-            </p>
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-3 shrink-0">
-            <a
-              href="https://wa.me/966501234567?text=مرحباً%20أتيليه،%20أرغب%20في%20حجز%20جلسة%20استشارة%20معمارية%20وتأثيث%20مخصص"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-8 py-4 rounded-2xl bg-[#1C1816] text-[#F2EFE8] font-bold text-xs flex items-center justify-center gap-2.5 shadow-xl hover:bg-black transition-all cursor-pointer"
-            >
-              <FaWhatsapp className="w-4 h-4 text-emerald-400" />
-              <span>استشارة فورية عبر واتساب</span>
-            </a>
-            <a
-              href="tel:+966501234567"
-              className="px-6 py-4 rounded-2xl bg-white/30 backdrop-blur-md text-[#1C1816] font-bold text-xs flex items-center justify-center gap-2 border border-black/10 hover:bg-white/40 transition-all"
-            >
-              <FaPhone className="w-3.5 h-3.5" />
-              <span>اتصال مباشر</span>
-            </a>
-          </div>
-        </div>
-      </section>
 
     </div>
   )

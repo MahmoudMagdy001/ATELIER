@@ -29,13 +29,44 @@
   --color-gold-100: #f9f1e7;
   --color-gold-50: #fdfaf5;
 
-  --font-serif: "Cinzel", "Playfair Display", "Cormorant Garamond", Georgia, serif;
-  --font-sans: "Cairo", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Cinzel", "Cormorant Garamond", "El Messiri", Georgia, serif;
+  --font-sans: "Alexandria", "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-editorial: "Cormorant Garamond", "El Messiri", serif;
 }
 
 body {
   font-family: var(--font-sans);
   background-color: #1c1816;
+  color: #f2efe8;
+  letter-spacing: -0.015em;
+}
+
+/* Ensure form controls and dialogs in light/admin contexts have clear dark text */
+input, textarea, select {
+  color: #14110f;
+}
+
+input::placeholder, textarea::placeholder {
+  color: #8c7f75;
+  opacity: 0.85;
+}
+
+/* Force dark text inside all white modals and dialogs */
+.fixed .bg-white,
+.fixed .bg-white input,
+.fixed .bg-white textarea,
+.fixed .bg-white select,
+.fixed .bg-white p,
+.fixed .bg-white span,
+.fixed .bg-white label {
+  --tw-text-opacity: 1;
+}
+
+/* Storefront dark input fields override */
+.bg-\[\#1C1816\] input:not(.text-black):not(.text-\[\#14110F\]),
+.bg-\[\#141110\] input:not(.text-black):not(.text-\[\#14110F\]),
+.bg-\[\#1C1816\] textarea:not(.text-black):not(.text-\[\#14110F\]),
+.bg-\[\#141110\] textarea:not(.text-black):not(.text-\[\#14110F\]) {
   color: #f2efe8;
 }
 
