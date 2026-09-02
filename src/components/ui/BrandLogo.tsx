@@ -1,4 +1,4 @@
-import logoImg from '../../assets/logo.png'
+import logoImg from '../../assets/newlogo.png'
 
 export interface AtelierMonogramProps {
   className?: string
@@ -76,7 +76,7 @@ export default function BrandLogo({
           className={`${imgSizes[size] || 'h-16 md:h-20 w-auto'} object-contain mb-3 transition-transform duration-300 hover:scale-105 drop-shadow-[0_4px_16px_rgba(196,160,112,0.25)]`} 
         />
         <span 
-          className={`font-['Cinzel'] font-bold leading-none uppercase ${titleSizes[size]} ${
+          className={`font-['Cinzel'] font-bold leading-none uppercase whitespace-nowrap ${titleSizes[size]} ${
             isLight ? 'text-[#1C1816]' : 'text-[#F2EFE8]'
           }`}
           style={{ fontFamily: "'Cinzel', Georgia, serif" }}
@@ -87,7 +87,7 @@ export default function BrandLogo({
 
         {showSubtitle && (
           <span 
-            className={`font-sans uppercase font-medium text-[#C4A070] mt-2 ${subSizes[size]}`}
+            className={`font-sans uppercase font-medium text-[#C4A070] mt-2 whitespace-nowrap ${subSizes[size]}`}
             style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             dir="ltr"
           >
@@ -108,7 +108,7 @@ export default function BrandLogo({
       
       <div className="flex flex-col text-right justify-center">
         <span 
-          className={`font-['Cinzel'] font-bold leading-none uppercase ${titleSizes[size]} ${
+          className={`font-['Cinzel'] font-bold leading-none uppercase whitespace-nowrap ${titleSizes[size]} ${
             isLight ? 'text-[#1C1816]' : 'text-[#F2EFE8]'
           }`}
           style={{ fontFamily: "'Cinzel', Georgia, serif" }}
@@ -119,7 +119,7 @@ export default function BrandLogo({
 
         {showSubtitle && (
           <span 
-            className={`font-sans uppercase font-semibold text-[#C4A070] mt-1.5 ${subSizes[size]}`}
+            className={`font-sans uppercase font-semibold text-[#C4A070] mt-1.5 whitespace-nowrap ${subSizes[size]}`}
             style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             dir="ltr"
           >

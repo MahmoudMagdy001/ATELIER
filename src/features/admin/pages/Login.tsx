@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../../../lib/supabase'
 import Button from '../../../components/ui/Button'
-import logoImg from '../../../assets/logo.png'
+import logoImg from '../../../assets/newlogo.png'
 import { FaLock, FaEnvelope } from 'react-icons/fa6'
 
 export default function Login() {

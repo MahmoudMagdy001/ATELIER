@@ -99,7 +99,7 @@ export default function Layout() {
           </Link>
 
           {/* Desktop Navigation with Framer Motion Layout Transition */}
-          <nav className="hidden md:flex items-center gap-4 lg:gap-8 text-sm font-medium">
+          <nav className="hidden md:flex flex-1 items-center justify-center gap-5 lg:gap-8 text-sm font-medium px-4">
             {NAV_LINKS.map((link) => (
               <NavLink 
                 key={link.to}
@@ -197,10 +197,10 @@ export default function Layout() {
 
       {/* Footer */}
       <footer className="border-t border-[#C4A070]/20 bg-[#141110] text-[#B3A9A3] py-14 px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
-          <div className="space-y-5">
-            <BrandLogo size="md" customLogo={settings?.logo_url} />
-            <p className="text-xs leading-relaxed text-[#B3A9A3] pt-1">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12">
+          <div className="space-y-5 lg:col-span-5">
+            <BrandLogo size="lg" customLogo={settings?.logo_url} />
+            <p className="text-xs sm:text-sm leading-relaxed text-[#B3A9A3] pt-1 max-w-sm">
               صياغة مساحات استثنائية وأثاث راقٍ مخصص يعكس الهوية الفاخرة للقصور والفيلات العصرية بأيدي كبار الحرفيين.
             </p>
             <div className="pt-2">
@@ -208,7 +208,7 @@ export default function Layout() {
             </div>
           </div>
 
-          <div>
+          <div className="lg:col-span-2">
             <h4 className="text-sm font-bold text-[#F2EFE8] mb-4 font-serif">روابط سريعة</h4>
             <ul className="space-y-2.5 text-xs">
               <li><Link to="/limited-edition" className="hover:text-[#C4A070] transition-colors">قطع ذات إصدار محدود</Link></li>
@@ -218,7 +218,7 @@ export default function Layout() {
             </ul>
           </div>
 
-          <div>
+          <div className="lg:col-span-3">
             <h4 className="text-sm font-bold text-[#F2EFE8] mb-4 font-serif">التواصل والمعرض</h4>
             <p className="text-xs text-[#B3A9A3] mb-2">{CONTACT_INFO.address}</p>
             <a href={`tel:${CONTACT_INFO.phone.replace(/\s+/g, '')}`} className="text-xs text-[#C4A070] font-mono hover:underline block">
@@ -226,7 +226,7 @@ export default function Layout() {
             </a>
           </div>
 
-          <div>
+          <div className="lg:col-span-2">
             <h4 className="text-sm font-bold text-[#F2EFE8] mb-4 font-serif">تابعنا على وسائل التواصل</h4>
             <div className="flex flex-wrap items-center gap-2.5 text-base text-[#C4A070]">
               {SOCIAL_LINKS.map((social) => (
