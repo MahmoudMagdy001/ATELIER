@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { adminService } from '../../features/admin/services/adminService'
 import { CONTACT_INFO } from '../../constants/contactInfo'
 import BrandLogo from '../ui/BrandLogo'
+import CrCertificateBadge from '../ui/CrCertificateBadge'
 import ContactShowroomSection from '../../features/home/components/ContactShowroomSection'
 import ScrollToTop from './ScrollToTop'
 import FloatingWhatsApp from './FloatingWhatsApp'
@@ -198,11 +199,14 @@ export default function Layout() {
       {/* Footer */}
       <footer className="border-t border-[#C4A070]/20 bg-[#141110] text-[#B3A9A3] py-14 px-6">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
-          <div className="space-y-4">
+          <div className="space-y-5">
             <BrandLogo size="md" customLogo={settings?.logo_url} />
-            <p className="text-xs leading-relaxed text-[#B3A9A3] pt-2">
+            <p className="text-xs leading-relaxed text-[#B3A9A3] pt-1">
               صياغة مساحات استثنائية وأثاث راقٍ مخصص يعكس الهوية الفاخرة للقصور والفيلات العصرية بأيدي كبار الحرفيين.
             </p>
+            <div className="pt-2">
+              <CrCertificateBadge />
+            </div>
           </div>
 
           <div>

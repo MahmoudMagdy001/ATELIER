@@ -401,7 +401,7 @@ export default function ContactShowroomSection({ settings }) {
                 <div className="flex items-center gap-2 min-w-0">
                   <FaLocationDot className="text-[#C4A070] w-3.5 h-3.5 shrink-0" />
                   <span className="text-[#827771] text-[11px] truncate">
-                    طريق الملك فهد، حي العليا، الرياض — المملكة العربية السعودية
+                    {address}
                   </span>
                 </div>
                 <a

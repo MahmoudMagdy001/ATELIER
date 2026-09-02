@@ -51,9 +51,17 @@ export default function LuxuryStatsSection() {
     },
     {
       id: 'years-experience',
-      number: '+15',
-      label: 'عاماً من الريادة والإتقان',
-      description: 'إرث عريق في صياغة الأثاث الفاخر وتصميم المساحات الراقية',
+      number: '2022',
+      label: 'عام التأسيس الرسمي',
+      description: (
+        <span>
+          موثقة رسمياً بسجل تجاري معتمد منذ{' '}
+          <strong className="gold-gradient-text font-bold font-serif drop-shadow-[0_0_8px_rgba(196,160,112,0.5)]">
+            12 سبتمبر 2022
+          </strong>{' '}
+          لخدمة أرقى القصور
+        </span>
+      ),
       icon: FaAward,
       highlight: false
     }

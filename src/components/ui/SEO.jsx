@@ -1,6 +1,7 @@
 import { memo, useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { supabase } from '../../lib/supabase'
+import { CONTACT_INFO } from '../../constants/contactInfo'
 
 function getVerificationTokens(val) {
   if (!val) return []
@@ -126,11 +127,26 @@ const SEO = memo(function SEO({
       <meta property="twitter:image" content={imageUrl} />
 
       {/* Structured Data */}
-      {jsonLd && (
-        <script type="application/ld+json">
-          {JSON.stringify(jsonLd)}
-        </script>
-      )}
+      <script type="application/ld+json">
+        {JSON.stringify(jsonLd || {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": settings?.site_name || CONTACT_INFO.brandFullName,
+          "url": siteUrl,
+          "logo": settings?.logo_url || `${siteUrl}/assets/logo.png`,
+          "foundingDate": CONTACT_INFO.foundedDate,
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": CONTACT_INFO.address,
+            "addressCountry": "SA"
+          },
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": CONTACT_INFO.phone,
+            "contactType": "customer service"
+          }
+        })}
+      </script>
     </Helmet>
   )
 })

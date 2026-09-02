@@ -100,6 +100,16 @@ export default function Home() {
           animate="visible"
           className="relative z-10 max-w-4xl mx-auto space-y-7 pt-28 pb-12"
         >
+          {/* Trust Badge with Founding Date */}
+          <motion.div variants={fadeUp} className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[#1C1816]/80 border border-[#C4A070]/35 backdrop-blur-md shadow-xl text-xs text-[#E3CAA9]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#C4A070] animate-pulse" />
+            <span className="font-serif font-bold text-[#F2EFE8] tracking-wider uppercase text-[11px]" dir="ltr">S&I ATELIER</span>
+            <span className="text-[#C4A070]/40">•</span>
+            <span>تأسست العلامة في <strong className="gold-gradient-text font-bold font-serif drop-shadow-[0_0_8px_rgba(196,160,112,0.5)]">12 سبتمبر 2022</strong></span>
+            <span className="text-[#C4A070]/40">•</span>
+            <span className="text-[#C4A070] font-medium">سجل تجاري معتمد</span>
+          </motion.div>
+
           <motion.h1 variants={fadeUp} className="text-4xl sm:text-6xl lg:text-7xl font-serif font-bold text-[#F2EFE8] leading-[1.15] drop-shadow-2xl">
             أناقة معمارية خالدة، <br />
             <span className="gold-gradient-text">مصممة خصيصاً لذوقك الرفيع</span>
@@ -180,7 +190,7 @@ export default function Home() {
               </h2>
               <div className="space-y-4 text-sm md:text-base text-[#DEDAD6] leading-loose font-light">
                 <p>
-                  تأسست <strong className="text-[#C4A070] font-bold">S&I Atelier</strong> كدار رائدة في مجال الأثاث الفاخر والتصميم الداخلي المعماري، نجمع بين عراقة الحرفية اليدوية وأحدث خطوط التصميم الإيطالي المعاصر.
+                  تأسست <strong className="text-[#C4A070] font-bold">S&I Atelier</strong> في <strong className="gold-gradient-text font-bold font-serif text-sm md:text-base drop-shadow-[0_0_12px_rgba(196,160,112,0.55)] border-b border-[#C4A070]/60 pb-0.5">12 سبتمبر 2022</strong> كدار رائدة وموثقة رسمياً في مجال الأثاث الفاخر والتصميم الداخلي المعماري، نجمع بين عراقة الحرفية اليدوية وأحدث خطوط التصميم الإيطالي المعاصر.
                 </p>
                 <p>
                   نؤمن بأن كل قصر وفيلا تمثل عملاً معمارياً فريداً؛ لذا لا نعتمد الإنتاج التجاري النمطي المتكرر، بل نبتكر لكل عميل قطعاً استثنائية تُصنع يدوياً من أندر أنواع خشب الجوز المعتق والرخام الأوروبي الطبيعي وأفخر أنواع الجلود والأقمشة.
@@ -258,9 +268,9 @@ export default function Home() {
             <div className="w-12 h-12 rounded-2xl bg-[#C4A070]/15 flex items-center justify-center text-[#C4A070] font-serif font-bold text-lg">
               01
             </div>
-            <h3 className="font-serif text-xl font-bold text-[#F2EFE8]">النشأة والشغف</h3>
+            <h3 className="font-serif text-xl font-bold text-[#F2EFE8]">التأسيس والنشأة الرسمية</h3>
             <p className="text-xs text-[#827771] leading-relaxed">
-              بدأت رحلتنا من شغف عائلي بالتصاميم الإيطالية والحرفية اليدوية، لنؤسس صرحاً يلبي تطلعات أصحاب الذوق الرفيع والباحثين عن التميز الحقيقي.
+              انطلقت العلامة رسمياً في <strong className="gold-gradient-text font-bold font-serif text-[13px] drop-shadow-[0_0_10px_rgba(196,160,112,0.55)] border-b border-[#C4A070]/60 pb-0.5">12 سبتمبر 2022</strong> لتؤسس صرحاً وطنياً موثقاً يلبي تطلعات نخبة أصحاب القصور والفيلات، جامعاً بين الاعتماد التجاري والابتكار الفني الحصري.
             </p>
           </motion.div>
 
