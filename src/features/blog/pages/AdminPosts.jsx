@@ -118,7 +118,7 @@ export default function AdminPosts() {
                 <input
                   type="text"
                   required
-                  className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="مثال: فن تشكيل المساحات الفاخرة 2026"
@@ -129,7 +129,7 @@ export default function AdminPosts() {
                 <label className="block text-xs font-bold text-[#5C544E] mb-1.5">الرابط المخصص (Slug)</label>
                 <input
                   type="text"
-                  className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none font-mono"
+                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-mono text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
                   placeholder="اتركه فارغاً للتوليد التلقائي"
                   value={slug}
                   onChange={(e) => setSlug(e.target.value)}
@@ -140,7 +140,7 @@ export default function AdminPosts() {
                 <label className="block text-xs font-bold text-[#5C544E] mb-1.5">الكاتب / المصمم</label>
                 <input
                   type="text"
-                  className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
                   value={author}
                   onChange={(e) => setAuthor(e.target.value)}
                   placeholder="فريق تحرير أتيليه"
@@ -150,7 +150,7 @@ export default function AdminPosts() {
               <div>
                 <label className="block text-xs font-bold text-[#5C544E] mb-1.5">القسم / التصنيف</label>
                 <select
-                  className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all cursor-pointer"
                   value={categoryId}
                   onChange={(e) => setCategoryId(e.target.value)}
                 >
@@ -165,7 +165,7 @@ export default function AdminPosts() {
                 <label className="block text-xs font-bold text-[#5C544E] mb-1.5">الوسوم (مفصولة بفواصل)</label>
                 <input
                   type="text"
-                  className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
                   placeholder="ديكور, رخام, أثاث إيطالي"
                   value={tags}
                   onChange={(e) => setTags(e.target.value)}
@@ -175,7 +175,7 @@ export default function AdminPosts() {
               <div>
                 <label className="block text-xs font-bold text-[#5C544E] mb-1.5">حالة النشر</label>
                 <select
-                  className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all cursor-pointer"
                   value={status}
                   onChange={(e) => setStatus(e.target.value)}
                 >
@@ -190,7 +190,7 @@ export default function AdminPosts() {
               <textarea
                 rows={2}
                 required
-                className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+                className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
                 placeholder="مقدمة سريعة تظهر في بطاقة المقال وقوائم التصفح..."
                 value={excerpt}
                 onChange={(e) => setExcerpt(e.target.value)}

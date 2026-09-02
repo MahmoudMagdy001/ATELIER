@@ -3,6 +3,7 @@ import { adminService } from '../services/adminService'
 import { regenerateSitemapAndRobots } from '../../../lib/sitemapGenerator'
 import { PageLoading } from '../../../components/ui/Loading'
 import Button from '../../../components/ui/Button'
+import ImagePicker from '../../../components/admin/ImagePicker'
 import { 
   FaFloppyDisk, 
   FaArrowsRotate, 
@@ -69,7 +70,7 @@ export default function AdminSettings() {
       ])
 
       if (settings) {
-        setSiteName(settings.site_name || 'ATELIER')
+        setSiteName(settings.site_name || 'S&I Atelier')
         setLogoUrl(settings.logo_url || '/logo.png')
         setFaviconUrl(settings.favicon_url || '/logo.png')
         setSiteDescription(settings.site_description || 'دار أثاث فاخر متخصصة في ابتكار وتصنيع القطع الحصرية للقصور والفيلات العصرية بالطلب.')
@@ -266,62 +267,60 @@ export default function AdminSettings() {
         <form onSubmit={handleSaveGeneralOrSEO} className="bg-white rounded-2xl border border-[#E6E1DC] p-6 shadow-sm space-y-6">
           <h3 className="font-bold text-base text-[#14110F] border-b border-[#E6E1DC] pb-3">معلومات وهوية الموقع</h3>
           
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="space-y-6">
             <div>
               <label className="block text-xs font-bold text-[#5C544E] mb-1.5">اسم الموقع / العلامة التجارية</label>
               <input
                 type="text"
-                className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+                className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
                 value={siteName}
                 onChange={(e) => setSiteName(e.target.value)}
                 placeholder="أتيليه للأثاث والتصميم الداخلي الفاخر"
               />
             </div>
 
-            <div>
-              <label className="block text-xs font-bold text-[#5C544E] mb-1.5">رابط الشعار (Logo URL)</label>
-              <input
-                type="text"
-                className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+            <div className="grid gap-6 md:grid-cols-2">
+              <ImagePicker
+                label="شعار الموقع (Logo)"
                 value={logoUrl}
-                onChange={(e) => setLogoUrl(e.target.value)}
-                placeholder="/assets/logo.png أو رابط مباشر"
+                onChange={setLogoUrl}
+                hint="الشعار الرئيسي للعلامة (PNG أو SVG بخلفية شفافة)"
+                title="اختر شعار الموقع من مكتبة الوسائط"
+                placeholder="/assets/logo.png أو رابط مباشر..."
               />
-            </div>
-          </div>
 
-          <div className="grid gap-6 md:grid-cols-2">
-            <div>
-              <label className="block text-xs font-bold text-[#5C544E] mb-1.5">أيقونة التبويب (Favicon URL)</label>
-              <input
-                type="text"
-                className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+              <ImagePicker
+                compact
+                label="أيقونة التبويب (Favicon)"
                 value={faviconUrl}
-                onChange={(e) => setFaviconUrl(e.target.value)}
-                placeholder="/favicon.ico"
+                onChange={setFaviconUrl}
+                hint="أيقونة مربعة صغيرة تظهر في تبويب المتصفح (SVG أو PNG)"
+                title="اختر أيقونة التبويب من مكتبة الوسائط"
+                placeholder="/favicon.svg أو رابط مباشر..."
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-[#5C544E] mb-1.5">صورة المشاركة الافتراضية (Default OG Image)</label>
-              <input
-                type="text"
-                className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+              <ImagePicker
+                label="صورة المشاركة الافتراضية (Default OG Image)"
                 value={defaultOgImage}
-                onChange={(e) => setDefaultOgImage(e.target.value)}
-                placeholder="https://..."
+                onChange={setDefaultOgImage}
+                hint="الصورة التي تظهر عند مشاركة رابط الموقع على واتساب وشبكات التواصل"
+                title="اختر صورة المشاركة الافتراضية من مكتبة الوسائط"
+                placeholder="https://... أو مسار صورة"
               />
             </div>
-          </div>
 
-          <div>
-            <label className="block text-xs font-bold text-[#5C544E] mb-1.5">الوصف العام للعلامة</label>
-            <textarea
-              rows={3}
-              className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
-              value={siteDescription}
-              onChange={(e) => setSiteDescription(e.target.value)}
-            />
+            <div>
+              <label className="block text-xs font-bold text-[#5C544E] mb-1.5">الوصف العام للعلامة</label>
+              <textarea
+                rows={3}
+                className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
+                value={siteDescription}
+                onChange={(e) => setSiteDescription(e.target.value)}
+                placeholder="اكتب نبذة شاملة عن العلامة التجارية..."
+              />
+            </div>
           </div>
 
           <div className="flex justify-end pt-4 border-t border-[#E6E1DC]">
@@ -342,9 +341,10 @@ export default function AdminSettings() {
               <label className="block text-xs font-bold text-[#5C544E] mb-1.5">عنوان الميتا الافتراضي (Default Meta Title)</label>
               <input
                 type="text"
-                className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+                className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
                 value={defaultMetaTitle}
                 onChange={(e) => setDefaultMetaTitle(e.target.value)}
+                placeholder="ATELIER | صياغة الأثاث الفاخر والتصميم الداخلي"
               />
             </div>
 
@@ -352,7 +352,8 @@ export default function AdminSettings() {
               <label className="block text-xs font-bold text-[#5C544E] mb-1.5">الرابط النموذجي الافتراضي (Canonical URL)</label>
               <input
                 type="url"
-                className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+                className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-mono text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
+                placeholder="https://atelier-luxury.com"
                 value={defaultCanonical}
                 onChange={(e) => setDefaultCanonical(e.target.value)}
               />
@@ -363,9 +364,10 @@ export default function AdminSettings() {
             <label className="block text-xs font-bold text-[#5C544E] mb-1.5">الوصف التعريفي الافتراضي (Default Meta Description)</label>
             <textarea
               rows={2}
-              className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+              className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
               value={defaultMetaDescription}
               onChange={(e) => setDefaultMetaDescription(e.target.value)}
+              placeholder="استكشف أرقى تشكيلات الأثاث الإيطالي المصنوع بالطلب من الصالونات وغرف الطعام والمجالس الملكية."
             />
           </div>
 
@@ -380,7 +382,7 @@ export default function AdminSettings() {
                 <label className="block text-xs font-semibold text-[#5C544E] mb-1">Google Site Verification</label>
                 <input
                   type="text"
-                  className="w-full rounded-xl border border-[#E6E1DC] px-3 py-2 text-xs bg-white"
+                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-3.5 py-2 text-xs font-mono text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none"
                   placeholder="رمز جوجل أو وسم الميتا الكامل"
                   value={googleVerification}
                   onChange={(e) => setGoogleVerification(e.target.value)}
@@ -391,7 +393,7 @@ export default function AdminSettings() {
                 <label className="block text-xs font-semibold text-[#5C544E] mb-1">Bing Webmaster (msvalidate.01)</label>
                 <input
                   type="text"
-                  className="w-full rounded-xl border border-[#E6E1DC] px-3 py-2 text-xs bg-white"
+                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-3.5 py-2 text-xs font-mono text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none"
                   placeholder="رمز توثيق بينج"
                   value={bingVerification}
                   onChange={(e) => setBingVerification(e.target.value)}
@@ -404,7 +406,8 @@ export default function AdminSettings() {
                 <label className="block text-xs font-semibold text-[#5C544E] mb-1">Facebook Domain Verification</label>
                 <input
                   type="text"
-                  className="w-full rounded-xl border border-[#E6E1DC] px-3 py-2 text-xs bg-white"
+                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-3.5 py-2 text-xs font-mono text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none"
+                  placeholder="Facebook Token"
                   value={facebookVerification}
                   onChange={(e) => setFacebookVerification(e.target.value)}
                 />
@@ -413,7 +416,8 @@ export default function AdminSettings() {
                 <label className="block text-xs font-semibold text-[#5C544E] mb-1">Pinterest Verification</label>
                 <input
                   type="text"
-                  className="w-full rounded-xl border border-[#E6E1DC] px-3 py-2 text-xs bg-white"
+                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-3.5 py-2 text-xs font-mono text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none"
+                  placeholder="Pinterest Token"
                   value={pinterestVerification}
                   onChange={(e) => setPinterestVerification(e.target.value)}
                 />
@@ -422,7 +426,8 @@ export default function AdminSettings() {
                 <label className="block text-xs font-semibold text-[#5C544E] mb-1">Yandex Verification</label>
                 <input
                   type="text"
-                  className="w-full rounded-xl border border-[#E6E1DC] px-3 py-2 text-xs bg-white"
+                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-3.5 py-2 text-xs font-mono text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none"
+                  placeholder="Yandex Token"
                   value={yandexVerification}
                   onChange={(e) => setYandexVerification(e.target.value)}
                 />
@@ -464,7 +469,7 @@ export default function AdminSettings() {
               <label className="block text-xs font-bold text-[#5C544E] mb-1.5">رابط خريطة الموقع داخل Robots.txt</label>
               <input
                 type="url"
-                className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F]"
+                className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-mono text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
                 placeholder="https://atelier-luxury.com/sitemap.xml"
                 value={robotsSitemapUrl}
                 onChange={(e) => setRobotsSitemapUrl(e.target.value)}
@@ -475,7 +480,7 @@ export default function AdminSettings() {
               <label className="block text-xs font-bold text-[#5C544E] mb-1.5">محتوى ملف Robots.txt المخصص</label>
               <textarea
                 rows={6}
-                className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-xs font-mono bg-[#FAF8F5]"
+                className="w-full rounded-xl border border-[#E6E1DC] bg-[#FAF8F5] px-4 py-2.5 text-xs font-mono text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
                 value={robotsCustomContent}
                 onChange={(e) => setRobotsCustomContent(e.target.value)}
               />

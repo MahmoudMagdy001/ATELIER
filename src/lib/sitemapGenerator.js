@@ -8,46 +8,33 @@ export async function regenerateSitemapAndRobots() {
     const siteUrl = window.location.origin || 'https://atelier-luxury.com'
 
     // Fetch all published items for sitemap urls
-    const [postsRes, productsRes, offersRes] = await Promise.all([
-      supabase.from('posts').select('slug, created_at').eq('status', 'published'),
-      supabase.from('products').select('slug, created_at').eq('status', 'published'),
-      supabase.from('offers').select('slug, created_at').eq('status', 'published'),
+    const [articlesRes, productsRes] = await Promise.all([
+      supabase.from('articles').select('slug, created_at').eq('status', 'published'),
+      supabase.from('limited_editions').select('slug, created_at').eq('status', 'published'),
     ])
 
-    const posts = postsRes.data || []
+    const articles = articlesRes.data || []
     const products = productsRes.data || []
-    const offers = offersRes.data || []
 
     const urls = [
       { loc: `${siteUrl}/`, priority: '1.0', changefreq: 'daily' },
-      { loc: `${siteUrl}/products`, priority: '0.9', changefreq: 'weekly' },
-      { loc: `${siteUrl}/offers`, priority: '0.8', changefreq: 'daily' },
-      { loc: `${siteUrl}/blog`, priority: '0.8', changefreq: 'daily' },
-      { loc: `${siteUrl}/about`, priority: '0.5', changefreq: 'monthly' },
+      { loc: `${siteUrl}/limited-edition`, priority: '0.9', changefreq: 'weekly' },
+      { loc: `${siteUrl}/bespoke`, priority: '0.9', changefreq: 'weekly' },
     ]
-
-    posts.forEach((item) => {
-      urls.push({
-        loc: `${siteUrl}/blog/${item.slug}`,
-        priority: '0.7',
-        changefreq: 'weekly',
-        lastmod: new Date(item.created_at || Date.now()).toISOString().split('T')[0],
-      })
-    })
 
     products.forEach((item) => {
       urls.push({
-        loc: `${siteUrl}/products/${item.slug}`,
+        loc: `${siteUrl}/limited-edition/${item.slug}`,
         priority: '0.9',
         changefreq: 'weekly',
         lastmod: new Date(item.created_at || Date.now()).toISOString().split('T')[0],
       })
     })
 
-    offers.forEach((item) => {
+    articles.forEach((item) => {
       urls.push({
-        loc: `${siteUrl}/offers/${item.slug}`,
-        priority: '0.8',
+        loc: `${siteUrl}/blog/${item.slug}`,
+        priority: '0.6',
         changefreq: 'weekly',
         lastmod: new Date(item.created_at || Date.now()).toISOString().split('T')[0],
       })

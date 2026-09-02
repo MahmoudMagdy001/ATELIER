@@ -186,7 +186,7 @@ export default function AdminOffers() {
                 <input
                   type="text"
                   required
-                  className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="عرض الصالونات الإيطالية VIP (خصم 20%)"
@@ -197,7 +197,7 @@ export default function AdminOffers() {
                 <label className="block text-xs font-bold text-[#5C544E] mb-1.5">الرابط المخصص (Slug)</label>
                 <input
                   type="text"
-                  className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none font-mono"
+                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-mono text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
                   placeholder="vip-italian-salons-exclusive-offer"
                   value={slug}
                   onChange={(e) => setSlug(e.target.value)}
@@ -208,7 +208,7 @@ export default function AdminOffers() {
                 <label className="block text-xs font-bold text-[#5C544E] mb-1.5">نص شارة الخصم (Discount Label)</label>
                 <input
                   type="text"
-                  className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
                   value={discountLabel}
                   onChange={(e) => setDiscountLabel(e.target.value)}
                   placeholder="خصم 20% لفترة محدودة أو باقة كراسي مجاناً"
@@ -222,21 +222,21 @@ export default function AdminOffers() {
                     <button
                       type="button"
                       onClick={() => setExpiryDays(30)}
-                      className="px-2 py-0.5 rounded bg-[#FAF8F5] border border-[#E6E1DC] hover:bg-[#C5A880] hover:text-white transition-colors"
+                      className="px-2 py-0.5 rounded bg-[#FAF8F5] border border-[#E6E1DC] hover:bg-[#C5A880] hover:text-white transition-colors cursor-pointer"
                     >
                       +30 يوم
                     </button>
                     <button
                       type="button"
                       onClick={() => setExpiryDays(60)}
-                      className="px-2 py-0.5 rounded bg-[#FAF8F5] border border-[#E6E1DC] hover:bg-[#C5A880] hover:text-white transition-colors"
+                      className="px-2 py-0.5 rounded bg-[#FAF8F5] border border-[#E6E1DC] hover:bg-[#C5A880] hover:text-white transition-colors cursor-pointer"
                     >
                       +60 يوم
                     </button>
                     <button
                       type="button"
                       onClick={() => setValidUntil('')}
-                      className="px-2 py-0.5 rounded bg-[#FAF8F5] border border-[#E6E1DC] hover:bg-[#C5A880] hover:text-white transition-colors"
+                      className="px-2 py-0.5 rounded bg-[#FAF8F5] border border-[#E6E1DC] hover:bg-[#C5A880] hover:text-white transition-colors cursor-pointer"
                     >
                       دائم
                     </button>
@@ -244,10 +244,10 @@ export default function AdminOffers() {
                 </div>
                 <input
                   type="date"
-                  className={`w-full rounded-xl border px-4 py-2.5 text-sm text-[#14110F] focus:outline-none ${
+                  className={`w-full rounded-xl border px-4 py-2.5 text-sm font-medium text-[#14110F] focus:outline-none transition-all ${
                     validUntil && isOfferExpired(validUntil)
                       ? 'border-rose-300 bg-rose-50/50 focus:border-rose-500'
-                      : 'border-[#E6E1DC] focus:border-[#C5A880]'
+                      : 'border-[#E6E1DC] bg-white focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880]'
                   }`}
                   value={validUntil}
                   onChange={(e) => setValidUntil(e.target.value)}
@@ -264,7 +264,7 @@ export default function AdminOffers() {
                 <label className="block text-xs font-bold text-[#5C544E] mb-1.5">شارة مميزة (Badge)</label>
                 <input
                   type="text"
-                  className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
                   value={badge}
                   onChange={(e) => setBadge(e.target.value)}
                   placeholder="عرض الصيف الحصري / باقة تأثيث كاملة"
@@ -274,7 +274,7 @@ export default function AdminOffers() {
               <div>
                 <label className="block text-xs font-bold text-[#5C544E] mb-1.5">حالة العرض</label>
                 <select
-                  className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all cursor-pointer"
                   value={status}
                   onChange={(e) => setStatus(e.target.value)}
                 >
@@ -289,7 +289,7 @@ export default function AdminOffers() {
               <textarea
                 rows={3}
                 required
-                className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+                className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
                 placeholder="شرح مميزات هذا العرض، الخصومات المتاحة، والتوصيل المجاني..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}

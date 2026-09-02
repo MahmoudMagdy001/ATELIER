@@ -109,7 +109,7 @@ export default function BlogDetail() {
     : (post.keywords ? post.keywords.split(',').map(k => k.trim()) : [])
 
   return (
-    <div className="bg-[#1C1816] text-[#F2EFE8] min-h-screen font-sans relative selection:bg-[#C4A070]/30 selection:text-[#F2EFE8]" dir="rtl">
+    <div className="bg-transparent text-[#F2EFE8] min-h-screen font-sans relative selection:bg-[#C4A070]/30 selection:text-[#F2EFE8]" dir="rtl">
       {/* Dynamic Reading Progress Bar */}
       <div 
         className="fixed top-0 left-0 right-0 z-50 h-[3px] bg-gradient-to-r from-[#9E7939] via-[#C4A070] to-[#F0DEC8] transition-all duration-150 ease-out"

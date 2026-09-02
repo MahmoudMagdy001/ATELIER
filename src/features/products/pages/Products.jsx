@@ -74,11 +74,11 @@ export default function Products() {
   }
 
   return (
-    <div className="bg-[#1C1816] text-[#F2EFE8] min-h-screen font-sans" dir="rtl">
+    <div className="bg-transparent text-[#F2EFE8] min-h-screen font-sans" dir="rtl">
       <SEO
-        title="مجموعة الأثاث الفاخر والتصميم المخصص | ATELIER"
-        description="استكشف أرقى تشكيلات الأثاث الإيطالي المصنوع بالطلب من الصالونات وغرف الطعام والمجالس الفاخرة."
-        slug="products"
+        title="قطع ذات إصدار محدود | S&I Atelier"
+        description="استكشف تشكيلات الأثاث الحصرية ذات الإصدار المحدود المصنوعة يدوياً بأندر الخامات الأوروبية الطبيعية."
+        slug="limited-edition"
       />
 
       {/* Hero Header */}
@@ -92,19 +92,18 @@ export default function Products() {
           animate="visible"
           className="relative max-w-4xl mx-auto text-center space-y-6"
         >
-          <motion.div variants={fadeUp} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#C4A070]/10 border border-[#C4A070]/30 shadow-sm backdrop-blur-md">
-            <FaCouch className="w-3.5 h-3.5 text-[#C4A070]" />
-            <span className="text-xs tracking-[0.25em] text-[#C4A070] uppercase font-bold">
-              BESPOKE LUXURY COLLECTION
-            </span>
+          <motion.div variants={fadeUp} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#C4A070]/30 bg-[#1C1816]/60 backdrop-blur-md text-[11px] font-bold text-[#C4A070]">
+            <span>LIMITED EDITION</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-[#C4A070]" />
+            <span>حصرية ونادرة</span>
           </motion.div>
 
           <motion.h1 variants={fadeUp} className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-[#F2EFE8] leading-tight tracking-normal">
-            مجموعة الأثاث و<span className="gold-gradient-text">القطع المصممة بالطلب</span>
+            قطع ذات <span className="gold-gradient-text">إصدار محدود</span>
           </motion.h1>
 
           <motion.p variants={fadeUp} className="text-sm sm:text-base md:text-lg text-[#DEDAD6] max-w-2xl mx-auto leading-relaxed md:leading-8 font-light">
-            قطع استثنائية تُصنع يدوياً بأرقى الخامات الطبيعية من خشب الجوز الإيطالي والرخام النادر مع خيارات واسعة ومخصصة للألوان والمقاسات.
+            قطع نحتية حصرية تُصنع بأعداد قليلة ومعدودة لأرقى القصور والمساحات الخاصة، من أجود أخشاب الجوز المعتق والرخام النادر.
           </motion.p>
         </motion.div>
       </div>
@@ -173,7 +172,7 @@ export default function Products() {
                   transition={springHover}
                 >
                   <Link
-                    to={`/products/${product.slug}`}
+                    to={`/limited-edition/${product.slug}`}
                     className="group rounded-3xl bg-[#141110] border border-[#C4A070]/20 overflow-hidden hover:border-[#C4A070] transition-all duration-300 flex flex-col shadow-xl block h-full hover:shadow-[#C4A070]/10"
                   >
                     <div className="relative aspect-[4/3] bg-[#1C1816] overflow-hidden">

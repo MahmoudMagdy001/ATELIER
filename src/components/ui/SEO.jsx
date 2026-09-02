@@ -71,8 +71,8 @@ const SEO = memo(function SEO({
   const finalSlug = slug || ''
   
   const fullTitle = title 
-    ? `${title} | ${settings?.site_name || defaultBrand}` 
-    : (settings?.default_meta_title || defaultBrand)
+    ? `${title} | S&I Atelier` 
+    : 'S&I Atelier | Bespoke Luxury Furniture & Interiors'
 
   const finalCanonical = canonicalUrl || settings?.default_canonical || `${siteUrl}/${finalSlug}`
   const imageUrl = finalImage.startsWith('http') ? finalImage : `${siteUrl}${finalImage}`

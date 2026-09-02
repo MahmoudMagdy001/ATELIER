@@ -238,8 +238,8 @@ export function useAdminProducts() {
           .from('redirects')
           .insert([
             {
-              source_path: `/products/${currentProduct.slug}`,
-              target_path: `/products/${targetSlug}`,
+              source_path: `/limited-edition/${currentProduct.slug}`,
+              target_path: `/limited-edition/${targetSlug}`,
               status_code: 301,
             },
           ])

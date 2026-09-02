@@ -4,7 +4,7 @@ import { compressImage, deleteStorageFileByUrl } from '../../../lib/imageCompres
 export const productService = {
   async fetchPublishedProducts() {
     const { data, error } = await supabase
-      .from('products')
+      .from('limited_editions')
       .select('*')
       .eq('status', 'published')
       .order('display_order', { ascending: true })
@@ -14,7 +14,7 @@ export const productService = {
 
   async fetchProductBySlug(slug) {
     const { data, error } = await supabase
-      .from('products')
+      .from('limited_editions')
       .select('*')
       .eq('slug', slug)
       .single()
@@ -24,7 +24,7 @@ export const productService = {
 
   async fetchAllProducts() {
     const { data, error } = await supabase
-      .from('products')
+      .from('limited_editions')
       .select('*')
       .order('display_order', { ascending: true })
     if (error) throw error
@@ -33,20 +33,20 @@ export const productService = {
 
   async deleteProduct(id) {
     const { data: product } = await supabase
-      .from('products')
+      .from('limited_editions')
       .select('main_image, variants')
       .eq('id', id)
       .single()
 
-    const { error } = await supabase.from('products').delete().eq('id', id)
+    const { error } = await supabase.from('limited_editions').delete().eq('id', id)
     if (error) throw error
 
     if (product?.main_image) {
-      await deleteStorageFileByUrl(product.main_image, 'product-images')
+      await deleteStorageFileByUrl(product.main_image, 'limited-edition-images')
     }
     if (Array.isArray(product?.variants)) {
       for (const v of product.variants) {
-        if (v.image) await deleteStorageFileByUrl(v.image, 'product-images')
+        if (v.image) await deleteStorageFileByUrl(v.image, 'limited-edition-images')
       }
     }
   },
@@ -55,21 +55,21 @@ export const productService = {
     const compressedFile = await compressImage(file)
     const fileExt = compressedFile.name.split('.').pop()
     const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`
-    const filePath = `products/${fileName}`
+    const filePath = `limited-editions/${fileName}`
 
     const { error: uploadError } = await supabase.storage
-      .from('product-images')
+      .from('limited-edition-images')
       .upload(filePath, compressedFile)
 
     if (uploadError) throw uploadError
 
-    const { data } = supabase.storage.from('product-images').getPublicUrl(filePath)
+    const { data } = supabase.storage.from('limited-edition-images').getPublicUrl(filePath)
     return data.publicUrl
   },
 
   async updateProduct(id, productData) {
     const { error } = await supabase
-      .from('products')
+      .from('limited_editions')
       .update(productData)
       .eq('id', id)
     if (error) throw error
@@ -77,7 +77,7 @@ export const productService = {
 
   async insertProduct(productData) {
     const { data, error } = await supabase
-      .from('products')
+      .from('limited_editions')
       .insert([productData])
       .select()
       .single()

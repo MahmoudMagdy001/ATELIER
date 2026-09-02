@@ -3,7 +3,8 @@ import { FaWhatsapp } from 'react-icons/fa6'
 import { CONTACT_INFO } from '../../constants/contactInfo'
 
 export default function FloatingWhatsApp() {
-  const whatsappUrl = `https://wa.me/${CONTACT_INFO.whatsappRaw}?text=${encodeURIComponent('مرحباً دار أتيليه، أود الاستفسار عن تفصيل قطع الأثاث وخدمات التصميم')}`
+  const defaultMessage = 'مرحباً S&I Atelier، أود الاستفسار عن تفصيل قطع أثاث واستشارة تصميم خاصة'
+  const whatsappUrl = `https://wa.me/${CONTACT_INFO.whatsappRaw}?text=${encodeURIComponent(defaultMessage)}`
 
   return (
     <div className="fixed bottom-6 right-6 z-40 select-none">

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { productService } from '../services/productService'
@@ -52,10 +52,61 @@ export default function ProductDetail() {
     loadProduct()
   }, [slug])
 
+  // Deduplicate gallery images across main image and variants, linking each image to its variant
+  const galleryImages = useMemo(() => {
+    if (!product) return []
+    const seen = new Set()
+    const list = []
+
+    const findVariantForImage = (imgUrl) => {
+      if (!Array.isArray(product.variants) || product.variants.length === 0) return null
+      return product.variants.find((v) => v.image === imgUrl) || product.variants[0]
+    }
+
+    if (product.main_image && !seen.has(product.main_image)) {
+      seen.add(product.main_image)
+      const matchedVariant = findVariantForImage(product.main_image)
+      list.push({
+        url: product.main_image,
+        label: matchedVariant?.name || product.title || 'الصورة الرئيسية',
+        variant: matchedVariant
+      })
+    }
+
+    if (Array.isArray(product.variants)) {
+      product.variants.forEach((v) => {
+        if (v.image && !seen.has(v.image)) {
+          seen.add(v.image)
+          list.push({
+            url: v.image,
+            label: v.name || 'خيار المنتج',
+            variant: v
+          })
+        }
+      })
+    }
+
+    return list
+  }, [product])
+
   const handleSelectVariant = (variant) => {
     setSelectedVariant(variant)
     if (variant.image) {
       setActiveImage(variant.image)
+    } else if (product?.main_image) {
+      setActiveImage(product.main_image)
+    }
+  }
+
+  const handleSelectGalleryImage = (item) => {
+    setActiveImage(item.url)
+    const targetVariant = 
+      product?.variants?.find((v) => v.image === item.url) || 
+      item.variant || 
+      product?.variants?.[0]
+
+    if (targetVariant) {
+      setSelectedVariant(targetVariant)
     }
   }
 
@@ -86,7 +137,7 @@ export default function ProductDetail() {
   const contactPhone = CONTACT_INFO.phone
 
   return (
-    <div className="bg-[#1C1816] text-[#F2EFE8] min-h-screen font-sans pt-28 md:pt-32" dir="rtl">
+    <div className="bg-transparent text-[#F2EFE8] min-h-screen font-sans pt-28 md:pt-32" dir="rtl">
       <SEO
         title={product.meta_title || `${product.title} | ATELIER`}
         description={product.meta_description || product.description}
@@ -104,12 +155,12 @@ export default function ProductDetail() {
 
       <div className="max-w-7xl mx-auto px-6 py-10 space-y-10">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-xs text-[#827771]">
-          <Link to="/" className="hover:text-[#C4A070]">الرئيسية</Link>
+        <div className="flex items-center gap-2 text-xs text-[#827771] mb-8 overflow-x-auto whitespace-nowrap">
+          <Link to="/" className="hover:text-[#C4A070] transition-colors">الرئيسية</Link>
           <span>/</span>
-          <Link to="/products" className="hover:text-[#C4A070]">المنتجات</Link>
+          <Link to="/limited-edition" className="hover:text-[#C4A070] transition-colors">قطع ذات إصدار محدود</Link>
           <span>/</span>
-          <span className="text-[#F2EFE8] font-bold truncate max-w-xs">{product.title}</span>
+          <span className="text-[#C4A070]">{product.title}</span>
         </div>
 
         {/* Main Product Section */}
@@ -139,30 +190,26 @@ export default function ProductDetail() {
               )}
             </div>
 
-            {/* Thumbnail switcher for all variants and main image */}
-            {Array.isArray(product.variants) && product.variants.length > 0 && (
+            {/* Thumbnail switcher for unique gallery images */}
+            {galleryImages.length > 1 && (
               <div className="flex gap-3 overflow-x-auto pb-2">
-                {product.main_image && (
-                  <button
-                    onClick={() => setActiveImage(product.main_image)}
-                    className={`w-20 h-20 rounded-2xl overflow-hidden border-2 shrink-0 transition-all cursor-pointer ${
-                      activeImage === product.main_image ? 'border-[#C4A070] scale-105 shadow-md shadow-[#C4A070]/20' : 'border-white/10 hover:border-white/30 opacity-70'
-                    }`}
-                  >
-                    <img src={product.main_image} alt="Main" className="w-full h-full object-cover" />
-                  </button>
-                )}
-                {product.variants.map((v) => (
-                  <button
-                    key={v.id}
-                    onClick={() => handleSelectVariant(v)}
-                    className={`w-20 h-20 rounded-2xl overflow-hidden border-2 shrink-0 transition-all cursor-pointer ${
-                      selectedVariant?.id === v.id ? 'border-[#C4A070] scale-105 shadow-md shadow-[#C4A070]/20' : 'border-white/10 hover:border-white/30 opacity-70'
-                    }`}
-                  >
-                    <img src={v.image || product.main_image} alt={v.name} className="w-full h-full object-cover" />
-                  </button>
-                ))}
+                {galleryImages.map((item, idx) => {
+                  const isActive = activeImage === item.url
+                  return (
+                    <button
+                      key={`${item.url}-${idx}`}
+                      onClick={() => handleSelectGalleryImage(item)}
+                      className={`w-20 h-20 rounded-2xl overflow-hidden border-2 shrink-0 transition-all cursor-pointer ${
+                        isActive
+                          ? 'border-[#C4A070] scale-105 shadow-md shadow-[#C4A070]/20 ring-1 ring-[#C4A070]'
+                          : 'border-white/10 hover:border-white/30 opacity-70'
+                      }`}
+                      title={item.label}
+                    >
+                      <img src={item.url} alt={item.label} className="w-full h-full object-cover" />
+                    </button>
+                  )
+                })}
               </div>
             )}
           </motion.div>
@@ -254,29 +301,40 @@ export default function ProductDetail() {
               </div>
             )}
 
+            {/* Bespoke Customization Notice Banner */}
+            <div className="p-4 rounded-2xl bg-[#1C1816]/90 border border-[#C4A070]/25 space-y-1">
+              <span className="text-[11px] font-bold text-[#C4A070] flex items-center gap-1.5 uppercase tracking-wider">
+                <FaGem className="w-3 h-3" />
+                <span>خدمة التفصيل الخاص • BESPOKE ADAPTATION</span>
+              </span>
+              <p className="text-[11px] text-[#B3A9A3] leading-relaxed">
+                هل تحتاج أبعاداً أو خامات رخام أو أقمشة خاصة؟ نوفر تعديلاً هندسياً كاملاً للقطعة لتطابق مخطط مساحتك تماماً.
+              </p>
+            </div>
+
             {/* Action Buttons */}
-            <div className="space-y-3 pt-4 border-t border-white/10">
+            <div className="space-y-3 pt-2">
               <a
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+                className="w-full py-4 rounded-2xl gold-btn-primary text-[#1C1816] font-bold text-xs flex items-center justify-center gap-2.5 shadow-xl transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
               >
                 <FaWhatsapp className="w-4 h-4" />
-                <span>طلب القطعة عبر واتساب مباشرة</span>
+                <span>طلب القطعة والتفصيل عبر واتساب</span>
               </a>
 
               <a
                 href={`tel:${contactPhone.replace(/\s+/g, '')}`}
-                className="w-full py-3 rounded-2xl bg-white/5 hover:bg-white/10 text-[#F2EFE8] border border-white/10 font-semibold text-xs flex items-center justify-center gap-2 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="w-full py-3.5 rounded-2xl gold-btn-secondary text-[#F2EFE8] font-semibold text-xs flex items-center justify-center gap-2 transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
                 <FaPhone className="w-3.5 h-3.5 text-[#C4A070]" />
-                <span>استشارة مع كبير المصممين</span>
+                <span>استشارة معمارية مع كبير المصممين</span>
               </a>
             </div>
 
             {/* Atelier Guarantees */}
-            <div className="grid grid-cols-3 gap-2 pt-4 text-center border-t border-white/5 text-[10px] text-[#827771]">
+            <div className="grid grid-cols-3 gap-2 pt-4 text-center border-t border-white/5 text-[10px] text-[#B3A9A3]">
               <div className="space-y-1">
                 <FaGem className="w-4 h-4 mx-auto text-[#C4A070]" />
                 <p>خامات إيطالية طبيعية</p>

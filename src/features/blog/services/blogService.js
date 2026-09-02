@@ -4,7 +4,7 @@ import { compressImage, deleteStorageFileByUrl, extractImageUrlsFromHtml } from 
 export const blogService = {
   async fetchPublishedPosts() {
     const { data, error } = await supabase
-      .from('posts')
+      .from('articles')
       .select('*')
       .eq('status', 'published')
       .order('created_at', { ascending: false })
@@ -14,7 +14,7 @@ export const blogService = {
 
   async fetchPostBySlug(slug) {
     const { data, error } = await supabase
-      .from('posts')
+      .from('articles')
       .select('*')
       .eq('slug', slug)
       .eq('status', 'published')
@@ -25,7 +25,7 @@ export const blogService = {
 
   async fetchPostById(id) {
     const { data, error } = await supabase
-      .from('posts')
+      .from('articles')
       .select('*')
       .eq('id', id)
       .single()
@@ -35,7 +35,7 @@ export const blogService = {
 
   async fetchAllPosts() {
     const { data, error } = await supabase
-      .from('posts')
+      .from('articles')
       .select('*')
       .order('created_at', { ascending: false })
     if (error) throw error
@@ -44,13 +44,13 @@ export const blogService = {
 
   async deletePost(id) {
     const { data: post } = await supabase
-      .from('posts')
+      .from('articles')
       .select('cover_image, content')
       .eq('id', id)
       .single()
 
     const { error } = await supabase
-      .from('posts')
+      .from('articles')
       .delete()
       .eq('id', id)
     if (error) throw error
@@ -101,13 +101,13 @@ export const blogService = {
 
   async updatePost(id, postData) {
     const { data: oldPost } = await supabase
-      .from('posts')
+      .from('articles')
       .select('cover_image, content')
       .eq('id', id)
       .single()
 
     const { error } = await supabase
-      .from('posts')
+      .from('articles')
       .update(postData)
       .eq('id', id)
     if (error) throw error
@@ -129,7 +129,7 @@ export const blogService = {
 
   async insertPost(postData) {
     const { error } = await supabase
-      .from('posts')
+      .from('articles')
       .insert([postData])
     if (error) throw error
   }

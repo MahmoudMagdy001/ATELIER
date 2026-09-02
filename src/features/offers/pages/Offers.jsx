@@ -47,7 +47,7 @@ export default function Offers() {
   }
 
   return (
-    <div className="bg-[#1C1816] text-[#F2EFE8] min-h-screen font-sans" dir="rtl">
+    <div className="bg-transparent text-[#F2EFE8] min-h-screen font-sans" dir="rtl">
       <SEO
         title="العروض والتخفيضات الحصرية للأثاث الفاخر | ATELIER"
         description="استفد من باقات الأثاث المخفضة والخصومات الحصرية لفترة محدودة على أطقم الصالونات وغرف الطعام."
@@ -65,13 +65,6 @@ export default function Offers() {
           animate="visible"
           className="relative max-w-4xl mx-auto text-center space-y-6"
         >
-          <motion.div variants={fadeUp} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#C4A070]/10 border border-[#C4A070]/30 shadow-sm backdrop-blur-md">
-            <FaPercent className="w-3.5 h-3.5 text-[#C4A070]" />
-            <span className="text-xs tracking-[0.25em] text-[#C4A070] uppercase font-bold">
-              EXCLUSIVE BESPOKE OFFERS
-            </span>
-          </motion.div>
-
           <motion.h1 variants={fadeUp} className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-[#F2EFE8] leading-tight tracking-normal">
             العروض و<span className="gold-gradient-text">الباقات الحصرية</span> لفترة محدودة
           </motion.h1>

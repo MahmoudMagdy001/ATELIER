@@ -38,12 +38,12 @@ export default function VipBespokeCta() {
             whileHover={hoverScale}
             whileTap={tapScale}
             transition={springHover}
-            href={`https://wa.me/${whatsappNum}?text=${encodeURIComponent('مرحباً أتيليه، أرغب في حجز جلسة استشارة معمارية وتأثيث مخصص')}`}
+            href={`https://wa.me/${whatsappNum}?text=${encodeURIComponent('مرحباً S&I Atelier، أرغب في حجز جلسة استشارة معمارية وتأثيث مخصص')}`}
             target="_blank"
             rel="noopener noreferrer"
             className="px-8 py-4 rounded-2xl bg-[#1C1816] text-[#F2EFE8] font-bold text-xs flex items-center justify-center gap-2.5 shadow-xl hover:bg-black transition-colors cursor-pointer"
           >
-            <FaWhatsapp className="w-4 h-4 text-emerald-400" />
+            <FaWhatsapp className="w-4 h-4 text-[#C4A070]" />
             <span>استشارة فورية عبر واتساب</span>
           </motion.a>
           <motion.a

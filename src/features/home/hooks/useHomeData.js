@@ -4,8 +4,7 @@ import { homeService } from '../services/homeService'
 export function useHomeData() {
   const [data, setData] = useState({
     products: [],
-    offers: [],
-    posts: [],
+    portfolio: [],
     categories: [],
     settings: {},
   })

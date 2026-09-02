@@ -11,17 +11,20 @@ import {
   FaArrowRightArrowLeft, 
   FaGear, 
   FaRightFromBracket,
-  FaArrowUpRightFromSquare
+  FaArrowUpRightFromSquare,
+  FaGem
 } from 'react-icons/fa6'
 
-const ADMIN_LINKS = [
-  { to: '/admin/posts', label: 'المقالات (Posts)', Icon: FaPenToSquare },
-  { to: '/admin/products', label: 'المنتجات والأثاث (Products)', Icon: FaCouch },
-  { to: '/admin/offers', label: 'العروض (Offers)', Icon: FaTag },
-  { to: '/admin/media', label: 'الوسائط (Media)', Icon: FaImages },
+const MAIN_ADMIN_LINKS = [
+  { to: '/admin/products', label: 'قطع الإصدار المحدود (Limited)', Icon: FaCouch },
+  { to: '/admin/offers', label: 'العروض الترويجية (Offers)', Icon: FaTag },
+  { to: '/admin/portfolio', label: 'معرض الأعمال (Portfolio)', Icon: FaImages },
+  { to: '/admin/bespoke', label: 'التنفيذ حسب الطلب (Bespoke)', Icon: FaGem },
+  { to: '/admin/posts', label: 'المقالات والمدونة (Blog)', Icon: FaPenToSquare },
   { to: '/admin/categories', label: 'التصنيفات (Categories)', Icon: FaFolderOpen },
+  { to: '/admin/media', label: 'مكتبة الوسائط (Media)', Icon: FaImages },
   { to: '/admin/redirects', label: 'التحويلات (Redirects)', Icon: FaArrowRightArrowLeft },
-  { to: '/admin/settings', label: 'الإعدادات (Settings)', Icon: FaGear },
+  { to: '/admin/settings', label: 'الإعدادات العامة (Settings)', Icon: FaGear },
 ]
 
 export default function AdminLayout() {
@@ -44,7 +47,7 @@ export default function AdminLayout() {
   }
 
   return (
-    <div className="h-screen bg-[#FAF8F5] flex flex-col md:flex-row overflow-hidden font-sans" dir="rtl">
+    <div className="admin-scope h-screen bg-[#FAF8F5] text-[#14110F] flex flex-col md:flex-row overflow-hidden font-sans" dir="rtl">
       {/* Sidebar */}
       <aside className="w-full md:w-64 bg-[#14110F] text-white shrink-0 shadow-2xl flex flex-col border-l border-white/5">
         {/* Brand Header */}
@@ -52,7 +55,7 @@ export default function AdminLayout() {
           <div className="flex items-center gap-3">
             <AtelierMonogram className="w-9 h-9" />
             <div className="flex flex-col">
-              <span className="font-bold text-sm tracking-wide text-white font-['Cinzel']">ATELIER</span>
+              <span className="font-bold text-sm tracking-wide text-white font-['Cinzel']">S&I ATELIER</span>
               <span className="text-[9px] text-[#C4A070] tracking-widest uppercase font-semibold">CONTROL PANEL</span>
             </div>
           </div>
@@ -69,7 +72,7 @@ export default function AdminLayout() {
 
         {/* Navigation Links */}
         <nav className="flex-1 p-4 space-y-1.5 overflow-y-auto">
-          {ADMIN_LINKS.map((link) => (
+          {MAIN_ADMIN_LINKS.map((link) => (
             <NavLink
               key={link.to}
               to={link.to}
@@ -87,8 +90,8 @@ export default function AdminLayout() {
           ))}
         </nav>
 
-        {/* Footer / Logout */}
-        <div className="p-4 border-t border-white/10 space-y-2">
+        {/* Logout */}
+        <div className="p-4 border-t border-white/10">
           <button
             onClick={handleSignOut}
             className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-red-500/15 text-red-300 hover:bg-red-600 hover:text-white transition-all text-sm font-semibold cursor-pointer"

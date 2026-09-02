@@ -7,9 +7,11 @@ import {
   FaImage, 
   FaXmark,
   FaCheck,
-  FaArrowUpFromBracket
+  FaArrowUpFromBracket,
+  FaSpinner
 } from 'react-icons/fa6'
 import MediaPickerModal from './MediaPickerModal'
+import { adminService } from '../../features/admin/services/adminService'
 
 export default function ImagePicker({
   label,
@@ -27,6 +29,7 @@ export default function ImagePicker({
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [showUrlInput, setShowUrlInput] = useState(false)
   const [preview, setPreview] = useState('')
+  const [uploading, setUploading] = useState(false)
   const fileInputRef = useRef(null)
 
   useEffect(() => {
@@ -39,17 +42,27 @@ export default function ImagePicker({
     }
   }, [file, value])
 
-  const handleLocalFileSelect = (e) => {
+  const handleLocalFileSelect = async (e) => {
     const selectedFile = e.target.files?.[0]
     if (!selectedFile) return
 
     if (onFileChange) {
       onFileChange(selectedFile)
-    } else {
-      // If parent only handles url via onChange
       const objectUrl = URL.createObjectURL(selectedFile)
       setPreview(objectUrl)
-      onChange?.(objectUrl)
+    } else {
+      // Auto-upload directly to Supabase storage & media library
+      setUploading(true)
+      try {
+        const uploaded = await adminService.uploadMedia(selectedFile)
+        const publicUrl = uploaded.file_url || uploaded.url
+        setPreview(publicUrl)
+        onChange?.(publicUrl)
+      } catch (err) {
+        alert('فشل رفع الصورة: ' + (err.message || 'خطأ غير متوقع'))
+      } finally {
+        setUploading(false)
+      }
     }
     e.target.value = ''
   }
@@ -93,14 +106,21 @@ export default function ImagePicker({
           )}
 
           {/* Upload Button */}
-          <label className="px-3 py-1.5 bg-white border border-[#E6E1DC] hover:bg-[#FAF8F5] hover:border-[#C5A880] rounded-xl text-xs font-bold text-[#5C544E] cursor-pointer flex items-center gap-1.5 transition-all shadow-sm">
-            <FaUpload className="w-3 h-3 text-[#C5A880]" />
-            <span>رفع</span>
+          <label className={`px-3 py-1.5 bg-white border border-[#E6E1DC] hover:bg-[#FAF8F5] hover:border-[#C5A880] rounded-xl text-xs font-bold text-[#5C544E] cursor-pointer flex items-center gap-1.5 transition-all shadow-sm ${
+            uploading ? 'opacity-60 pointer-events-none' : ''
+          }`}>
+            {uploading ? (
+              <FaSpinner className="w-3 h-3 text-[#C5A880] animate-spin" />
+            ) : (
+              <FaUpload className="w-3 h-3 text-[#C5A880]" />
+            )}
+            <span>{uploading ? 'جار الرفع...' : 'رفع'}</span>
             <input
               ref={fileInputRef}
               type="file"
               accept="image/*"
               className="hidden"
+              disabled={uploading}
               onChange={handleLocalFileSelect}
             />
           </label>
@@ -119,7 +139,7 @@ export default function ImagePicker({
           <input
             type="url"
             placeholder="أو رابط مباشر..."
-            className="flex-1 min-w-[140px] rounded-xl border border-[#E6E1DC] bg-white px-3 py-1.5 text-xs text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+            className="flex-1 min-w-[140px] rounded-xl border border-[#E6E1DC] bg-white px-3 py-1.5 text-xs text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:outline-none font-medium"
             value={value || ''}
             onChange={(e) => {
               if (onFileChange) onFileChange(null)
@@ -178,14 +198,21 @@ export default function ImagePicker({
         <div className="flex-1 w-full space-y-2.5">
           <div className="flex flex-wrap items-center gap-2">
             {/* Upload From Device */}
-            <label className="px-4 py-2 rounded-xl bg-white border border-[#E6E1DC] hover:border-[#C5A880] hover:bg-[#F3EFEA] text-xs font-bold text-[#5C544E] cursor-pointer flex items-center gap-2 transition-all shadow-sm">
-              <FaUpload className="w-3.5 h-3.5 text-[#C5A880]" />
-              <span>رفع من الجهاز</span>
+            <label className={`px-4 py-2 rounded-xl bg-white border border-[#E6E1DC] hover:border-[#C5A880] hover:bg-[#F3EFEA] text-xs font-bold text-[#5C544E] cursor-pointer flex items-center gap-2 transition-all shadow-sm ${
+              uploading ? 'opacity-60 pointer-events-none' : ''
+            }`}>
+              {uploading ? (
+                <FaSpinner className="w-3.5 h-3.5 text-[#C5A880] animate-spin" />
+              ) : (
+                <FaUpload className="w-3.5 h-3.5 text-[#C5A880]" />
+              )}
+              <span>{uploading ? 'جار الرفع...' : 'رفع من الجهاز'}</span>
               <input
                 ref={fileInputRef}
                 type="file"
                 accept="image/*"
                 className="hidden"
+                disabled={uploading}
                 onChange={handleLocalFileSelect}
               />
             </label>

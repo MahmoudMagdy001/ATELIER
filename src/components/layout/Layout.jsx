@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { adminService } from '../../features/admin/services/adminService'
 import { CONTACT_INFO } from '../../constants/contactInfo'
 import BrandLogo from '../ui/BrandLogo'
-import VipBespokeCta from '../ui/VipBespokeCta'
 import ContactShowroomSection from '../../features/home/components/ContactShowroomSection'
 import ScrollToTop from './ScrollToTop'
 import FloatingWhatsApp from './FloatingWhatsApp'
@@ -26,10 +25,9 @@ import {
 
 const NAV_LINKS = [
   { to: '/', label: 'الرئيسية' },
-  { to: '/products', label: 'مجموعة الأثاث والمنتجات' },
-  { to: '/offers', label: 'المجموعات الحصرية' },
-  { to: '/blog', label: 'المجلة المعمارية' },
-  { to: '/about', label: 'عن أتيليه' },
+  { to: '/limited-edition', label: 'قطع ذات إصدار محدود' },
+  { to: '/bespoke', label: 'تنفيذ حسب الطلب' },
+  { to: '/offers', label: 'العروض الحصرية' },
 ]
 
 const SOCIAL_LINKS = [
@@ -86,7 +84,7 @@ export default function Layout() {
   }
 
   return (
-    <div className="min-h-screen bg-[#1C1816] text-[#F2EFE8] flex flex-col selection:bg-[#C4A070]/30 selection:text-[#F2EFE8] font-sans relative" dir="rtl">
+    <div className="min-h-screen bg-transparent text-[#F2EFE8] flex flex-col selection:bg-[#C4A070]/30 selection:text-[#F2EFE8] font-sans relative" dir="rtl">
       {/* Dynamic Transparent / Solid Navbar */}
       <header
         className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ease-in-out ${
@@ -135,10 +133,10 @@ export default function Layout() {
           <div className="flex items-center gap-3 shrink-0">
             <div className="hidden lg:flex items-center gap-3">
               <a
-                href={`https://wa.me/${CONTACT_INFO.whatsappRaw}?text=${encodeURIComponent('مرحباً، أود الاستفسار عن تفصيل قطع أثاث خاصة من أتيليه')}`}
+                href={`https://wa.me/${CONTACT_INFO.whatsappRaw}?text=${encodeURIComponent('مرحباً S&I Atelier، أود الاستفسار عن تفصيل قطع أثاث خاصة')}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-4 py-2 rounded-xl text-xs font-bold text-[#1C1816] bg-gradient-to-r from-[#C4A070] to-[#E3CAA9] hover:from-[#D4B58C] hover:to-[#C4A070] transition-all duration-300 shadow-md shadow-[#C4A070]/20 flex items-center gap-2"
+                className="px-5 py-2.5 rounded-full text-xs font-bold gold-btn-primary transition-all duration-300 shadow-lg flex items-center gap-2"
               >
                 <span>طلب استشارة تصميم</span>
               </a>
@@ -192,9 +190,8 @@ export default function Layout() {
         <Outlet />
       </main>
 
-      {/* Persistent Global Sections (VIP CTA & Contact Showroom) */}
-      <div className="space-y-20 pt-12 pb-20 bg-[#1C1816]">
-        <VipBespokeCta settings={settings} />
+      {/* Unified VIP Bespoke Concierge & Showroom Contact Section */}
+      <div className="pt-8 pb-20 bg-transparent">
         <ContactShowroomSection settings={settings} />
       </div>
 
@@ -203,7 +200,7 @@ export default function Layout() {
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
           <div className="space-y-4">
             <BrandLogo size="md" customLogo={settings?.logo_url} />
-            <p className="text-xs leading-relaxed text-[#827771] pt-2">
+            <p className="text-xs leading-relaxed text-[#B3A9A3] pt-2">
               صياغة مساحات استثنائية وأثاث راقٍ مخصص يعكس الهوية الفاخرة للقصور والفيلات العصرية بأيدي كبار الحرفيين.
             </p>
           </div>
@@ -211,16 +208,16 @@ export default function Layout() {
           <div>
             <h4 className="text-sm font-bold text-[#F2EFE8] mb-4 font-serif">روابط سريعة</h4>
             <ul className="space-y-2.5 text-xs">
-              <li><Link to="/products" className="hover:text-[#C4A070] transition-colors">كتالوج الأثاث الفاخر</Link></li>
-              <li><Link to="/offers" className="hover:text-[#C4A070] transition-colors">المجموعات الخاصة والعروض</Link></li>
-              <li><Link to="/blog" className="hover:text-[#C4A070] transition-colors">المجلة المعمارية</Link></li>
-              <li><Link to="/about" className="hover:text-[#C4A070] transition-colors">عن دار أتيليه</Link></li>
+              <li><Link to="/limited-edition" className="hover:text-[#C4A070] transition-colors">قطع ذات إصدار محدود</Link></li>
+              <li><Link to="/bespoke" className="hover:text-[#C4A070] transition-colors">التنفيذ حسب الطلب</Link></li>
+              <li><Link to="/offers" className="hover:text-[#C4A070] transition-colors">العروض الحصرية</Link></li>
+              <li><Link to="/blog" className="hover:text-[#C4A070] transition-colors">المدونة</Link></li>
             </ul>
           </div>
 
           <div>
             <h4 className="text-sm font-bold text-[#F2EFE8] mb-4 font-serif">التواصل والمعرض</h4>
-            <p className="text-xs text-[#827771] mb-2">{CONTACT_INFO.address}</p>
+            <p className="text-xs text-[#B3A9A3] mb-2">{CONTACT_INFO.address}</p>
             <a href={`tel:${CONTACT_INFO.phone.replace(/\s+/g, '')}`} className="text-xs text-[#C4A070] font-mono hover:underline block">
               {CONTACT_INFO.phone}
             </a>
@@ -247,14 +244,14 @@ export default function Layout() {
         </div>
 
         {/* Brand Values Ribbon */}
-        <div className="max-w-7xl mx-auto mt-12 pt-6 border-t border-white/5 flex flex-col md:flex-row items-center justify-between text-xs text-[#827771] gap-4">
-          <div className="flex items-center gap-4 text-[11px] tracking-[0.25em] text-[#C4A070] uppercase font-bold">
+        <div className="max-w-7xl mx-auto mt-12 pt-6 border-t border-white/5 flex flex-col md:flex-row items-center justify-between text-xs text-[#B3A9A3] gap-4">
+          <div className="flex items-center gap-4 text-[11px] tracking-[0.28em] text-[#C4A070] uppercase font-extrabold font-serif" dir="ltr">
             <span>LUXURY</span>
-            <span>—</span>
+            <span>•</span>
             <span>MINIMAL</span>
-            <span>—</span>
+            <span>•</span>
             <span>TIMELESS</span>
-            <span>—</span>
+            <span>•</span>
             <span>BESPOKE</span>
           </div>
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { offerService } from '../services/offerService'
@@ -53,10 +53,62 @@ export default function OfferDetail() {
     loadOffer()
   }, [slug])
 
+  // Deduplicate gallery images across cover image and variants, linking each to its variant
+  const galleryImages = useMemo(() => {
+    if (!offer) return []
+    const seen = new Set()
+    const list = []
+
+    const findVariantForImage = (imgUrl) => {
+      if (!Array.isArray(offer.variants) || offer.variants.length === 0) return null
+      return offer.variants.find((v) => v.image === imgUrl) || offer.variants[0]
+    }
+
+    const primaryImg = offer.cover_image || offer.banner_image
+    if (primaryImg && !seen.has(primaryImg)) {
+      seen.add(primaryImg)
+      const matchedVariant = findVariantForImage(primaryImg)
+      list.push({
+        url: primaryImg,
+        label: matchedVariant?.name || offer.title || 'صورة العرض الرئيسية',
+        variant: matchedVariant
+      })
+    }
+
+    if (Array.isArray(offer.variants)) {
+      offer.variants.forEach((v) => {
+        if (v.image && !seen.has(v.image)) {
+          seen.add(v.image)
+          list.push({
+            url: v.image,
+            label: v.name || 'خيار العرض',
+            variant: v
+          })
+        }
+      })
+    }
+
+    return list
+  }, [offer])
+
   const handleSelectVariant = (variant) => {
     setSelectedVariant(variant)
     if (variant.image) {
       setActiveImage(variant.image)
+    } else if (offer?.cover_image || offer?.banner_image) {
+      setActiveImage(offer.cover_image || offer.banner_image)
+    }
+  }
+
+  const handleSelectGalleryImage = (item) => {
+    setActiveImage(item.url)
+    const targetVariant = 
+      offer?.variants?.find((v) => v.image === item.url) || 
+      item.variant || 
+      offer?.variants?.[0]
+
+    if (targetVariant) {
+      setSelectedVariant(targetVariant)
     }
   }
 
@@ -91,7 +143,7 @@ export default function OfferDetail() {
   const contactPhone = CONTACT_INFO.phone
 
   return (
-    <div className="bg-[#1C1816] text-[#F2EFE8] min-h-screen font-sans pt-28 md:pt-32" dir="rtl">
+    <div className="bg-transparent text-[#F2EFE8] min-h-screen font-sans pt-28 md:pt-32" dir="rtl">
       <SEO
         title={offer.meta_title || `${offer.title} | تخفيضات ATELIER`}
         description={offer.meta_description || offer.description}
@@ -152,30 +204,26 @@ export default function OfferDetail() {
               )}
             </div>
 
-            {/* Thumbnail switcher */}
-            {Array.isArray(offer.variants) && offer.variants.length > 0 && (
+            {/* Thumbnail switcher for unique gallery images */}
+            {galleryImages.length > 1 && (
               <div className="flex gap-3 overflow-x-auto pb-2">
-                {(offer.cover_image || offer.banner_image) && (
-                  <button
-                    onClick={() => setActiveImage(offer.cover_image || offer.banner_image)}
-                    className={`w-20 h-20 rounded-2xl overflow-hidden border-2 shrink-0 transition-all cursor-pointer ${
-                      activeImage === (offer.cover_image || offer.banner_image) ? 'border-[#C4A070] scale-105 shadow-md shadow-[#C4A070]/20' : 'border-white/10 hover:border-white/30 opacity-70'
-                    }`}
-                  >
-                    <img src={offer.cover_image || offer.banner_image} alt="Main" className="w-full h-full object-cover" />
-                  </button>
-                )}
-                {offer.variants.map((v) => (
-                  <button
-                    key={v.id}
-                    onClick={() => handleSelectVariant(v)}
-                    className={`w-20 h-20 rounded-2xl overflow-hidden border-2 shrink-0 transition-all cursor-pointer ${
-                      selectedVariant?.id === v.id ? 'border-[#C4A070] scale-105 shadow-md shadow-[#C4A070]/20' : 'border-white/10 hover:border-white/30 opacity-70'
-                    }`}
-                  >
-                    <img src={v.image || offer.cover_image} alt={v.name} className="w-full h-full object-cover" />
-                  </button>
-                ))}
+                {galleryImages.map((item, idx) => {
+                  const isActive = activeImage === item.url
+                  return (
+                    <button
+                      key={`${item.url}-${idx}`}
+                      onClick={() => handleSelectGalleryImage(item)}
+                      className={`w-20 h-20 rounded-2xl overflow-hidden border-2 shrink-0 transition-all cursor-pointer ${
+                        isActive
+                          ? 'border-[#C4A070] scale-105 shadow-md shadow-[#C4A070]/20 ring-1 ring-[#C4A070]'
+                          : 'border-white/10 hover:border-white/30 opacity-70'
+                      }`}
+                      title={item.label}
+                    >
+                      <img src={item.url} alt={item.label} className="w-full h-full object-cover" />
+                    </button>
+                  )
+                })}
               </div>
             )}
           </motion.div>
@@ -287,13 +335,24 @@ export default function OfferDetail() {
               </div>
             )}
 
+            {/* Bespoke Customization Notice Banner */}
+            <div className="p-4 rounded-2xl bg-[#1C1816]/90 border border-[#C4A070]/25 space-y-1">
+              <span className="text-[11px] font-bold text-[#C4A070] flex items-center gap-1.5 uppercase tracking-wider">
+                <FaGem className="w-3 h-3" />
+                <span>عرض حصري وتفصيل متكامل • EXCLUSIVE BESPOKE OFFER</span>
+              </span>
+              <p className="text-[11px] text-[#B3A9A3] leading-relaxed">
+                يشمل العرض خدمة التصميم الداخلي وتنسيق الألوان مجاناً مع إمكانية تعديل الأبعاد والمقاسات حسب مخطط قصرك.
+              </p>
+            </div>
+
             {/* Action Buttons */}
-            <div className="space-y-3 pt-4 border-t border-white/10">
+            <div className="space-y-3 pt-2">
               <a
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+                className="w-full py-4 rounded-2xl gold-btn-primary text-[#1C1816] font-bold text-xs flex items-center justify-center gap-2.5 shadow-xl transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
               >
                 <FaWhatsapp className="w-4 h-4" />
                 <span>حجز العرض وتثبيت الخصم عبر واتساب</span>
@@ -301,15 +360,15 @@ export default function OfferDetail() {
 
               <a
                 href={`tel:${contactPhone.replace(/\s+/g, '')}`}
-                className="w-full py-3 rounded-2xl bg-white/5 hover:bg-white/10 text-[#F2EFE8] border border-white/10 font-semibold text-xs flex items-center justify-center gap-2 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="w-full py-3.5 rounded-2xl gold-btn-secondary text-[#F2EFE8] font-semibold text-xs flex items-center justify-center gap-2 transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
                 <FaPhone className="w-3.5 h-3.5 text-[#C4A070]" />
-                <span>استفسار هاتفي فوري</span>
+                <span>استفسار هاتفي فوري مع المستشار</span>
               </a>
             </div>
 
             {/* Atelier Guarantees */}
-            <div className="grid grid-cols-3 gap-2 pt-4 text-center border-t border-white/5 text-[10px] text-[#827771]">
+            <div className="grid grid-cols-3 gap-2 pt-4 text-center border-t border-white/5 text-[10px] text-[#B3A9A3]">
               <div className="space-y-1">
                 <FaGem className="w-4 h-4 mx-auto text-[#C4A070]" />
                 <p>ضمان شامل ومطابقة</p>
@@ -320,7 +379,7 @@ export default function OfferDetail() {
               </div>
               <div className="space-y-1">
                 <FaTruckFast className="w-4 h-4 mx-auto text-[#C4A070]" />
-                <p>شحن وتوصيل فوري</p>
+                <p>شحن وتوصيل فوري VIP</p>
               </div>
             </div>
 

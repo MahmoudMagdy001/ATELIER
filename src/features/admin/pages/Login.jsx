@@ -71,11 +71,11 @@ export default function Login() {
           <div className="mx-auto w-20 h-20 rounded-2xl bg-[#14110F] flex items-center justify-center p-3 shadow-lg shadow-[#C5A880]/20 mb-4 border border-[#C4A070]/30">
             <img src={logoImg} alt="ATELIER Logo" className="w-full h-full object-contain" />
           </div>
-          <h2 className="text-2xl font-bold text-[#14110F]">
-            تسجيل الدخول للوحة التحكم
-          </h2>
-          <p className="mt-2 text-xs text-[#8C7F75]">
-            نظام إدارة المحتوى والـ SEO المعماري الفاخر - ATELIER
+          <h1 className="text-2xl font-serif font-bold text-[#14110F]">
+            لوحة تحكم <span className="text-[#C4A070]">S&I Atelier</span>
+          </h1>
+          <p className="text-xs text-[#827771] mt-1">
+            سجّل الدخول لإدارة القطع ذات الإصدار المحدود وخدمة التنفيذ حسب الطلب
           </p>
         </div>
 

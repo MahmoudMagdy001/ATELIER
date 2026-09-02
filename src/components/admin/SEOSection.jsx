@@ -69,7 +69,7 @@ export default function SEOSection({
               </div>
               <input
                 type="text"
-                className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+                className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
                 placeholder="العنوان الذي يظهر في نتائج بحث جوجل..."
                 value={metaTitle}
                 onChange={(e) => setMetaTitle(e.target.value)}
@@ -80,7 +80,7 @@ export default function SEOSection({
               <label className="block text-xs font-bold text-[#5C544E] mb-1.5">الكلمات المفتاحية المستهدفة (Focus Keywords)</label>
               <input
                 type="text"
-                className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+                className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
                 placeholder="أثاث فاخر, تصميم داخلي, مجالس راقية"
                 value={keywords}
                 onChange={(e) => setKeywords(e.target.value)}
@@ -98,7 +98,7 @@ export default function SEOSection({
             </div>
             <textarea
               rows={3}
-              className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+              className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
               placeholder="وصف مشوق ومختصر يظهر تحت العنوان في نتائج محركات البحث..."
               value={metaDescription}
               onChange={(e) => setMetaDescription(e.target.value)}
@@ -111,7 +111,7 @@ export default function SEOSection({
               <label className="block text-xs font-bold text-[#5C544E] mb-1.5">الرابط النموذجي (Canonical URL)</label>
               <input
                 type="url"
-                className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+                className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-mono text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
                 placeholder="اتركه فارغاً للتوليد التلقائي"
                 value={canonicalUrl}
                 onChange={(e) => setCanonicalUrl(e.target.value)}
@@ -122,7 +122,7 @@ export default function SEOSection({
               <label className="block text-xs font-bold text-[#5C544E] mb-1.5">نص الصورة البديل (Featured Image Alt)</label>
               <input
                 type="text"
-                className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+                className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
                 placeholder="توضيح محتوى الصورة الرئيسية لمحركات البحث وقارئات الشاشة"
                 value={imageAlt}
                 onChange={(e) => setImageAlt(e.target.value)}
@@ -187,7 +187,7 @@ export default function SEOSection({
                 <label className="block text-xs font-medium text-[#5C544E] mb-1">عنوان المشاركة (OG Title)</label>
                 <input
                   type="text"
-                  className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2 text-xs text-[#14110F]"
+                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2 text-xs font-medium text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
                   placeholder="اتركه فارغاً لاستخدام العنوان الرئيسي"
                   value={ogTitle}
                   onChange={(e) => setOgTitle(e.target.value)}
@@ -211,7 +211,7 @@ export default function SEOSection({
                 <label className="block text-xs font-medium text-[#5C544E] mb-1">وصف المشاركة (OG Description)</label>
                 <textarea
                   rows={2}
-                  className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2 text-xs text-[#14110F]"
+                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2 text-xs font-medium text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
                   placeholder="اتركه فارغاً لاستخدام الوصف التعريفي"
                   value={ogDescription}
                   onChange={(e) => setOgDescription(e.target.value)}
@@ -221,7 +221,7 @@ export default function SEOSection({
               <div>
                 <label className="block text-xs font-medium text-[#5C544E] mb-1">نوع بطاقة تويتر (Twitter Card)</label>
                 <select
-                  className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-xs text-[#14110F]"
+                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-xs font-medium text-[#14110F] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all cursor-pointer"
                   value={twitterCard}
                   onChange={(e) => setTwitterCard(e.target.value)}
                 >

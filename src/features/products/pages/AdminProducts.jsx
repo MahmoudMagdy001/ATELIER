@@ -118,13 +118,13 @@ export default function AdminProducts() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E6E1DC] pb-6">
         <div>
           <h1 className="text-2xl font-bold text-[#14110F]">
-            {isEditing ? (currentProduct ? 'تعديل المنتج والخيارات' : 'إضافة قطعة أثاث جديدة') : 'إدارة المنتجات والأثاث الفاخر (Products)'}
+            {isEditing ? (currentProduct ? 'تعديل قطعة الإصدار المحدود' : 'إضافة قطعة جديدة') : 'إدارة قطع الإصدار المحدود (Limited Editions)'}
           </h1>
-          <p className="text-xs text-[#8C7F75] mt-1">التحكم في قطع الأثاث، المتغيرات (الألوان والمقاسات)، الأسعار، وصور العرض</p>
+          <p className="text-xs text-[#8C7F75] mt-1">التحكم في القطع الحصرية، المتغيرات (الألوان والمقاسات)، الأسعار، وصور العرض</p>
         </div>
         {!isEditing && (
           <Button onClick={handleCreateNew} icon={<FaPlus />}>
-            إضافة منتج جديد
+            إضافة قطعة جديدة
           </Button>
         )}
       </div>
@@ -145,7 +145,7 @@ export default function AdminProducts() {
                 <input
                   type="text"
                   required
-                  className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="طقم صالون Milano Velvet الملكي"
@@ -156,7 +156,7 @@ export default function AdminProducts() {
                 <label className="block text-xs font-bold text-[#5C544E] mb-1.5">الرابط المخصص (Slug)</label>
                 <input
                   type="text"
-                  className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none font-mono"
+                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-mono text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
                   placeholder="milano-velvet-royal-living-set"
                   value={slug}
                   onChange={(e) => setSlug(e.target.value)}
@@ -166,7 +166,7 @@ export default function AdminProducts() {
               <div>
                 <label className="block text-xs font-bold text-[#5C544E] mb-1.5">التصنيف / القسم</label>
                 <select
-                  className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all cursor-pointer"
                   value={categoryId}
                   onChange={(e) => setCategoryId(e.target.value)}
                 >
@@ -181,7 +181,7 @@ export default function AdminProducts() {
                 <label className="block text-xs font-bold text-[#5C544E] mb-1.5">شارة مميزة (Badge)</label>
                 <input
                   type="text"
-                  className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
                   value={badge}
                   onChange={(e) => setBadge(e.target.value)}
                   placeholder="الأكثر طلباً / Bespoke Edition / إصدار محدود"
@@ -192,7 +192,7 @@ export default function AdminProducts() {
                 <label className="block text-xs font-bold text-[#5C544E] mb-1.5">ترتيب الظهور</label>
                 <input
                   type="number"
-                  className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-bold text-[#14110F] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
                   value={displayOrder}
                   onChange={(e) => setDisplayOrder(e.target.value)}
                 />
@@ -201,7 +201,7 @@ export default function AdminProducts() {
               <div>
                 <label className="block text-xs font-bold text-[#5C544E] mb-1.5">حالة المنتج</label>
                 <select
-                  className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all cursor-pointer"
                   value={status}
                   onChange={(e) => setStatus(e.target.value)}
                 >
@@ -216,7 +216,7 @@ export default function AdminProducts() {
               <textarea
                 rows={3}
                 required
-                className="w-full rounded-xl border border-[#E6E1DC] px-4 py-2.5 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+                className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
                 placeholder="تفاصيل نوع الخشب، الأقمشة، الأبعاد، ونوعية التشطيب الإيطالي..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}

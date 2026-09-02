@@ -1,6 +1,6 @@
 export const CONTACT_INFO = {
-  brandName: 'أتيليه',
-  brandFullName: 'دار أتيليه (ATELIER)',
+  brandName: 'S&I Atelier',
+  brandFullName: 'S&I Atelier',
   whatsappNumber: '+966 50 123 4567',
   whatsappRaw: '966501234567',
   phone: '+966 50 123 4567',

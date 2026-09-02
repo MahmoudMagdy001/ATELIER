@@ -36,19 +36,40 @@
 
 body {
   font-family: var(--font-sans);
-  background-color: #1c1816;
+  background-color: #141110;
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 16px,
+    rgba(255, 255, 255, 0.018) 16px,
+    rgba(255, 255, 255, 0.018) 18px,
+    rgba(0, 0, 0, 0.45) 18px,
+    rgba(0, 0, 0, 0.45) 20px
+  );
+  background-attachment: fixed;
   color: #f2efe8;
   letter-spacing: -0.015em;
+  min-height: 100vh;
 }
 
-/* Ensure form controls and dialogs in light/admin contexts have clear dark text */
-input, textarea, select {
-  color: #14110f;
+/* Admin Panel form controls: ALWAYS high-contrast dark text and clean styling */
+.admin-scope,
+.admin-scope input,
+.admin-scope textarea,
+.admin-scope select {
+  color: #14110f !important;
 }
 
-input::placeholder, textarea::placeholder {
-  color: #8c7f75;
-  opacity: 0.85;
+.admin-scope input:not([class*="bg-"]),
+.admin-scope textarea:not([class*="bg-"]),
+.admin-scope select:not([class*="bg-"]) {
+  background-color: #ffffff;
+}
+
+.admin-scope input::placeholder,
+.admin-scope textarea::placeholder {
+  color: #8c7f75 !important;
+  opacity: 0.9 !important;
 }
 
 /* Force dark text inside all white modals and dialogs */
@@ -59,14 +80,14 @@ input::placeholder, textarea::placeholder {
 .fixed .bg-white p,
 .fixed .bg-white span,
 .fixed .bg-white label {
-  --tw-text-opacity: 1;
+  color: #14110f !important;
 }
 
-/* Storefront dark input fields override */
-.bg-\[\#1C1816\] input:not(.text-black):not(.text-\[\#14110F\]),
-.bg-\[\#141110\] input:not(.text-black):not(.text-\[\#14110F\]),
-.bg-\[\#1C1816\] textarea:not(.text-black):not(.text-\[\#14110F\]),
-.bg-\[\#141110\] textarea:not(.text-black):not(.text-\[\#14110F\]) {
+/* Storefront dark input fields override - STRICTLY excluded inside admin scope */
+body:not(.admin-scope) div:not(.admin-scope) .bg-\[\#1C1816\]:not(.admin-scope) input:not([class*="text-"]):not(.admin-scope input),
+body:not(.admin-scope) div:not(.admin-scope) .bg-\[\#141110\]:not(.admin-scope) input:not([class*="text-"]):not(.admin-scope input),
+body:not(.admin-scope) div:not(.admin-scope) .bg-\[\#1C1816\]:not(.admin-scope) textarea:not([class*="text-"]):not(.admin-scope textarea),
+body:not(.admin-scope) div:not(.admin-scope) .bg-\[\#141110\]:not(.admin-scope) textarea:not([class*="text-"]):not(.admin-scope textarea) {
   color: #f2efe8;
 }
 
@@ -79,6 +100,43 @@ h1, h2, h3, .font-serif {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(196, 160, 112, 0.22);
+}
+
+/* Architectural Fluted Wood Texture (Inspired by PDF Wall Treatment) */
+.fluted-panel {
+  background-color: #141110;
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 16px,
+    rgba(255, 255, 255, 0.018) 16px,
+    rgba(255, 255, 255, 0.018) 18px,
+    rgba(0, 0, 0, 0.45) 18px,
+    rgba(0, 0, 0, 0.45) 20px
+  );
+}
+
+.luxury-card {
+  background: linear-gradient(145deg, #181514 0%, #13100f 100%);
+  border: 1px solid rgba(196, 160, 112, 0.18);
+  transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.luxury-card:hover {
+  border-color: rgba(196, 160, 112, 0.5);
+  box-shadow: 0 12px 35px -8px rgba(0, 0, 0, 0.7), 0 0 20px 0 rgba(196, 160, 112, 0.12);
+}
+
+.brass-border {
+  border: 1px solid rgba(196, 160, 112, 0.22);
+}
+
+.brass-border-subtle {
+  border: 1px solid rgba(196, 160, 112, 0.12);
+}
+
+.ambient-gold-glow {
+  background: radial-gradient(circle at 50% 0%, rgba(196, 160, 112, 0.14) 0%, rgba(28, 24, 22, 0) 70%);
 }
 
 .gold-gradient-text {
@@ -101,10 +159,37 @@ h1, h2, h3, .font-serif {
   transform: translateY(-2px);
 }
 
+.gold-btn-secondary {
+  background: rgba(28, 24, 22, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #f2efe8;
+  border: 1px solid rgba(196, 160, 112, 0.35);
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.gold-btn-secondary:hover {
+  background: rgba(196, 160, 112, 0.15);
+  border-color: rgba(196, 160, 112, 0.8);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px -2px rgba(196, 160, 112, 0.25);
+}
+
 .brand-ribbon-bar {
   background: linear-gradient(90deg, #141110 0%, #1c1816 50%, #141110 100%);
   border-top: 1px solid rgba(196, 160, 112, 0.15);
   border-bottom: 1px solid rgba(196, 160, 112, 0.15);
+}
+
+/* High Contrast accessible text utilities */
+.text-body-luxury {
+  color: #b3a9a3;
+}
+
+.text-caption-luxury {
+  color: #c4bcb5;
 }
 
 ::-webkit-scrollbar {

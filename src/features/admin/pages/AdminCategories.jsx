@@ -321,7 +321,7 @@ export default function AdminCategories() {
                 <input
                   type="text"
                   required
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E6E1DC] text-xs text-[#14110F] bg-white placeholder-[#8C7F75] focus:border-[#C5A880] focus:outline-none"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E6E1DC] text-xs font-medium text-[#14110F] bg-white placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
                   placeholder="مثال: أطقم الصالونات والمجالس"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -332,7 +332,7 @@ export default function AdminCategories() {
                 <label className="block text-xs font-bold text-[#5C544E] mb-1">الاسم اللطيف (Slug)</label>
                 <input
                   type="text"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E6E1DC] text-xs font-mono text-[#14110F] bg-white placeholder-[#8C7F75] focus:border-[#C5A880] focus:outline-none"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E6E1DC] text-xs font-mono text-[#14110F] bg-white placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
                   placeholder="living-room-majlis"
                   value={slug}
                   onChange={(e) => setSlug(e.target.value)}
@@ -345,7 +345,7 @@ export default function AdminCategories() {
               <div>
                 <label className="block text-xs font-bold text-[#5C544E] mb-1">نوع التصنيف</label>
                 <select
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E6E1DC] text-xs text-[#14110F] bg-white focus:border-[#C5A880] focus:outline-none cursor-pointer"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E6E1DC] text-xs font-medium text-[#14110F] bg-white focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all cursor-pointer"
                   value={type}
                   onChange={(e) => setType(e.target.value)}
                 >
@@ -359,7 +359,7 @@ export default function AdminCategories() {
                 <input
                   type="number"
                   min="0"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E6E1DC] text-xs text-[#14110F] bg-white placeholder-[#8C7F75] focus:border-[#C5A880] focus:outline-none"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E6E1DC] text-xs font-bold text-[#14110F] bg-white placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
                   value={displayOrder}
                   onChange={(e) => setDisplayOrder(e.target.value)}
                 />
@@ -371,7 +371,7 @@ export default function AdminCategories() {
               <label className="block text-xs font-bold text-[#5C544E] mb-1">وصف مختصر للتصنيف</label>
               <textarea
                 rows={2}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-[#E6E1DC] text-xs text-[#14110F] bg-white placeholder-[#8C7F75] focus:border-[#C5A880] focus:outline-none leading-relaxed"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-[#E6E1DC] text-xs font-medium text-[#14110F] bg-white placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none leading-relaxed transition-all"
                 placeholder="أطقم صالونات ومجالس فاخرة مكسوة بأفخم الأقمشة الإيطالية والجلد الطبيعي..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
