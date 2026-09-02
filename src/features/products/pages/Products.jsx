@@ -92,12 +92,6 @@ export default function Products() {
           animate="visible"
           className="relative max-w-4xl mx-auto text-center space-y-6"
         >
-          <motion.div variants={fadeUp} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#C4A070]/30 bg-[#1C1816]/60 backdrop-blur-md text-[11px] font-bold text-[#C4A070]">
-            <span>LIMITED EDITION</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#C4A070]" />
-            <span>حصرية ونادرة</span>
-          </motion.div>
-
           <motion.h1 variants={fadeUp} className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-[#F2EFE8] leading-tight tracking-normal">
             قطع ذات <span className="gold-gradient-text">إصدار محدود</span>
           </motion.h1>

@@ -100,12 +100,6 @@ export default function Home() {
           animate="visible"
           className="relative z-10 max-w-4xl mx-auto space-y-7 pt-28 pb-12"
         >
-          <motion.div variants={fadeUp} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#C4A070]/30 bg-[#1C1816]/60 backdrop-blur-md text-[11px] font-bold text-[#C4A070]">
-            <span>S&I ATELIER</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#C4A070]" />
-            <span>صياغة الفخامة المعمارية</span>
-          </motion.div>
-
           <motion.h1 variants={fadeUp} className="text-4xl sm:text-6xl lg:text-7xl font-serif font-bold text-[#F2EFE8] leading-[1.15] drop-shadow-2xl">
             أناقة معمارية خالدة، <br />
             <span className="gold-gradient-text">مصممة خصيصاً لذوقك الرفيع</span>
