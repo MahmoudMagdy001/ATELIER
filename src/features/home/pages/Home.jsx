@@ -100,16 +100,6 @@ export default function Home() {
           animate="visible"
           className="relative z-10 max-w-4xl mx-auto space-y-7 pt-28 pb-12"
         >
-          {/* Trust Badge with Founding Date */}
-          <motion.div variants={fadeUp} className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[#1C1816]/80 border border-[#C4A070]/35 backdrop-blur-md shadow-xl text-xs text-[#E3CAA9]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#C4A070] animate-pulse" />
-            <span className="font-serif font-bold text-[#F2EFE8] tracking-wider uppercase text-[11px]" dir="ltr">S&I ATELIER</span>
-            <span className="text-[#C4A070]/40">•</span>
-            <span>تأسست العلامة في <strong className="gold-gradient-text font-bold font-serif drop-shadow-[0_0_8px_rgba(196,160,112,0.5)]">12 سبتمبر 2022</strong></span>
-            <span className="text-[#C4A070]/40">•</span>
-            <span className="text-[#C4A070] font-medium">سجل تجاري معتمد</span>
-          </motion.div>
-
           <motion.h1 variants={fadeUp} className="text-4xl sm:text-6xl lg:text-7xl font-serif font-bold text-[#F2EFE8] leading-[1.15] drop-shadow-2xl">
             أناقة معمارية خالدة، <br />
             <span className="gold-gradient-text">مصممة خصيصاً لذوقك الرفيع</span>
