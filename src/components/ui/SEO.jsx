@@ -94,9 +94,9 @@ const SEO = memo(function SEO({
       <meta name="title" content={fullTitle} />
       <meta name="description" content={finalDesc} />
       <link rel="canonical" href={finalCanonical} />
-      <link rel="icon" type="image/png" href={settings?.favicon_url || '/logo.png'} />
-      <link rel="shortcut icon" href={settings?.favicon_url || '/logo.png'} />
-      <link rel="apple-touch-icon" href={settings?.favicon_url || '/logo.png'} />
+      <link rel="icon" type="image/png" href={settings?.favicon_url || '/logo.png?v=3'} />
+      <link rel="shortcut icon" href={settings?.favicon_url || '/logo.png?v=3'} />
+      <link rel="apple-touch-icon" href={settings?.favicon_url || '/logo.png?v=3'} />
       {keywords && <meta name="keywords" content={keywords} />}
       <meta name="robots" content={finalRobots} />
 
