@@ -673,6 +673,7 @@ export default function AdminSettings() {
                   <textarea
                     rows={5}
                     required
+                    dir="ltr"
                     className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] font-mono text-xs text-[#141110] bg-[#FAF8F5] placeholder-[#8C7F75] focus:border-[#C4A070] focus:outline-none"
                     placeholder="<script>...</script>"
                     value={scriptSrc}
