@@ -291,7 +291,7 @@ export default function OfferDetail() {
                       )}
                     </span>
                     {originalPrice > currentPrice && (
-                      <span className="text-sm text-[#827771] line-through font-mono">
+                      <span className="text-sm text-[#827771] line-through font-serif">
                         {originalPrice.toLocaleString(isEn ? 'en-US' : 'ar-SA')} {t('sar')}
                       </span>
                     )}
@@ -357,7 +357,7 @@ export default function OfferDetail() {
                             {vPrice.toLocaleString(isEn ? 'en-US' : 'ar-SA')} <span className="text-[10px] text-[#C4A070] font-sans font-normal">{t('sar')}</span>
                           </span>
                           {vOrig > vPrice && (
-                            <span className="text-[10px] text-[#827771] line-through block font-mono">
+                            <span className="text-[10px] text-[#827771] line-through block font-serif">
                               {vOrig.toLocaleString(isEn ? 'en-US' : 'ar-SA')} {t('sar')}
                             </span>
                           )}

@@ -7,7 +7,7 @@ export const offerService = {
     const today = new Date().toISOString().split('T')[0]
     const { data, error } = await supabase
       .from('offers')
-      .select('id, title, title_en, slug, description, description_en, discount_label, discount_label_en, cover_image, banner_image, valid_until, badge, badge_en, status, variants, created_at')
+      .select('id, title, title_en, slug, description, description_en, discount_label, discount_label_en, cover_image, valid_until, badge, badge_en, status, variants, created_at')
       .eq('status', 'published')
       .or(`valid_until.is.null,valid_until.gte.${today}`)
       .order('created_at', { ascending: false })

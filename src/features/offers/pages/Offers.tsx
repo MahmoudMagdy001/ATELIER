@@ -169,7 +169,7 @@ export default function Offers() {
                                   {startPrice.toLocaleString(isEn ? 'en-US' : 'ar-SA')} <span className="text-xs text-[#C4A070] font-sans font-normal">{t('sar')}</span>
                                 </span>
                                 {startOrigPrice && startOrigPrice > startPrice && (
-                                  <span className="text-xs text-[#827771] line-through font-mono">
+                                  <span className="text-xs text-[#827771] line-through font-serif">
                                     {startOrigPrice.toLocaleString(isEn ? 'en-US' : 'ar-SA')} {t('sar')}
                                   </span>
                                 )}
