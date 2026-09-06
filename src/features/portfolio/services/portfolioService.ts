@@ -6,7 +6,7 @@ export const portfolioService = {
   async fetchVisiblePortfolio(): Promise<PortfolioItem[]> {
     const { data, error } = await supabase
       .from('portfolio')
-      .select('*')
+      .select('id, title, title_en, description, description_en, image_url, category, category_en, display_order, is_visible')
       .eq('is_visible', true)
       .order('display_order', { ascending: true })
     if (error) throw error

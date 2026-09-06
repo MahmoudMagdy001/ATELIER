@@ -6,7 +6,7 @@ export const productService = {
   async fetchPublishedProducts(): Promise<LimitedEdition[]> {
     const { data, error } = await supabase
       .from('limited_editions')
-      .select('*')
+      .select('id, title, title_en, slug, description, description_en, main_image, badge, badge_en, category_id, status, display_order, variants, created_at')
       .eq('status', 'published')
       .order('display_order', { ascending: true })
     if (error) throw error

@@ -6,7 +6,7 @@ export const blogService = {
   async fetchPublishedPosts(): Promise<Article[]> {
     const { data, error } = await supabase
       .from('articles')
-      .select('*')
+      .select('id, slug, title, title_en, excerpt, excerpt_en, cover_image, author, author_en, status, published_at, created_at, category_id, reading_time')
       .eq('status', 'published')
       .order('created_at', { ascending: false })
     if (error) throw error

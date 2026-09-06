@@ -1,9 +1,11 @@
 import { lazy, Suspense } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/layout/Layout'
-import ProtectedRoute from './features/admin/pages/ProtectedRoute'
-import AdminLayout from './features/admin/pages/AdminLayout'
 import { PageLoading } from './components/ui/Loading'
+
+// Admin shell components — lazy-loaded so auth + admin nav don't bloat the public bundle
+const ProtectedRoute = lazy(() => import('./features/admin/pages/ProtectedRoute'))
+const AdminLayout = lazy(() => import('./features/admin/pages/AdminLayout'))
 import ScriptInjector from './components/layout/ScriptInjector'
 import RedirectGuard from './components/layout/RedirectGuard'
 import ScrollRestoration from './components/layout/ScrollRestoration'
