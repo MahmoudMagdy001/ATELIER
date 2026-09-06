@@ -9,8 +9,11 @@ export function useAdminPortfolio() {
   const [currentItem, setCurrentItem] = useState<PortfolioItem | null>(null)
 
   const [title, setTitle] = useState<string>('')
+  const [titleEn, setTitleEn] = useState<string>('')
   const [description, setDescription] = useState<string>('')
+  const [descriptionEn, setDescriptionEn] = useState<string>('')
   const [category, setCategory] = useState<string>('صالونات')
+  const [categoryEn, setCategoryEn] = useState<string>('')
   const [displayOrder, setDisplayOrder] = useState<number>(0)
   const [isVisible, setIsVisible] = useState<boolean>(true)
   const [imageUrl, setImageUrl] = useState<string>('')
@@ -36,8 +39,11 @@ export function useAdminPortfolio() {
   const handleEdit = (item: PortfolioItem) => {
     setCurrentItem(item)
     setTitle(item.title || '')
+    setTitleEn(item.title_en || '')
     setDescription(item.description || '')
+    setDescriptionEn(item.description_en || '')
     setCategory(item.category || 'صالونات')
+    setCategoryEn(item.category_en || '')
     setDisplayOrder(item.display_order || 0)
     setIsVisible(item.is_visible ?? true)
     setImageUrl(item.image_url || '')
@@ -48,8 +54,11 @@ export function useAdminPortfolio() {
   const handleCreateNew = () => {
     setCurrentItem(null)
     setTitle('')
+    setTitleEn('')
     setDescription('')
+    setDescriptionEn('')
     setCategory('صالونات')
+    setCategoryEn('')
     setDisplayOrder(0)
     setIsVisible(true)
     setImageUrl('')
@@ -85,8 +94,11 @@ export function useAdminPortfolio() {
 
       const itemData: Partial<PortfolioItem> = {
         title,
+        title_en: titleEn || null,
         description,
+        description_en: descriptionEn || null,
         category,
+        category_en: categoryEn || null,
         display_order: Number(displayOrder),
         is_visible: isVisible,
         image_url: finalImageUrl,
@@ -114,10 +126,16 @@ export function useAdminPortfolio() {
     currentItem,
     title,
     setTitle,
+    titleEn,
+    setTitleEn,
     description,
     setDescription,
+    descriptionEn,
+    setDescriptionEn,
     category,
     setCategory,
+    categoryEn,
+    setCategoryEn,
     displayOrder,
     setDisplayOrder,
     isVisible,

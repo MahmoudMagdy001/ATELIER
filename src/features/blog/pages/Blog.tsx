@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import { blogService } from '../services/blogService'
 import { adminService } from '../../admin/services/adminService'
 import SEO from '../../../components/ui/SEO'
@@ -18,6 +19,9 @@ import { FaArrowLeft, FaCalendarDays, FaBookOpen } from 'react-icons/fa6'
 import type { Article, Category } from '../../../types/database'
 
 export default function Blog() {
+  const { t, i18n } = useTranslation('blog')
+  const isEn = i18n.language?.startsWith('en')
+
   const [posts, setPosts] = useState<Article[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
@@ -46,10 +50,10 @@ export default function Blog() {
     : posts.filter(p => p.category_id === selectedCategory)
 
   return (
-    <div className="bg-transparent text-[#F2EFE8] min-h-screen font-sans" dir="rtl">
+    <div className="bg-transparent text-[#F2EFE8] min-h-screen font-sans">
       <SEO
-        title="المجلة المعمارية وفنون الأثاث الفاخر | ATELIER"
-        description="استكشف مقالات متخصصة في العمارة المعاصرة، أسرار الأثاث الإيطالي المصنوع بالطلب، واتجاهات التصميم الداخلي."
+        title={t('meta_title')}
+        description={t('meta_description')}
         slug="blog"
       />
 
@@ -64,12 +68,14 @@ export default function Blog() {
           animate="visible"
           className="relative max-w-4xl mx-auto text-center space-y-6"
         >
-          <motion.h1 variants={fadeUp} className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-[#F2EFE8] leading-tight tracking-normal">
-            المجلة المعمارية و<span className="gold-gradient-text">فنون التأثيث الراقي</span>
+          <motion.h1 variants={fadeUp} className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold leading-tight tracking-normal">
+            <span className="gold-gradient-text inline-block">
+              {t('hero_title_pre')}{t('hero_title_highlight')}
+            </span>
           </motion.h1>
 
           <motion.p variants={fadeUp} className="text-sm sm:text-base md:text-lg text-[#DEDAD6] max-w-2xl mx-auto leading-relaxed md:leading-8 font-light">
-            مقالات حصرية وإلهام معماري يومي من قلب استوديوهات التصميم في ميلانو والرياض.
+            {t('hero_desc')}
           </motion.p>
         </motion.div>
       </div>
@@ -91,7 +97,7 @@ export default function Blog() {
                   : 'bg-white/5 text-[#B3A9A3] hover:bg-white/10 hover:text-white border border-white/5'
               }`}
             >
-              جميع المقالات
+              {t('filter_all')}
             </button>
             {categories.map((c) => (
               <button
@@ -103,7 +109,7 @@ export default function Blog() {
                     : 'bg-white/5 text-[#B3A9A3] hover:bg-white/10 hover:text-white border border-white/5'
                 }`}
               >
-                {c.name}
+                {isEn ? (c.name_en || c.name) : c.name}
               </button>
             ))}
           </div>
@@ -117,7 +123,7 @@ export default function Blog() {
         ) : filteredPosts.length === 0 ? (
           <div className="text-center py-16 text-xs text-[#827771]">
             <FaBookOpen className="w-12 h-12 mx-auto text-[#C4A070]/30 mb-3" />
-            لا توجد مقالات منشورة ضمن هذا التصنيف حالياً.
+            {t('empty_state')}
           </div>
         ) : (
           <motion.div 
@@ -125,65 +131,70 @@ export default function Blog() {
             variants={staggerContainer}
             initial="hidden"
             animate="visible"
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-start"
           >
-            {filteredPosts.map((post, idx) => (
-              <motion.div
-                key={post.id}
-                variants={fadeUp}
-                custom={idx}
-                whileHover={cardHover}
-                transition={springHover}
-              >
-                <Link
-                  to={`/blog/${post.slug}`}
-                  className="group rounded-3xl bg-[#141110] border border-[#C4A070]/20 overflow-hidden hover:border-[#C4A070] transition-all duration-300 flex flex-col shadow-xl block h-full hover:shadow-[#C4A070]/10"
+            {filteredPosts.map((post, idx) => {
+              const postTitle = isEn ? (post.title_en || post.title) : post.title
+              const postExcerpt = isEn ? (post.excerpt_en || post.excerpt) : post.excerpt
+
+              return (
+                <motion.div
+                  key={post.id}
+                  variants={fadeUp}
+                  custom={idx}
+                  whileHover={cardHover}
+                  transition={springHover}
                 >
-                  <div className="relative aspect-[16/10] overflow-hidden bg-[#1C1816]">
-                    {post.cover_image ? (
-                      <img
-                        src={post.cover_image}
-                        alt={post.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-[#C4A070]/30">
-                        <FaBookOpen className="w-12 h-12" />
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-[10px] text-[#C4A070]">
-                        <FaCalendarDays className="w-2.5 h-2.5" />
-                        <span>{new Date(post.published_at || post.created_at || Date.now()).toLocaleDateString('ar-SA')}</span>
-                        {post.reading_time && (
-                          <>
-                            <span>•</span>
-                            <span>قراءة {post.reading_time} د</span>
-                          </>
-                        )}
-                      </div>
-
-                      <h3 className="text-lg font-bold font-serif text-[#F2EFE8] group-hover:text-[#C4A070] transition-colors leading-snug">
-                        {post.title}
-                      </h3>
-
-                      <p className="text-xs text-[#827771] line-clamp-2 leading-relaxed">
-                        {post.excerpt}
-                      </p>
+                  <Link
+                    to={`/blog/${post.slug}`}
+                    className="group rounded-3xl bg-[#141110] border border-[#C4A070]/20 overflow-hidden hover:border-[#C4A070] transition-all duration-300 flex flex-col shadow-xl block h-full hover:shadow-[#C4A070]/10 text-start"
+                  >
+                    <div className="relative aspect-[16/10] overflow-hidden bg-[#1C1816]">
+                      {post.cover_image ? (
+                        <img
+                          src={post.cover_image}
+                          alt={postTitle}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-[#C4A070]/30">
+                          <FaBookOpen className="w-12 h-12" />
+                        </div>
+                      )}
                     </div>
 
-                    <div className="pt-4 border-t border-white/5 flex items-center justify-between text-xs font-bold text-[#C4A070]">
-                      <span>قراءة المقال بالكامل</span>
-                      <FaArrowLeft className="w-3 h-3 group-hover:translate-x-[-4px] transition-transform" />
+                    <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2 text-[10px] text-[#C4A070]">
+                          <FaCalendarDays className="w-2.5 h-2.5" />
+                          <span>{new Date(post.published_at || post.created_at || Date.now()).toLocaleDateString(isEn ? 'en-US' : 'ar-SA')}</span>
+                          {post.reading_time && (
+                            <>
+                              <span>•</span>
+                              <span>{t('read_time', { time: post.reading_time })}</span>
+                            </>
+                          )}
+                        </div>
+
+                        <h3 className="text-lg font-bold font-serif text-[#F2EFE8] group-hover:text-[#C4A070] transition-colors leading-snug">
+                          {postTitle}
+                        </h3>
+
+                        <p className="text-xs text-[#827771] line-clamp-2 leading-relaxed">
+                          {postExcerpt}
+                        </p>
+                      </div>
+
+                      <div className="pt-4 border-t border-white/5 flex items-center justify-between text-xs font-bold text-[#C4A070]">
+                        <span>{t('read_article')}</span>
+                        <FaArrowLeft className="w-3 h-3 ltr:rotate-180 group-hover:ltr:translate-x-1 group-hover:rtl:translate-x-[-4px] transition-transform" />
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
+                  </Link>
+                </motion.div>
+              )
+            })}
           </motion.div>
         )}
       </div>

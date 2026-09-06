@@ -21,9 +21,11 @@ import {
 import SEOSection from '../../../components/admin/SEOSection'
 import SEOAnalyzer from '../../../components/admin/SEOAnalyzer'
 import ImagePicker from '../../../components/admin/ImagePicker'
+import AdminLanguageTabs, { type AdminLocale } from '../../../components/admin/AdminLanguageTabs'
 import type { ProductVariant } from '../../../types/database'
 
 export default function AdminProducts() {
+  const [activeLocale, setActiveLocale] = useState<AdminLocale>('ar')
   const {
     products,
     categories,
@@ -32,12 +34,18 @@ export default function AdminProducts() {
     currentProduct,
     title,
     setTitle,
+    titleEn,
+    setTitleEn,
     slug,
     setSlug,
     description,
     setDescription,
+    descriptionEn,
+    setDescriptionEn,
     badge,
     setBadge,
+    badgeEn,
+    setBadgeEn,
     categoryId,
     setCategoryId,
     displayOrder,
@@ -61,8 +69,12 @@ export default function AdminProducts() {
     setIsEditing,
     metaTitle,
     setMetaTitle,
+    metaTitleEn,
+    setMetaTitleEn,
     metaDescription,
     setMetaDescription,
+    metaDescriptionEn,
+    setMetaDescriptionEn,
     keywords,
     setKeywords,
     canonicalUrl,
@@ -118,7 +130,7 @@ export default function AdminProducts() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E6E1DC] pb-6">
         <div>
-          <h1 className="text-2xl font-bold text-[#14110F]">
+          <h1 className="text-2xl font-bold text-[#141110]">
             {isEditing ? (currentProduct ? 'تعديل قطعة الإصدار المحدود' : 'إضافة قطعة جديدة') : 'إدارة قطع الإصدار المحدود (Limited Editions)'}
           </h1>
           <p className="text-xs text-[#8C7F75] mt-1">التحكم في القطع الحصرية، المتغيرات (الألوان والمقاسات)، الأسعار، وصور العرض</p>
@@ -133,127 +145,210 @@ export default function AdminProducts() {
       {isEditing ? (
         <form onSubmit={handleSubmit} className="space-y-8">
           
+          {/* Multilingual Tabs */}
+          <AdminLanguageTabs
+            activeLocale={activeLocale}
+            onChange={setActiveLocale}
+            hasEnglishContent={Boolean(titleEn || descriptionEn)}
+          />
+
           {/* SECTION 1: Basic Info */}
           <div className="bg-white rounded-2xl p-6 border border-[#E6E1DC] shadow-sm space-y-6">
-            <div className="flex items-center gap-2.5 border-b border-[#E6E1DC] pb-3">
-              <FaCouch className="text-[#C5A880] w-5 h-5" />
-              <h3 className="font-bold text-base text-[#14110F]">بيانات المنتج الأساسية</h3>
+            <div className="flex items-center justify-between border-b border-[#E6E1DC] pb-3">
+              <div className="flex items-center gap-2.5">
+                <FaCouch className="text-[#C4A070] w-5 h-5" />
+                <h3 className="font-bold text-base text-[#141110]">
+                  {activeLocale === 'ar' ? 'بيانات المنتج الأساسية (العربية)' : 'Basic Product Information (English)'}
+                </h3>
+              </div>
+              <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-[#FAF8F5] text-[#8C7F75] border border-[#E6E1DC]">
+                {activeLocale === 'ar' ? '🇸🇦 العربية (الرئيسية)' : '🇬🇧 English (Optional)'}
+              </span>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2">
-              <div>
-                <label className="block text-xs font-bold text-[#5C544E] mb-1.5">اسم القطعة / المنتج *</label>
-                <input
-                  type="text"
-                  required
-                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder="طقم صالون Milano Velvet الملكي"
+            {/* Language-dependent fields */}
+            {activeLocale === 'ar' ? (
+              <div className="space-y-4">
+                <div className="grid gap-6 md:grid-cols-2">
+                  <div>
+                    <label className="block text-xs font-bold text-[#5C544E] mb-1.5">اسم القطعة / المنتج (بالعربية) *</label>
+                    <input
+                      type="text"
+                      required
+                      className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      placeholder="طقم صالون Milano Velvet الملكي"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-[#5C544E] mb-1.5">شارة مميزة (Badge بالعربية)</label>
+                    <input
+                      type="text"
+                      className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all"
+                      value={badge}
+                      onChange={(e) => setBadge(e.target.value)}
+                      placeholder="الأكثر طلباً / Bespoke Edition / إصدار محدود"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#5C544E] mb-1.5">وصف تفصيلي للقطعة وخاماتها (بالعربية) *</label>
+                  <textarea
+                    rows={3}
+                    required
+                    className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all"
+                    placeholder="تفاصيل نوع الخشب، الأقمشة، الأبعاد، ونوعية التشطيب الإيطالي..."
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-4" dir="ltr">
+                <div className="grid gap-6 md:grid-cols-2">
+                  <div>
+                    <label className="block text-xs font-bold text-[#5C544E] mb-1.5 text-left">Product Title (English)</label>
+                    <input
+                      type="text"
+                      className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all text-left"
+                      value={titleEn}
+                      onChange={(e) => setTitleEn(e.target.value)}
+                      placeholder="Milano Velvet Royal Living Set"
+                    />
+                    <p className="text-[11px] text-[#8C7F75] mt-1 text-left">Leave blank to use the Arabic title as fallback</p>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-[#5C544E] mb-1.5 text-left">Featured Badge (English)</label>
+                    <input
+                      type="text"
+                      className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all text-left"
+                      value={badgeEn}
+                      onChange={(e) => setBadgeEn(e.target.value)}
+                      placeholder="Best Seller / Limited Edition"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#5C544E] mb-1.5 text-left">Detailed Description & Materials (English)</label>
+                  <textarea
+                    rows={3}
+                    className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all text-left"
+                    placeholder="Handcrafted Italian velvet, solid walnut frame, bespoke bronze accents..."
+                    value={descriptionEn}
+                    onChange={(e) => setDescriptionEn(e.target.value)}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Shared Settings (Category, Slug, Order, Status) */}
+            <div className="pt-4 border-t border-[#E6E1DC] space-y-4">
+              <h4 className="text-xs font-bold text-[#8C7F75] uppercase tracking-wider">
+                {activeLocale === 'en' ? 'General Product Settings' : 'الإعدادات العامة للقطعة (مشتركة)'}
+              </h4>
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                <div>
+                  <label className="block text-xs font-bold text-[#5C544E] mb-1.5">
+                    {activeLocale === 'en' ? 'Custom URL (Slug)' : 'الرابط المخصص (Slug)'}
+                  </label>
+                  <input
+                    type="text"
+                    className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-mono text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all"
+                    placeholder="milano-velvet-royal-living-set"
+                    value={slug}
+                    onChange={(e) => setSlug(e.target.value)}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#5C544E] mb-1.5">
+                    {activeLocale === 'en' ? 'Category' : 'التصنيف / القسم'}
+                  </label>
+                  <select
+                    className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#141110] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all cursor-pointer"
+                    value={categoryId}
+                    onChange={(e) => setCategoryId(e.target.value)}
+                  >
+                    <option value="">{activeLocale === 'en' ? '-- Select Category --' : '-- اختر التصنيف --'}</option>
+                    {categories.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {activeLocale === 'en' ? (c.name_en || c.name) : c.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#5C544E] mb-1.5">
+                    {activeLocale === 'en' ? 'Display Order' : 'ترتيب الظهور'}
+                  </label>
+                  <input
+                    type="number"
+                    className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-bold text-[#141110] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all"
+                    value={displayOrder}
+                    onChange={(e) => setDisplayOrder(Number(e.target.value) || 0)}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#5C544E] mb-1.5">
+                    {activeLocale === 'en' ? 'Product Status' : 'حالة المنتج'}
+                  </label>
+                  <select
+                    className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#141110] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all cursor-pointer"
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                  >
+                    <option value="published">{activeLocale === 'en' ? 'Published' : 'منشور ومتاح في المعرض (Published)'}</option>
+                    <option value="draft">{activeLocale === 'en' ? 'Draft' : 'مسودة مخفية (Draft)'}</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Main Image Upload */}
+              <div className="pt-2">
+                <ImagePicker
+                  label={activeLocale === 'en' ? 'Main Product Image (Cover)' : 'الصورة الرئيسية للمنتج (الغلاف)'}
+                  value={mainImageUrl}
+                  onChange={setMainImageUrl}
+                  file={mainImageFile}
+                  onFileChange={setMainImageFile}
+                  hint={activeLocale === 'en' ? 'Prominent cover photo shown across storefront & details' : 'صورة بارزة تظهر في واجهة المتجر وتفاصيل المنتج'}
+                  title={activeLocale === 'en' ? 'Choose product image from media library' : 'اختر صورة للمنتج من مكتبة الوسائط'}
                 />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-[#5C544E] mb-1.5">الرابط المخصص (Slug)</label>
-                <input
-                  type="text"
-                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-mono text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
-                  placeholder="milano-velvet-royal-living-set"
-                  value={slug}
-                  onChange={(e) => setSlug(e.target.value)}
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-[#5C544E] mb-1.5">التصنيف / القسم</label>
-                <select
-                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all cursor-pointer"
-                  value={categoryId}
-                  onChange={(e) => setCategoryId(e.target.value)}
-                >
-                  <option value="">-- اختر التصنيف --</option>
-                  {categories.map((c) => (
-                    <option key={c.id} value={c.id}>{c.name}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-[#5C544E] mb-1.5">شارة مميزة (Badge)</label>
-                <input
-                  type="text"
-                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
-                  value={badge}
-                  onChange={(e) => setBadge(e.target.value)}
-                  placeholder="الأكثر طلباً / Bespoke Edition / إصدار محدود"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-[#5C544E] mb-1.5">ترتيب الظهور</label>
-                <input
-                  type="number"
-                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-bold text-[#14110F] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
-                  value={displayOrder}
-                  onChange={(e) => setDisplayOrder(Number(e.target.value) || 0)}
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-[#5C544E] mb-1.5">حالة المنتج</label>
-                <select
-                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all cursor-pointer"
-                  value={status}
-                  onChange={(e) => setStatus(e.target.value)}
-                >
-                  <option value="published">منشور ومتاح في المعرض (Published)</option>
-                  <option value="draft">مسودة مخفية (Draft)</option>
-                </select>
               </div>
             </div>
-
-            <div>
-              <label className="block text-xs font-bold text-[#5C544E] mb-1.5">وصف تفصيلي للقطعة وخاماتها *</label>
-              <textarea
-                rows={3}
-                required
-                className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
-                placeholder="تفاصيل نوع الخشب، الأقمشة، الأبعاد، ونوعية التشطيب الإيطالي..."
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-            </div>
-
-            {/* Main Image Upload */}
-            <ImagePicker
-              label="الصورة الرئيسية للمنتج (الغلاف)"
-              value={mainImageUrl}
-              onChange={setMainImageUrl}
-              file={mainImageFile}
-              onFileChange={setMainImageFile}
-              hint="صورة بارزة تظهر في واجهة المتجر وتفاصيل المنتج"
-              title="اختر صورة للمنتج من مكتبة الوسائط"
-            />
           </div>
 
           {/* SECTION 2: Dynamic Variants Builder */}
           <div className="bg-white rounded-2xl p-6 border border-[#E6E1DC] shadow-sm space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E6E1DC] pb-4">
               <div className="flex items-center gap-2.5">
-                <FaLayerGroup className="text-[#C5A880] w-5 h-5" />
+                <FaLayerGroup className="text-[#C4A070] w-5 h-5" />
                 <div>
-                  <h3 className="font-bold text-base text-[#14110F]">خيارات ومتغيرات المنتج (Product Variants)</h3>
-                  <p className="text-xs text-[#8C7F75] mt-0.5">أضف الألوان، المقاسات، أو الخامات؛ وحدد لكل خيار سعره وصورته الخاصة</p>
+                  <h3 className="font-bold text-base text-[#141110]">
+                    {activeLocale === 'en' ? 'Product Variants (English)' : 'خيارات ومتغيرات المنتج (Product Variants)'}
+                  </h3>
+                  <p className="text-xs text-[#8C7F75] mt-0.5">
+                    {activeLocale === 'en' 
+                      ? 'Configure dimensions, colors, and prices in English for international clients'
+                      : 'أدخل خيارات المنتج وأسعاره باللغة العربية'}
+                  </p>
                 </div>
               </div>
 
               <button
                 type="button"
                 onClick={addVariant}
-                className="px-4 py-2 bg-[#14110F] text-white hover:bg-[#2B2623] rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer shadow-sm"
+                className="px-4 py-2 bg-[#141110] text-white hover:bg-[#26211F] rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer shadow-sm"
               >
-                <FaPlus className="w-3 h-3 text-[#C5A880]" />
-                <span>إضافة خيار جديد (Add Variant)</span>
+                <FaPlus className="w-3 h-3 text-[#C4A070]" />
+                <span>{activeLocale === 'en' ? 'Add Variant' : 'إضافة خيار جديد'}</span>
               </button>
             </div>
 
@@ -262,44 +357,60 @@ export default function AdminProducts() {
               {variants.map((v, index) => (
                 <div
                   key={v.id || index}
-                  className="bg-[#FAF8F5] rounded-2xl p-5 border border-[#E6E1DC] space-y-4 transition-all hover:border-[#C5A880]/60 relative"
+                  className="bg-[#FAF8F5] rounded-2xl p-5 border border-[#E6E1DC] space-y-4 transition-all hover:border-[#C4A070]/60 relative"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-extrabold text-[#14110F] bg-white px-2.5 py-1 rounded-lg border border-[#E6E1DC]">
-                      الخيار #{index + 1}
+                    <span className="text-xs font-extrabold text-[#141110] bg-white px-2.5 py-1 rounded-lg border border-[#E6E1DC]">
+                      {activeLocale === 'en' ? `Variant #${index + 1}` : `الخيار #${index + 1}`}
                     </span>
                     {variants.length > 1 && (
                       <button
                         type="button"
                         onClick={() => removeVariant(v.id)}
-                        className="text-xs text-rose-600 hover:text-rose-800 flex items-center gap-1 font-bold p-1 rounded hover:bg-rose-50"
+                        className="text-xs text-rose-600 hover:text-rose-800 flex items-center gap-1 font-bold p-1 rounded hover:bg-rose-50 cursor-pointer"
                       >
                         <FaTrash className="w-3 h-3" />
-                        <span>حذف الخيار</span>
+                        <span>{activeLocale === 'en' ? 'Delete' : 'حذف الخيار'}</span>
                       </button>
                     )}
                   </div>
 
                   <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-                    {/* Variant Name */}
-                    <div className="sm:col-span-2">
-                      <label className="block text-xs font-bold text-[#5C544E] mb-1">
-                        اسم ومواصفة الخيار (مثل: اللون / الحجم / الخامة) *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        className="w-full rounded-xl border border-[#E6E1DC] bg-white px-3.5 py-2 text-xs text-[#14110F] focus:border-[#C5A880] focus:outline-none font-medium"
-                        placeholder="مثال: أزرق كحلي ملكي (مقاس 240 سم) أو جلد كونياك إيطالي"
-                        value={v.name}
-                        onChange={(e) => updateVariant(v.id, 'name', e.target.value)}
-                      />
-                    </div>
+                    {/* Variant Name based on activeLocale */}
+                    {activeLocale === 'ar' ? (
+                      <div>
+                        <label className="block text-xs font-bold text-[#5C544E] mb-1">
+                          اسم الخيار (بالعربية) *
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          className="w-full rounded-xl border border-[#E6E1DC] bg-white px-3.5 py-2 text-xs text-[#141110] focus:border-[#C4A070] focus:outline-none font-medium"
+                          placeholder="أزرق كحلي ملكي (240 سم)"
+                          value={v.name}
+                          onChange={(e) => updateVariant(v.id, 'name', e.target.value)}
+                        />
+                      </div>
+                    ) : (
+                      <div>
+                        <label className="block text-xs font-bold text-[#5C544E] mb-1 text-left" dir="ltr">
+                          Variant Name (English)
+                        </label>
+                        <input
+                          type="text"
+                          className="w-full rounded-xl border border-[#E6E1DC] bg-white px-3.5 py-2 text-xs text-[#141110] focus:border-[#C4A070] focus:outline-none font-medium text-left"
+                          dir="ltr"
+                          placeholder="Royal Navy Blue (240 cm)"
+                          value={v.name_en || ''}
+                          onChange={(e) => updateVariant(v.id, 'name_en', e.target.value)}
+                        />
+                      </div>
+                    )}
 
                     {/* Variant Price */}
                     <div>
-                      <label className="block text-xs font-bold text-[#5C544E] mb-1">
-                        السعر الخاص بهذا الخيار (ر.س / SAR) *
+                      <label className={`block text-xs font-bold text-[#5C544E] mb-1 ${activeLocale === 'en' ? 'text-left' : ''}`}>
+                        {activeLocale === 'en' ? 'Price (SAR) *' : 'السعر الخاص بهذا الخيار (ر.س) *'}
                       </label>
                       <div className="relative">
                         <input
@@ -307,40 +418,41 @@ export default function AdminProducts() {
                           required
                           min="0"
                           step="any"
-                          className="w-full rounded-xl border border-[#E6E1DC] bg-white px-3.5 py-2 text-xs text-[#14110F] focus:border-[#C5A880] focus:outline-none font-bold"
-                          placeholder="مثال: 18500"
+                          className={`w-full rounded-xl border border-[#E6E1DC] bg-white px-3.5 py-2 text-xs text-[#141110] focus:border-[#C4A070] focus:outline-none font-bold ${activeLocale === 'en' ? 'text-left' : ''}`}
+                          placeholder="18500"
                           value={v.price}
                           onChange={(e) => updateVariant(v.id, 'price', e.target.value)}
                         />
-                        <span className="absolute left-3 top-2 text-[10px] font-bold text-[#8C7F75]">ر.س</span>
+                        <span className={`absolute ${activeLocale === 'en' ? 'right-3' : 'left-3'} top-2 text-[10px] font-bold text-[#8C7F75]`}>
+                          {activeLocale === 'en' ? 'SAR' : 'ر.س'}
+                        </span>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Variant Image & SKU */}
-                  <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 items-center pt-2 border-t border-[#E6E1DC]/60">
-                    <div className="sm:col-span-2">
-                      <ImagePicker
-                        compact
-                        label="صورة مخصصة لهذا الخيار (تتغير عند اختيار العميل لهذا اللون/المقاس)"
-                        value={v.image || ''}
-                        onChange={(url) => updateVariant(v.id, 'image', url)}
-                        title={`اختر صورة للخيار: ${v.name || 'خيار المنتج'}`}
-                      />
-                    </div>
-
+                    {/* Variant SKU */}
                     <div>
-                      <label className="block text-xs font-bold text-[#5C544E] mb-1">
-                        رمز المنتج (SKU / كود اختياري)
+                      <label className={`block text-xs font-bold text-[#5C544E] mb-1 ${activeLocale === 'en' ? 'text-left' : ''}`}>
+                        {activeLocale === 'en' ? 'SKU / Model Code' : 'رمز المنتج (SKU اختياري)'}
                       </label>
                       <input
                         type="text"
-                        className="w-full rounded-xl border border-[#E6E1DC] bg-white px-3.5 py-1.5 text-xs text-[#14110F] font-mono"
+                        className="w-full rounded-xl border border-[#E6E1DC] bg-white px-3.5 py-2 text-xs text-[#141110] font-mono text-left"
                         placeholder="MILANO-NVY-240"
                         value={v.sku || ''}
                         onChange={(e) => updateVariant(v.id, 'sku', e.target.value)}
                       />
                     </div>
+                  </div>
+
+                  {/* Variant Image */}
+                  <div className="pt-2 border-t border-[#E6E1DC]/60">
+                    <ImagePicker
+                      compact
+                      label={activeLocale === 'en' ? 'Custom Variant Image' : 'صورة مخصصة لهذا الخيار (تتغير عند اختيار العميل لهذا اللون/المقاس)'}
+                      value={v.image || ''}
+                      onChange={(url) => updateVariant(v.id, 'image', url)}
+                      title={activeLocale === 'en' ? `Choose image for: ${v.name_en || v.name || 'Variant'}` : `اختر صورة للخيار: ${v.name || 'خيار المنتج'}`}
+                    />
                   </div>
                 </div>
               ))}
@@ -351,10 +463,10 @@ export default function AdminProducts() {
           <div className="grid gap-6 lg:grid-cols-12 items-start">
             <div className="lg:col-span-7">
               <SEOSection
-                metaTitle={metaTitle}
-                setMetaTitle={setMetaTitle}
-                metaDescription={metaDescription}
-                setMetaDescription={setMetaDescription}
+                metaTitle={activeLocale === 'en' ? (metaTitleEn || '') : metaTitle}
+                setMetaTitle={activeLocale === 'en' ? setMetaTitleEn : setMetaTitle}
+                metaDescription={activeLocale === 'en' ? (metaDescriptionEn || '') : metaDescription}
+                setMetaDescription={activeLocale === 'en' ? setMetaDescriptionEn : setMetaDescription}
                 keywords={keywords}
                 setKeywords={setKeywords}
                 canonicalUrl={canonicalUrl}
@@ -377,14 +489,15 @@ export default function AdminProducts() {
                 setTwitterCard={setTwitterCard}
                 imageAlt={imageAlt}
                 setImageAlt={setImageAlt}
+                locale={activeLocale}
               />
             </div>
 
             <div className="lg:col-span-5 sticky top-6">
               <SEOAnalyzer
-                title={title}
-                description={metaDescription || description}
-                content={description}
+                title={activeLocale === 'en' ? (titleEn || title) : title}
+                description={activeLocale === 'en' ? (metaDescriptionEn || descriptionEn || description) : (metaDescription || description)}
+                content={activeLocale === 'en' ? (descriptionEn || description) : description}
                 focusKeyword={keywords}
                 imageAlt={imageAlt}
                 canonicalUrl={canonicalUrl}
@@ -397,12 +510,14 @@ export default function AdminProducts() {
             <button
               type="button"
               onClick={() => setIsEditing(false)}
-              className="px-6 py-3 rounded-xl border border-[#E6E1DC] text-xs font-bold text-[#5C544E] hover:bg-[#FAF8F5]"
+              className="px-6 py-3 rounded-xl border border-[#E6E1DC] text-xs font-bold text-[#5C544E] hover:bg-[#FAF8F5] cursor-pointer"
             >
-              إلغاء
+              {activeLocale === 'en' ? 'Cancel' : 'إلغاء'}
             </button>
             <Button type="submit" disabled={submitting} icon={<FaFloppyDisk />} size="lg">
-              {submitting ? 'جار حفظ المنتج والخيارات...' : 'حفظ ونشر القطعة'}
+              {submitting 
+                ? (activeLocale === 'en' ? 'Saving Product...' : 'جار حفظ المنتج والخيارات...') 
+                : (activeLocale === 'en' ? 'Save & Publish Product' : 'حفظ ونشر القطعة')}
             </Button>
           </div>
         </form>
@@ -431,10 +546,19 @@ export default function AdminProducts() {
                     )}
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <h4 className="font-bold text-sm text-[#14110F]">{prod.title}</h4>
+                        <h4 className="font-bold text-sm text-[#141110]">{prod.title}</h4>
                         {prod.badge && (
-                          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#C5A880]/15 text-[#8C6A2D]">
+                          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#C4A070]/15 text-[#8C6A2D]">
                             {prod.badge}
+                          </span>
+                        )}
+                        {prod.title_en ? (
+                          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200" title={`English: ${prod.title_en}`}>
+                            🇬🇧 EN
+                          </span>
+                        ) : (
+                          <span className="px-1.5 py-0.5 rounded text-[9px] text-[#8C7F75] bg-gray-100" title="بدون ترجمة إنجليزية (سيتم استخدام العربية تلقائياً)">
+                            عربي فقط
                           </span>
                         )}
                       </div>
@@ -443,7 +567,7 @@ export default function AdminProducts() {
 
                       <div className="flex flex-wrap items-center gap-2 pt-1">
                         {/* Price from Variants */}
-                        <span className="text-xs font-bold text-[#14110F] bg-[#FAF8F5] px-2.5 py-0.5 rounded-lg border border-[#E6E1DC]">
+                        <span className="text-xs font-bold text-[#141110] bg-[#FAF8F5] px-2.5 py-0.5 rounded-lg border border-[#E6E1DC]">
                           {getPriceRange(prod.variants)}
                         </span>
 
@@ -467,9 +591,9 @@ export default function AdminProducts() {
 
                   <div className="flex items-center gap-2 shrink-0">
                     <Link
-                      to={`/products/${prod.slug}`}
+                      to={`/limited-edition/${prod.slug}`}
                       target="_blank"
-                      className="p-2.5 text-[#5C544E] hover:bg-white rounded-xl border border-[#E6E1DC] hover:text-[#C5A880]"
+                      className="p-2.5 text-[#5C544E] hover:bg-white rounded-xl border border-[#E6E1DC] hover:text-[#C4A070]"
                       title="معاينة في المتجر"
                     >
                       <FaEye className="w-3.5 h-3.5" />
@@ -477,7 +601,7 @@ export default function AdminProducts() {
                     <button
                       type="button"
                       onClick={() => handleEdit(prod)}
-                      className="p-2.5 text-[#5C544E] hover:bg-white rounded-xl border border-[#E6E1DC] hover:text-[#C5A880]"
+                      className="p-2.5 text-[#5C544E] hover:bg-white rounded-xl border border-[#E6E1DC] hover:text-[#C4A070]"
                       title="تعديل"
                     >
                       <FaPen className="w-3.5 h-3.5" />

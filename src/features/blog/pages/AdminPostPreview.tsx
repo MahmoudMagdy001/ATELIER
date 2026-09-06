@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+﻿import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { blogService } from '../services/blogService'
 import { PageLoading } from '../../../components/ui/Loading'
@@ -45,29 +45,29 @@ export default function AdminPostPreview() {
       <div className="flex items-center justify-between">
         <Link
           to="/admin/posts"
-          className="inline-flex items-center gap-2 text-xs font-bold text-[#C5A880] hover:underline"
+          className="inline-flex items-center gap-2 text-xs font-bold text-[#C4A070] hover:underline"
         >
           <FaArrowRight className="w-3 h-3" />
           <span>العودة لقائمة المقالات</span>
         </Link>
-        <span className="text-xs px-3 py-1 rounded-full bg-[#C5A880]/15 text-[#8C6A2D] font-bold">
+        <span className="text-xs px-3 py-1 rounded-full bg-[#C4A070]/15 text-[#8C6A2D] font-bold">
           وضع المعاينة (Preview Mode)
         </span>
       </div>
 
       <article className="bg-white rounded-3xl p-8 md:p-12 space-y-8 border border-[#E6E1DC] shadow-sm">
         <div className="space-y-4">
-          <div className="flex items-center gap-3 text-xs text-[#C5A880]">
+          <div className="flex items-center gap-3 text-xs text-[#C4A070]">
             <span className="flex items-center gap-1 font-bold">
               <FaCalendar className="w-3 h-3" /> {new Date(post.created_at || Date.now()).toLocaleDateString('ar-SA')}
             </span>
           </div>
 
-          <h1 className="text-2xl md:text-3xl font-bold text-[#14110F] leading-tight">
+          <h1 className="text-2xl md:text-3xl font-bold text-[#141110] leading-tight">
             {post.title}
           </h1>
 
-          <p className="text-sm text-[#5C544E] leading-relaxed border-r-2 border-[#C5A880] pr-4">
+          <p className="text-sm text-[#5C544E] leading-relaxed border-r-2 border-[#C4A070] pr-4">
             {post.excerpt}
           </p>
         </div>

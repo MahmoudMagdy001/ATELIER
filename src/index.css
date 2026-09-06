@@ -1,42 +1,38 @@
 @import "tailwindcss";
+@import "../design-system/tokens.css";
 
-@theme {
-  --color-brand-cream: #f2efe8;
-  --color-brand-charcoal: #1c1816;
-  --color-brand-gold: #c4a070;
+html {
+  scrollbar-gutter: stable;
+  scroll-behavior: smooth;
+}
 
-  --color-onyx-950: #0f0d0c;
-  --color-onyx-900: #141110;
-  --color-onyx-800: #1c1816;
-  --color-onyx-700: #26211f;
-  --color-onyx-600: #332d2a;
-  --color-onyx-500: #423b37;
-  --color-onyx-400: #5c534e;
-  --color-onyx-300: #827771;
-  --color-onyx-200: #b3a9a3;
-  --color-onyx-100: #dedad6;
-  --color-onyx-50: #f2efe8;
+/* Language & Direction-aware Typography */
+html[dir="rtl"], html[lang="ar"] {
+  --font-sans: "Alexandria", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-serif: "Cinzel", "El Messiri", serif;
+}
 
-  --color-gold-950: #3d2d14;
-  --color-gold-900: #59431f;
-  --color-gold-800: #7a5d2b;
-  --color-gold-700: #9e7939;
-  --color-gold-600: #b88f48;
-  --color-gold-500: #c4a070;
-  --color-gold-400: #d4b58c;
-  --color-gold-300: #e3caa9;
-  --color-gold-200: #f0dec8;
-  --color-gold-100: #f9f1e7;
-  --color-gold-50: #fdfaf5;
-
-  --font-serif: "Cinzel", "Cormorant Garamond", "El Messiri", Georgia, serif;
-  --font-sans: "Alexandria", "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-editorial: "Cormorant Garamond", "El Messiri", serif;
+html[dir="ltr"], html[lang="en"] {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-serif: "Cinzel", "Cormorant Garamond", Georgia, serif;
 }
 
 body {
   font-family: var(--font-sans);
   background-color: #141110;
+  color: #f2efe8;
+  letter-spacing: -0.015em;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* GPU-accelerated background pattern: avoids CPU repaint during scrolling */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
   background-image: repeating-linear-gradient(
     90deg,
     transparent,
@@ -46,10 +42,8 @@ body {
     rgba(0, 0, 0, 0.45) 18px,
     rgba(0, 0, 0, 0.45) 20px
   );
-  background-attachment: fixed;
-  color: #f2efe8;
-  letter-spacing: -0.015em;
-  min-height: 100vh;
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 /* Admin Panel form controls: ALWAYS high-contrast dark text and clean styling */
@@ -57,7 +51,7 @@ body {
 .admin-scope input,
 .admin-scope textarea,
 .admin-scope select {
-  color: #14110f !important;
+  color: #141110 !important;
 }
 
 .admin-scope input:not([class*="bg-"]),
@@ -72,15 +66,21 @@ body {
   opacity: 0.9 !important;
 }
 
-/* Force dark text inside all white modals and dialogs */
-.fixed .bg-white,
-.fixed .bg-white input,
-.fixed .bg-white textarea,
-.fixed .bg-white select,
-.fixed .bg-white p,
-.fixed .bg-white span,
-.fixed .bg-white label {
-  color: #14110f !important;
+/* Force dark text inside all white modals and dialogs, respecting explicit button/text colors */
+.fixed .bg-white input:not([class*="text-"]),
+.fixed .bg-white textarea:not([class*="text-"]),
+.fixed .bg-white select:not([class*="text-"]),
+.fixed .bg-white p:not([class*="text-"]),
+.fixed .bg-white label:not([class*="text-"]),
+.fixed .bg-white span:not(button span):not([class*="text-"]) {
+  color: #141110 !important;
+}
+
+.fixed .bg-white button[class*="text-white"],
+.fixed .bg-white button[class*="text-white"] span,
+.fixed .bg-white [class*="text-white"],
+.fixed .bg-white [class*="text-white"] span {
+  color: #ffffff !important;
 }
 
 /* Storefront dark input fields override - STRICTLY excluded inside admin scope */
@@ -93,88 +93,6 @@ body:not(.admin-scope) div:not(.admin-scope) .bg-\[\#141110\]:not(.admin-scope) 
 
 h1, h2, h3, .font-serif {
   font-family: var(--font-serif);
-}
-
-.glass-panel-luxury {
-  background: rgba(28, 24, 22, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(196, 160, 112, 0.22);
-}
-
-/* Architectural Fluted Wood Texture (Inspired by PDF Wall Treatment) */
-.fluted-panel {
-  background-color: #141110;
-  background-image: repeating-linear-gradient(
-    90deg,
-    transparent,
-    transparent 16px,
-    rgba(255, 255, 255, 0.018) 16px,
-    rgba(255, 255, 255, 0.018) 18px,
-    rgba(0, 0, 0, 0.45) 18px,
-    rgba(0, 0, 0, 0.45) 20px
-  );
-}
-
-.luxury-card {
-  background: linear-gradient(145deg, #181514 0%, #13100f 100%);
-  border: 1px solid rgba(196, 160, 112, 0.18);
-  transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-.luxury-card:hover {
-  border-color: rgba(196, 160, 112, 0.5);
-  box-shadow: 0 12px 35px -8px rgba(0, 0, 0, 0.7), 0 0 20px 0 rgba(196, 160, 112, 0.12);
-}
-
-.brass-border {
-  border: 1px solid rgba(196, 160, 112, 0.22);
-}
-
-.brass-border-subtle {
-  border: 1px solid rgba(196, 160, 112, 0.12);
-}
-
-.ambient-gold-glow {
-  background: radial-gradient(circle at 50% 0%, rgba(196, 160, 112, 0.14) 0%, rgba(28, 24, 22, 0) 70%);
-}
-
-.gold-gradient-text {
-  background: linear-gradient(135deg, #f0dec8 0%, #c4a070 50%, #9e7939 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.gold-btn-primary {
-  background: linear-gradient(135deg, #c4a070 0%, #a68252 100%);
-  color: #1c1816;
-  font-weight: 700;
-  box-shadow: 0 4px 25px -2px rgba(196, 160, 112, 0.4);
-  transition: all 0.3s ease;
-}
-
-.gold-btn-primary:hover {
-  background: linear-gradient(135deg, #d4b58c 0%, #b88f48 100%);
-  box-shadow: 0 6px 30px 0 rgba(196, 160, 112, 0.55);
-  transform: translateY(-2px);
-}
-
-.gold-btn-secondary {
-  background: rgba(28, 24, 22, 0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  color: #f2efe8;
-  border: 1px solid rgba(196, 160, 112, 0.35);
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.gold-btn-secondary:hover {
-  background: rgba(196, 160, 112, 0.15);
-  border-color: rgba(196, 160, 112, 0.8);
-  color: #ffffff;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 20px -2px rgba(196, 160, 112, 0.25);
 }
 
 .brand-ribbon-bar {
@@ -207,3 +125,16 @@ h1, h2, h3, .font-serif {
 ::-webkit-scrollbar-thumb:hover {
   background: #c4a070;
 }
+
+/* Reduced Motion Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+

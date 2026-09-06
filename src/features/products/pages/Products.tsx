@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import { productService } from '../services/productService'
 import { adminService } from '../../admin/services/adminService'
 import SEO from '../../../components/ui/SEO'
@@ -19,6 +20,9 @@ import { FaCouch, FaArrowLeft, FaLayerGroup } from 'react-icons/fa6'
 import type { LimitedEdition, Category, ProductVariant } from '../../../types/database'
 
 export default function Products() {
+  const { t, i18n } = useTranslation('products')
+  const isEn = i18n.language?.startsWith('en')
+
   const [products, setProducts] = useState<LimitedEdition[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
@@ -76,10 +80,10 @@ export default function Products() {
   }
 
   return (
-    <div className="bg-transparent text-[#F2EFE8] min-h-screen font-sans" dir="rtl">
+    <div className="bg-transparent text-[#F2EFE8] min-h-screen font-sans">
       <SEO
-        title="قطع ذات إصدار محدود | S&I Atelier"
-        description="استكشف تشكيلات الأثاث الحصرية ذات الإصدار المحدود المصنوعة يدوياً بأندر الخامات الأوروبية الطبيعية."
+        title={t('meta_title')}
+        description={t('meta_description')}
         slug="limited-edition"
       />
 
@@ -94,12 +98,14 @@ export default function Products() {
           animate="visible"
           className="relative max-w-4xl mx-auto text-center space-y-6"
         >
-          <motion.h1 variants={fadeUp} className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-[#F2EFE8] leading-tight tracking-normal">
-            قطع ذات <span className="gold-gradient-text">إصدار محدود</span>
+          <motion.h1 variants={fadeUp} className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold leading-tight tracking-normal">
+            <span className="gold-gradient-text inline-block">
+              {t('hero_title_pre')} {t('hero_title_highlight')}
+            </span>
           </motion.h1>
 
           <motion.p variants={fadeUp} className="text-sm sm:text-base md:text-lg text-[#DEDAD6] max-w-2xl mx-auto leading-relaxed md:leading-8 font-light">
-            قطع نحتية حصرية تُصنع بأعداد قليلة ومعدودة لأرقى القصور والمساحات الخاصة، من أجود أخشاب الجوز المعتق والرخام النادر.
+            {t('hero_desc')}
           </motion.p>
         </motion.div>
       </div>
@@ -121,7 +127,7 @@ export default function Products() {
                   : 'bg-white/5 text-[#B3A9A3] hover:bg-white/10 hover:text-white border border-white/5'
               }`}
             >
-              الكل
+              {t('filter_all')}
             </button>
             {categories.map((c) => (
               <button
@@ -133,7 +139,7 @@ export default function Products() {
                     : 'bg-white/5 text-[#B3A9A3] hover:bg-white/10 hover:text-white border border-white/5'
                 }`}
               >
-                {c.name}
+                {isEn ? (c.name_en || c.name) : c.name}
               </button>
             ))}
           </div>
@@ -147,7 +153,7 @@ export default function Products() {
         ) : filteredProducts.length === 0 ? (
           <div className="text-center py-16 text-xs text-[#827771]">
             <FaCouch className="w-12 h-12 mx-auto text-[#C4A070]/30 mb-3" />
-            لا توجد منتجات ضمن هذا القسم حالياً.
+            {t('empty_state')}
           </div>
         ) : (
           <motion.div 
@@ -155,10 +161,14 @@ export default function Products() {
             variants={staggerContainer}
             initial="hidden"
             animate="visible"
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 text-start"
           >
             {filteredProducts.map((product, idx) => {
               const startPrice = getStartingPrice(product.variants)
+              const pTitle = isEn ? (product.title_en || product.title) : product.title
+              const pDesc = isEn ? (product.description_en || product.description) : product.description
+              const pBadge = isEn ? (product.badge_en || product.badge) : product.badge
+
               return (
                 <motion.div
                   key={product.id}
@@ -169,24 +179,24 @@ export default function Products() {
                 >
                   <Link
                     to={`/limited-edition/${product.slug}`}
-                    className="group rounded-3xl bg-[#141110] border border-[#C4A070]/20 overflow-hidden hover:border-[#C4A070] transition-all duration-300 flex flex-col shadow-xl block h-full hover:shadow-[#C4A070]/10"
+                    className="group rounded-3xl bg-[#141110] border border-[#C4A070]/20 overflow-hidden hover:border-[#C4A070] transition-all duration-300 flex flex-col shadow-xl block h-full hover:shadow-[#C4A070]/10 text-start"
                   >
                     <div className="relative aspect-[4/3] bg-[#1C1816] overflow-hidden">
                       <img
                         src={product.main_image || product.variants?.[0]?.image}
-                        alt={product.title}
+                        alt={pTitle}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         loading="lazy"
                       />
-                      {product.badge && (
-                        <span className="absolute top-4 right-4 px-3 py-1 rounded-full text-[11px] font-bold bg-[#C4A070] text-[#1C1816] shadow-md">
-                          {product.badge}
+                      {pBadge && (
+                        <span className="absolute top-4 end-4 px-3 py-1 rounded-full text-[11px] font-bold bg-[#C4A070] text-[#1C1816] shadow-md">
+                          {pBadge}
                         </span>
                       )}
                       {Array.isArray(product.variants) && product.variants.length > 0 && (
-                        <span className="absolute bottom-4 left-4 px-2.5 py-1 rounded-lg text-[10px] font-semibold bg-black/60 backdrop-blur-md text-white border border-white/10 flex items-center gap-1.5">
+                        <span className="absolute bottom-4 start-4 px-2.5 py-1 rounded-lg text-[10px] font-semibold bg-black/60 backdrop-blur-md text-white border border-white/10 flex items-center gap-1.5">
                           <FaLayerGroup className="w-3 h-3 text-[#C4A070]" />
-                          <span>{product.variants.length} خيارات</span>
+                          <span>{t('options_count', { count: product.variants.length })}</span>
                         </span>
                       )}
                     </div>
@@ -194,28 +204,28 @@ export default function Products() {
                     <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
                       <div>
                         <h3 className="text-lg font-bold font-serif text-[#F2EFE8] group-hover:text-[#C4A070] transition-colors leading-snug">
-                          {product.title}
+                          {pTitle}
                         </h3>
                         <p className="text-xs text-[#827771] mt-2 line-clamp-2 leading-relaxed">
-                          {product.description}
+                          {pDesc}
                         </p>
                       </div>
 
                       <div className="pt-4 border-t border-white/5 flex items-center justify-between">
                         <div>
-                          <span className="text-[10px] text-[#827771] block font-medium">السعر</span>
+                          <span className="text-[10px] text-[#827771] block font-medium">{t('price_label')}</span>
                           {startPrice ? (
                             <div className="text-base font-extrabold font-serif text-[#E3CAA9] tracking-wide">
-                              يبدأ من {startPrice.toLocaleString()} <span className="text-xs text-[#C4A070] font-sans font-normal">ر.س</span>
+                              {t('starts_from')} {startPrice.toLocaleString(isEn ? 'en-US' : 'ar-SA')} <span className="text-xs text-[#C4A070] font-sans font-normal">{t('sar')}</span>
                             </div>
                           ) : (
-                            <span className="text-xs text-[#C4A070] font-bold">حسب التخصيص</span>
+                            <span className="text-xs text-[#C4A070] font-bold">{t('custom_pricing')}</span>
                           )}
                         </div>
 
-                        <div className="flex items-center gap-1.5 text-xs font-bold text-[#C4A070] group-hover:translate-x-[-4px] transition-transform">
-                          <span>التفاصيل</span>
-                          <FaArrowLeft className="w-3 h-3" />
+                        <div className="flex items-center gap-1.5 text-xs font-bold text-[#C4A070] group-hover:ltr:translate-x-1 group-hover:rtl:translate-x-[-4px] transition-transform">
+                          <span>{t('details_cta')}</span>
+                          <FaArrowLeft className="w-3 h-3 ltr:rotate-180 transition-transform" />
                         </div>
                       </div>
                     </div>

@@ -16,6 +16,8 @@ import {
   FaLink
 } from 'react-icons/fa6'
 
+import AdminLanguageTabs, { AdminLocale } from '../../../components/admin/AdminLanguageTabs'
+
 import type { Category } from '../../../types/database'
 
 export default function AdminCategories() {
@@ -26,9 +28,12 @@ export default function AdminCategories() {
   // Form State
   const [isEditing, setIsEditing] = useState<boolean>(false)
   const [currentId, setCurrentId] = useState<string | null>(null)
+  const [adminLocale, setAdminLocale] = useState<AdminLocale>('ar')
   const [name, setName] = useState<string>('')
+  const [nameEn, setNameEn] = useState<string>('')
   const [slug, setSlug] = useState<string>('')
   const [description, setDescription] = useState<string>('')
+  const [descriptionEn, setDescriptionEn] = useState<string>('')
   const [imageUrl, setImageUrl] = useState<string>('')
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string>('')
@@ -60,8 +65,10 @@ export default function AdminCategories() {
   const handleEdit = (cat: Category) => {
     setCurrentId(cat.id)
     setName(cat.name || '')
+    setNameEn(cat.name_en || '')
     setSlug(cat.slug || '')
     setDescription(cat.description || '')
+    setDescriptionEn(cat.description_en || '')
     setImageUrl(cat.image_url || '')
     setImagePreview(cat.image_url || '')
     setImageFile(null)
@@ -69,14 +76,17 @@ export default function AdminCategories() {
     setDisplayOrder(cat.display_order || 0)
     setMetaTitle(cat.meta_title || '')
     setMetaDescription(cat.meta_description || '')
+    setAdminLocale('ar')
     setIsEditing(true)
   }
 
   const handleCreateNew = () => {
     setCurrentId(null)
     setName('')
+    setNameEn('')
     setSlug('')
     setDescription('')
+    setDescriptionEn('')
     setImageUrl('')
     setImagePreview('')
     setImageFile(null)
@@ -84,6 +94,7 @@ export default function AdminCategories() {
     setDisplayOrder(categories.length + 1)
     setMetaTitle('')
     setMetaDescription('')
+    setAdminLocale('ar')
     setIsEditing(true)
   }
 
@@ -130,8 +141,10 @@ export default function AdminCategories() {
 
       const catData = {
         name,
+        name_en: nameEn.trim() || null,
         slug: targetSlug,
         description,
+        description_en: descriptionEn.trim() || null,
         image_url: finalImageUrl,
         type,
         display_order: Number(displayOrder),
@@ -161,7 +174,7 @@ export default function AdminCategories() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E6E1DC] pb-6">
         <div>
-          <h1 className="text-2xl font-bold text-[#14110F]">إدارة التصنيفات (Categories)</h1>
+          <h1 className="text-2xl font-bold text-[#141110]">إدارة التصنيفات (Categories)</h1>
           <p className="text-xs text-[#8C7F75] mt-1">
             إضافة صور مميزة وتعديل أقسام الأثاث الفاخر وتصنيفات المقالات المعمارية
           </p>
@@ -178,7 +191,7 @@ export default function AdminCategories() {
           onClick={() => setFilterType('products')}
           className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
             filterType === 'products'
-              ? 'bg-[#C5A880] text-white shadow-md shadow-[#C5A880]/20'
+              ? 'bg-[#C4A070] text-white shadow-md shadow-[#C4A070]/20'
               : 'bg-white border border-[#E6E1DC] text-[#5C544E] hover:bg-[#FAF8F5]'
           }`}
         >
@@ -188,7 +201,7 @@ export default function AdminCategories() {
           onClick={() => setFilterType('blog')}
           className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
             filterType === 'blog'
-              ? 'bg-[#C5A880] text-white shadow-md shadow-[#C5A880]/20'
+              ? 'bg-[#C4A070] text-white shadow-md shadow-[#C4A070]/20'
               : 'bg-white border border-[#E6E1DC] text-[#5C544E] hover:bg-[#FAF8F5]'
           }`}
         >
@@ -207,7 +220,7 @@ export default function AdminCategories() {
           categories.map((cat) => (
             <div 
               key={cat.id} 
-              className="bg-white rounded-2xl border border-[#E6E1DC] p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm hover:border-[#C5A880]/50 transition-all"
+              className="bg-white rounded-2xl border border-[#E6E1DC] p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm hover:border-[#C4A070]/50 transition-all"
             >
               <div className="flex items-center gap-4">
                 {/* Category Image Preview */}
@@ -219,7 +232,7 @@ export default function AdminCategories() {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="text-[#C5A880] flex flex-col items-center justify-center p-2 text-center">
+                    <div className="text-[#C4A070] flex flex-col items-center justify-center p-2 text-center">
                       <FaImage className="w-6 h-6 mb-1 opacity-50" />
                       <span className="text-[9px] text-[#8C7F75]">بدون صورة</span>
                     </div>
@@ -227,8 +240,13 @@ export default function AdminCategories() {
                 </div>
 
                 <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <h4 className="font-bold text-sm sm:text-base text-[#14110F]">{cat.name}</h4>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h4 className="font-bold text-sm sm:text-base text-[#141110]">{cat.name}</h4>
+                    {cat.name_en && (
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-sans">
+                        EN: {cat.name_en}
+                      </span>
+                    )}
                     <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#FAF8F5] text-[#8C7F75] border border-[#E6E1DC] font-mono">
                       ترتيب: {cat.display_order || 0}
                     </span>
@@ -246,7 +264,7 @@ export default function AdminCategories() {
                 <button
                   type="button"
                   onClick={() => handleEdit(cat)}
-                  className="px-3 py-2 rounded-xl text-xs font-semibold bg-[#FAF8F5] text-[#5C544E] hover:bg-[#C5A880] hover:text-white transition-all flex items-center gap-1.5 cursor-pointer"
+                  className="px-3 py-2 rounded-xl text-xs font-semibold bg-[#FAF8F5] text-[#5C544E] hover:bg-[#C4A070] hover:text-white transition-all flex items-center gap-1.5 cursor-pointer"
                   title="تعديل"
                 >
                   <FaPen className="w-3 h-3" />
@@ -276,11 +294,15 @@ export default function AdminCategories() {
           >
             <div className="flex items-center justify-between border-b border-[#E6E1DC] pb-4">
               <div>
-                <h3 className="font-bold text-lg text-[#14110F]">
-                  {currentId ? 'تعديل بيانات التصنيف' : 'إنشاء تصنيف جديد'}
+                <h3 className="font-bold text-lg text-[#141110]">
+                  {adminLocale === 'en' 
+                    ? (currentId ? 'Edit Category' : 'Create New Category') 
+                    : (currentId ? 'تعديل بيانات التصنيف' : 'إنشاء تصنيف جديد')}
                 </h3>
                 <p className="text-xs text-[#8C7F75] mt-0.5">
-                  خصص اسم التصنيف وصورته الرئيسية ليظهر بشكل جذاب في الصفحة الرئيسية
+                  {adminLocale === 'en'
+                    ? 'Configure category details and featured visual presentation'
+                    : 'خصص اسم التصنيف وصورته الرئيسية ليظهر بشكل جذاب في الصفحة الرئيسية'}
                 </p>
               </div>
               <button 
@@ -294,7 +316,7 @@ export default function AdminCategories() {
 
             {/* Category Image Upload & Preview */}
             <ImagePicker
-              label="صورة التصنيف (للعرض الفاخر في الصفحة الرئيسية)"
+              label={adminLocale === 'en' ? 'Category Image (Homepage Showcase)' : 'صورة التصنيف (للعرض في الصفحة الرئيسية)'}
               value={imageUrl}
               onChange={(url) => {
                 setImageUrl(url)
@@ -313,71 +335,114 @@ export default function AdminCategories() {
                 setImagePreview('')
               }}
               aspectRatio="square"
-              title="اختر صورة للتصنيف من مكتبة الوسائط"
+              title={adminLocale === 'en' ? 'Select category image from Media Library' : 'اختر صورة للتصنيف من مكتبة الوسائط'}
             />
 
-            {/* Name and Slug */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-bold text-[#5C544E] mb-1">اسم التصنيف *</label>
-                <input
-                  type="text"
-                  required
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E6E1DC] text-xs font-medium text-[#14110F] bg-white placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
-                  placeholder="مثال: أطقم الصالونات والمجالس"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </div>
+            {/* Multilingual Tabs */}
+            <AdminLanguageTabs
+              activeLocale={adminLocale}
+              onChange={setAdminLocale}
+              hasEnglishContent={Boolean(nameEn.trim())}
+            />
 
-              <div>
-                <label className="block text-xs font-bold text-[#5C544E] mb-1">الاسم اللطيف (Slug)</label>
-                <input
-                  type="text"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E6E1DC] text-xs font-mono text-[#14110F] bg-white placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
-                  placeholder="living-room-majlis"
-                  value={slug}
-                  onChange={(e) => setSlug(e.target.value)}
-                />
+            {/* Localized Form Fields */}
+            {adminLocale === 'ar' ? (
+              <>
+                {/* Name and Slug */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-[#5C544E] mb-1">اسم التصنيف *</label>
+                    <input
+                      type="text"
+                      required
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#E6E1DC] text-xs font-medium text-[#141110] bg-white placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all"
+                      placeholder="مثال: أطقم الصالونات والمجالس"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-[#5C544E] mb-1">الرابط المخصص (Slug)</label>
+                    <input
+                      type="text"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#E6E1DC] text-xs font-mono text-[#141110] bg-white placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all"
+                      placeholder="living-room-majlis"
+                      value={slug}
+                      onChange={(e) => setSlug(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                {/* Description */}
+                <div>
+                  <label className="block text-xs font-bold text-[#5C544E] mb-1">وصف التصنيف</label>
+                  <textarea
+                    rows={2}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#E6E1DC] text-xs font-medium text-[#141110] bg-white placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none leading-relaxed transition-all"
+                    placeholder="أطقم صالونات ومجالس فاخرة مكسوة بأفخم الأقمشة الإيطالية والجلد الطبيعي..."
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+                </div>
+              </>
+            ) : (
+              <div className="space-y-4" dir="ltr">
+                <div>
+                  <label className="block text-xs font-bold text-[#5C544E] mb-1 text-left">Category Name</label>
+                  <input
+                    type="text"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#E6E1DC] text-xs font-medium text-[#141110] bg-white placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all text-left"
+                    placeholder="e.g. Salons & Royal Majlis Suites"
+                    value={nameEn}
+                    onChange={(e) => setNameEn(e.target.value)}
+                  />
+                  <p className="text-[10px] text-[#8C7F75] mt-1 text-left">
+                    Leave blank to use Arabic name as fallback
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#5C544E] mb-1 text-left">Category Description</label>
+                  <textarea
+                    rows={2}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#E6E1DC] text-xs font-medium text-[#141110] bg-white placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none leading-relaxed transition-all text-left"
+                    placeholder="e.g. Luxurious salons and majlis suites upholstered in fine Italian textiles and natural leather..."
+                    value={descriptionEn}
+                    onChange={(e) => setDescriptionEn(e.target.value)}
+                  />
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Type and Order */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-[#5C544E] mb-1">نوع التصنيف</label>
+                <label className="block text-xs font-bold text-[#5C544E] mb-1">
+                  {adminLocale === 'en' ? 'Category Type' : 'نوع التصنيف'}
+                </label>
                 <select
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E6E1DC] text-xs font-medium text-[#14110F] bg-white focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all cursor-pointer"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E6E1DC] text-xs font-medium text-[#141110] bg-white focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all cursor-pointer"
                   value={type}
                   onChange={(e) => setType(e.target.value)}
                 >
-                  <option value="products">منتجات وأثاث (Products)</option>
-                  <option value="blog">مقالات المدونة (Blog)</option>
+                  <option value="products">{adminLocale === 'en' ? 'Furniture & Products' : 'منتجات وأثاث (Products)'}</option>
+                  <option value="blog">{adminLocale === 'en' ? 'Blog & Articles' : 'مقالات المدونة (Blog)'}</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[#5C544E] mb-1">ترتيب الظهور (Display Order)</label>
+                <label className="block text-xs font-bold text-[#5C544E] mb-1">
+                  {adminLocale === 'en' ? 'Display Order' : 'ترتيب الظهور'}
+                </label>
                 <input
                   type="number"
                   min="0"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E6E1DC] text-xs font-bold text-[#14110F] bg-white placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E6E1DC] text-xs font-bold text-[#141110] bg-white placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all"
                   value={displayOrder}
                   onChange={(e) => setDisplayOrder(Number(e.target.value) || 0)}
                 />
               </div>
-            </div>
-
-            {/* Description */}
-            <div>
-              <label className="block text-xs font-bold text-[#5C544E] mb-1">وصف مختصر للتصنيف</label>
-              <textarea
-                rows={2}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-[#E6E1DC] text-xs font-medium text-[#14110F] bg-white placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none leading-relaxed transition-all"
-                placeholder="أطقم صالونات ومجالس فاخرة مكسوة بأفخم الأقمشة الإيطالية والجلد الطبيعي..."
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
             </div>
 
             {/* Modal Actions */}
@@ -387,7 +452,7 @@ export default function AdminCategories() {
                 onClick={() => setIsEditing(false)}
                 className="px-5 py-2.5 text-xs font-semibold text-[#5C544E] hover:bg-[#FAF8F5] rounded-xl transition-all cursor-pointer"
               >
-                إلغاء
+                {adminLocale === 'en' ? 'Cancel' : 'إلغاء'}
               </button>
               <Button 
                 type="submit" 
@@ -395,7 +460,9 @@ export default function AdminCategories() {
                 icon={<FaFloppyDisk />} 
                 size="md"
               >
-                {submitting || uploadingImage ? 'جار الحفظ والرفع...' : 'حفظ التصنيف'}
+                {submitting || uploadingImage 
+                  ? (adminLocale === 'en' ? 'Saving...' : 'جار الحفظ والرفع...') 
+                  : (adminLocale === 'en' ? 'Save Category' : 'حفظ التصنيف')}
               </Button>
             </div>
           </form>

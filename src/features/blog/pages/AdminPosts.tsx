@@ -7,11 +7,13 @@ import { FaPen, FaTrash, FaPlus, FaUpload, FaEye, FaFloppyDisk, FaNewspaper } fr
 import SEOSection from '../../../components/admin/SEOSection'
 import SEOAnalyzer from '../../../components/admin/SEOAnalyzer'
 import ImagePicker from '../../../components/admin/ImagePicker'
+import AdminLanguageTabs, { type AdminLocale } from '../../../components/admin/AdminLanguageTabs'
 import TipTapEditor from '../components/TipTapEditor'
 import DOMPurify from 'dompurify'
 import '../../../styles/article.css'
 
 export default function AdminPosts() {
+  const [activeLocale, setActiveLocale] = useState<AdminLocale>('ar')
   const {
     posts,
     loading,
@@ -19,14 +21,22 @@ export default function AdminPosts() {
     currentPost,
     title,
     setTitle,
+    titleEn,
+    setTitleEn,
     slug,
     setSlug,
     excerpt,
     setExcerpt,
+    excerptEn,
+    setExcerptEn,
     content,
     setContent,
+    contentEn,
+    setContentEn,
     author,
     setAuthor,
+    authorEn,
+    setAuthorEn,
     tags,
     setTags,
     status,
@@ -46,8 +56,12 @@ export default function AdminPosts() {
     categories,
     metaTitle,
     setMetaTitle,
+    metaTitleEn,
+    setMetaTitleEn,
     metaDescription,
     setMetaDescription,
+    metaDescriptionEn,
+    setMetaDescriptionEn,
     keywords,
     setKeywords,
     canonicalUrl,
@@ -95,7 +109,7 @@ export default function AdminPosts() {
     <div className="space-y-6 max-w-6xl mx-auto" dir="rtl">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E6E1DC] pb-6">
         <div>
-          <h1 className="text-2xl font-bold text-[#14110F]">
+          <h1 className="text-2xl font-bold text-[#141110]">
             {isEditing ? (currentPost ? 'تعديل المقال' : 'إنشاء مقال معماري فاخر') : 'إدارة مقالات المدونة (Posts)'}
           </h1>
           <p className="text-xs text-[#8C7F75] mt-1">نشر وتحرير مقالات العمارة والتصميم الداخلي مع محرر الـ SEO المتقدم</p>
@@ -109,140 +123,238 @@ export default function AdminPosts() {
 
       {isEditing ? (
         <form onSubmit={handleSubmit} className="space-y-6">
+
+          {/* Multilingual Tabs */}
+          <AdminLanguageTabs
+            activeLocale={activeLocale}
+            onChange={setActiveLocale}
+            hasEnglishContent={Boolean(titleEn || contentEn)}
+          />
+
           <div className="bg-white rounded-2xl p-6 border border-[#E6E1DC] shadow-sm space-y-6">
-            <h3 className="font-bold text-base text-[#14110F] border-b border-[#E6E1DC] pb-3">البيانات الأساسية للمقال</h3>
-
-            <div className="grid gap-6 md:grid-cols-2">
-              <div>
-                <label className="block text-xs font-bold text-[#5C544E] mb-1.5">عنوان المقال *</label>
-                <input
-                  type="text"
-                  required
-                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder="مثال: فن تشكيل المساحات الفاخرة 2026"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-[#5C544E] mb-1.5">الرابط المخصص (Slug)</label>
-                <input
-                  type="text"
-                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-mono text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
-                  placeholder="اتركه فارغاً للتوليد التلقائي"
-                  value={slug}
-                  onChange={(e) => setSlug(e.target.value)}
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-[#5C544E] mb-1.5">الكاتب / المصمم</label>
-                <input
-                  type="text"
-                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
-                  value={author}
-                  onChange={(e) => setAuthor(e.target.value)}
-                  placeholder="فريق تحرير أتيليه"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-[#5C544E] mb-1.5">القسم / التصنيف</label>
-                <select
-                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all cursor-pointer"
-                  value={categoryId}
-                  onChange={(e) => setCategoryId(e.target.value)}
-                >
-                  <option value="">-- اختر التصنيف --</option>
-                  {categories.map((c) => (
-                    <option key={c.id} value={c.id}>{c.name}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-[#5C544E] mb-1.5">الوسوم (مفصولة بفواصل)</label>
-                <input
-                  type="text"
-                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
-                  placeholder="ديكور, رخام, أثاث إيطالي"
-                  value={tags}
-                  onChange={(e) => setTags(e.target.value)}
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-[#5C544E] mb-1.5">حالة النشر</label>
-                <select
-                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all cursor-pointer"
-                  value={status}
-                  onChange={(e) => setStatus(e.target.value)}
-                >
-                  <option value="draft">مسودة (Draft)</option>
-                  <option value="published">منشور (Published)</option>
-                </select>
-              </div>
+            <div className="flex items-center justify-between border-b border-[#E6E1DC] pb-3">
+              <h3 className="font-bold text-base text-[#141110]">
+                {activeLocale === 'ar' ? 'البيانات الأساسية للمقال (العربية)' : 'Basic Article Information (English)'}
+              </h3>
+              <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-[#FAF8F5] text-[#8C7F75] border border-[#E6E1DC]">
+                {activeLocale === 'ar' ? '🇸🇦 العربية (الرئيسية)' : '🇬🇧 English (Optional)'}
+              </span>
             </div>
 
-            <div>
-              <label className="block text-xs font-bold text-[#5C544E] mb-1.5">مقتطف المقال (Excerpt) *</label>
-              <textarea
-                rows={2}
-                required
-                className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
-                placeholder="مقدمة سريعة تظهر في بطاقة المقال وقوائم التصفح..."
-                value={excerpt}
-                onChange={(e) => setExcerpt(e.target.value)}
-              />
-            </div>
+            {activeLocale === 'ar' ? (
+              <div className="space-y-4">
+                <div className="grid gap-6 md:grid-cols-2">
+                  <div>
+                    <label className="block text-xs font-bold text-[#5C544E] mb-1.5">عنوان المقال (بالعربية) *</label>
+                    <input
+                      type="text"
+                      required
+                      className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      placeholder="مثال: فن تشكيل المساحات الفاخرة 2026"
+                    />
+                  </div>
 
-            {/* Cover Image Upload */}
-            <ImagePicker
-              label="صورة الغلاف البارزة"
-              value={imageUrl}
-              onChange={setImageUrl}
-              file={imageFile}
-              onFileChange={setImageFile}
-              hint="صورة عالية الجودة تظهر في بطاقة المقال والواجهة الرئيسية"
-              title="اختر صورة للغلاف من مكتبة الوسائط"
-            />
+                  <div>
+                    <label className="block text-xs font-bold text-[#5C544E] mb-1.5">الكاتب / المصمم (بالعربية)</label>
+                    <input
+                      type="text"
+                      className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all"
+                      value={author}
+                      onChange={(e) => setAuthor(e.target.value)}
+                      placeholder="فريق تحرير أتيليه"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#5C544E] mb-1.5">مقتطف المقال (Excerpt بالعربية) *</label>
+                  <textarea
+                    rows={2}
+                    required
+                    className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all"
+                    placeholder="مقدمة سريعة تظهر في بطاقة المقال وقوائم التصفح..."
+                    value={excerpt}
+                    onChange={(e) => setExcerpt(e.target.value)}
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-4" dir="ltr">
+                <div className="grid gap-6 md:grid-cols-2">
+                  <div>
+                    <label className="block text-xs font-bold text-[#5C544E] mb-1.5 text-left">Article Title (English)</label>
+                    <input
+                      type="text"
+                      className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all text-left"
+                      value={titleEn}
+                      onChange={(e) => setTitleEn(e.target.value)}
+                      placeholder="e.g. Sculpting Timeless Architectural Spaces 2026"
+                    />
+                    <p className="text-[11px] text-[#8C7F75] mt-1 text-left">Leave blank to use Arabic text as fallback</p>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-[#5C544E] mb-1.5 text-left">Author / Designer (English)</label>
+                    <input
+                      type="text"
+                      className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all text-left"
+                      value={authorEn}
+                      onChange={(e) => setAuthorEn(e.target.value)}
+                      placeholder="e.g. S&I Editorial Advisory Team"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#5C544E] mb-1.5 text-left">Article Excerpt (English)</label>
+                  <textarea
+                    rows={2}
+                    className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all text-left"
+                    placeholder="Concise English overview appearing on article preview cards..."
+                    value={excerptEn}
+                    onChange={(e) => setExcerptEn(e.target.value)}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Shared Article Settings */}
+            <div className="pt-4 border-t border-[#E6E1DC] space-y-4">
+              <h4 className="text-xs font-bold text-[#8C7F75] uppercase tracking-wider">
+                {activeLocale === 'en' ? 'General Article Settings' : 'الإعدادات العامة للمقال (مشتركة)'}
+              </h4>
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                <div>
+                  <label className="block text-xs font-bold text-[#5C544E] mb-1.5">
+                    {activeLocale === 'en' ? 'Custom URL Slug' : 'الرابط المخصص (Slug)'}
+                  </label>
+                  <input
+                    type="text"
+                    className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-mono text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all"
+                    placeholder={activeLocale === 'en' ? 'Leave blank for auto-generation' : 'اتركه فارغاً للتوليد التلقائي'}
+                    value={slug}
+                    onChange={(e) => setSlug(e.target.value)}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#5C544E] mb-1.5">
+                    {activeLocale === 'en' ? 'Category' : 'القسم / التصنيف'}
+                  </label>
+                  <select
+                    className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#141110] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all cursor-pointer"
+                    value={categoryId}
+                    onChange={(e) => setCategoryId(e.target.value)}
+                  >
+                    <option value="">{activeLocale === 'en' ? '-- Select Category --' : '-- اختر التصنيف --'}</option>
+                    {categories.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {activeLocale === 'en' ? (c.name_en || c.name) : c.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#5C544E] mb-1.5">
+                    {activeLocale === 'en' ? 'Tags (comma separated)' : 'الوسوم (مفصولة بفواصل)'}
+                  </label>
+                  <input
+                    type="text"
+                    className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all"
+                    placeholder={activeLocale === 'en' ? 'Interior, Marble, Italian Furniture' : 'ديكور, رخام, أثاث إيطالي'}
+                    value={tags}
+                    onChange={(e) => setTags(e.target.value)}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#5C544E] mb-1.5">
+                    {activeLocale === 'en' ? 'Publishing Status' : 'حالة النشر'}
+                  </label>
+                  <select
+                    className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#141110] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all cursor-pointer"
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                  >
+                    <option value="draft">{activeLocale === 'en' ? 'Draft' : 'مسودة (Draft)'}</option>
+                    <option value="published">{activeLocale === 'en' ? 'Published' : 'منشور (Published)'}</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Cover Image Upload */}
+              <div className="pt-2">
+                <ImagePicker
+                  label={activeLocale === 'en' ? 'Featured Cover Image' : 'صورة الغلاف البارزة'}
+                  value={imageUrl}
+                  onChange={setImageUrl}
+                  file={imageFile}
+                  onFileChange={setImageFile}
+                  hint={activeLocale === 'en' ? 'High quality image shown on article cards and listing pages' : 'صورة عالية الجودة تظهر في بطاقة المقال والواجهة الرئيسية'}
+                  title={activeLocale === 'en' ? 'Select cover image from Media Library' : 'اختر صورة للغلاف من مكتبة الوسائط'}
+                />
+              </div>
+            </div>
           </div>
 
           {/* TipTap Rich Content Editor */}
           <div className="bg-white rounded-2xl p-6 border border-[#E6E1DC] shadow-sm space-y-4">
             <div className="flex items-center justify-between border-b border-[#E6E1DC] pb-3">
-              <h3 className="font-bold text-base text-[#14110F]">محتوى المقال التفاعلي (Article Body)</h3>
+              <div>
+                <h3 className="font-bold text-base text-[#141110]">
+                  {activeLocale === 'ar' ? 'محتوى المقال التفاعلي (بالعربية)' : 'Article Body Content (English)'}
+                </h3>
+                <p className="text-xs text-[#8C7F75] mt-0.5">
+                  {activeLocale === 'ar' ? 'المحتوى الرئيسي الكامل باللغة العربية' : 'Full English article text (Optional fallback to Arabic)'}
+                </p>
+              </div>
+
               <div className="flex gap-2">
                 <button
                   type="button"
                   onClick={() => setEditorTab('edit')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold ${
-                    editorTab === 'edit' ? 'bg-[#C5A880] text-white' : 'bg-[#FAF8F5] text-[#5C544E]'
+                    editorTab === 'edit' ? 'bg-[#C4A070] text-white' : 'bg-[#FAF8F5] text-[#5C544E]'
                   }`}
                 >
-                  المحرر
+                  {activeLocale === 'en' ? 'Editor' : 'المحرر'}
                 </button>
                 <button
                   type="button"
                   onClick={() => setEditorTab('preview')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 ${
-                    editorTab === 'preview' ? 'bg-[#C5A880] text-white' : 'bg-[#FAF8F5] text-[#5C544E]'
+                    editorTab === 'preview' ? 'bg-[#C4A070] text-white' : 'bg-[#FAF8F5] text-[#5C544E]'
                   }`}
                 >
                   <FaEye className="w-3 h-3" />
-                  <span>معاينة المقال</span>
+                  <span>{activeLocale === 'en' ? 'Preview' : 'معاينة'}</span>
                 </button>
               </div>
             </div>
 
-            {editorTab === 'edit' ? (
-              <TipTapEditor value={content} onChange={setContent} />
+            {activeLocale === 'ar' ? (
+              editorTab === 'edit' ? (
+                <TipTapEditor value={content} onChange={setContent} />
+              ) : (
+                <div
+                  className="article-content bg-[#FAF8F5] p-6 rounded-2xl border border-[#E6E1DC] min-h-[400px]"
+                  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}
+                />
+              )
             ) : (
-              <div
-                className="article-content bg-[#FAF8F5] p-6 rounded-2xl border border-[#E6E1DC] min-h-[400px]"
-                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}
-              />
+              <div dir="ltr">
+                {editorTab === 'edit' ? (
+                  <TipTapEditor value={contentEn} onChange={setContentEn} />
+                ) : (
+                  <div
+                    className="article-content bg-[#FAF8F5] p-6 rounded-2xl border border-[#E6E1DC] min-h-[400px] text-left"
+                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(contentEn || content) }}
+                  />
+                )}
+              </div>
             )}
           </div>
 
@@ -250,10 +362,10 @@ export default function AdminPosts() {
           <div className="grid gap-6 lg:grid-cols-12 items-start">
             <div className="lg:col-span-7">
               <SEOSection
-                metaTitle={metaTitle}
-                setMetaTitle={setMetaTitle}
-                metaDescription={metaDescription}
-                setMetaDescription={setMetaDescription}
+                metaTitle={activeLocale === 'en' ? metaTitleEn : metaTitle}
+                setMetaTitle={activeLocale === 'en' ? setMetaTitleEn : setMetaTitle}
+                metaDescription={activeLocale === 'en' ? metaDescriptionEn : metaDescription}
+                setMetaDescription={activeLocale === 'en' ? setMetaDescriptionEn : setMetaDescription}
                 keywords={keywords}
                 setKeywords={setKeywords}
                 canonicalUrl={canonicalUrl}
@@ -276,14 +388,15 @@ export default function AdminPosts() {
                 setTwitterCard={setTwitterCard}
                 imageAlt={imageAlt}
                 setImageAlt={setImageAlt}
+                locale={activeLocale}
               />
             </div>
 
             <div className="lg:col-span-5 sticky top-6">
               <SEOAnalyzer
-                title={title}
-                description={metaDescription || excerpt}
-                content={content}
+                title={activeLocale === 'en' ? (titleEn || title) : title}
+                description={activeLocale === 'en' ? (metaDescriptionEn || excerptEn || excerpt) : (metaDescription || excerpt)}
+                content={activeLocale === 'en' ? (contentEn || content) : content}
                 focusKeyword={keywords}
                 imageAlt={imageAlt}
                 canonicalUrl={canonicalUrl}
@@ -298,10 +411,12 @@ export default function AdminPosts() {
               onClick={() => setIsEditing(false)}
               className="px-6 py-3 rounded-xl border border-[#E6E1DC] text-xs font-bold text-[#5C544E] hover:bg-[#FAF8F5]"
             >
-              إلغاء
+              {activeLocale === 'en' ? 'Cancel' : 'إلغاء'}
             </button>
             <Button type="submit" disabled={submitting} icon={<FaFloppyDisk />} size="lg">
-              {submitting ? 'جار الحفظ والتحديث...' : 'حفظ ونشر المقال'}
+              {submitting 
+                ? (activeLocale === 'en' ? 'Saving...' : 'جار الحفظ والتحديث...') 
+                : (activeLocale === 'en' ? 'Save & Publish Article' : 'حفظ ونشر المقال')}
             </Button>
           </div>
         </form>
@@ -326,7 +441,14 @@ export default function AdminPosts() {
                       />
                     )}
                     <div>
-                      <h4 className="font-bold text-sm text-[#14110F]">{post.title}</h4>
+                      <div className="flex items-center gap-2">
+                        <h4 className="font-bold text-sm text-[#141110]">{post.title}</h4>
+                        {post.title_en && (
+                          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200">
+                            🇬🇧 EN
+                          </span>
+                        )}
+                      </div>
                       <p className="text-xs text-[#8C7F75] mt-1 font-mono">/{post.slug}</p>
                       <div className="flex items-center gap-2 mt-2">
                         <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${

@@ -1,5 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import { 
   fadeUp, 
   staggerContainer, 
@@ -16,50 +17,54 @@ import {
 } from 'react-icons/fa6'
 
 export default function LuxuryStatsSection() {
+  const { t, i18n } = useTranslation('home')
+  const isEn = i18n.language?.startsWith('en')
+  const foundedDateStr = isEn ? 'September 12, 2022' : '12 سبتمبر 2022'
+
   const stats = [
     {
       id: 'support-24-7',
       number: '24/7',
-      label: 'خدمة كونسيرج واستشارات',
-      description: 'فريق استشاري معماري متاح على مدار الساعة لتلبية متطلباتكم',
+      label: t('stats.supportLabel'),
+      description: t('stats.supportDesc'),
       icon: FaHeadset,
       highlight: true
     },
     {
       id: 'crafted-pieces',
       number: '+1,500',
-      label: 'قطعة أثاث حصرية ومخصصة',
-      description: 'صُممت ونُفذت بالطلب لأفخم القصور والمساحات الملكية',
+      label: t('stats.craftedLabel'),
+      description: t('stats.craftedDesc'),
       icon: FaCouch,
       highlight: false
     },
     {
       id: 'luxury-villas',
       number: '+420',
-      label: 'قصر وفيلا تم تأثيثها',
-      description: 'ثقة متجددة من نخبة العملاء في المملكة والخليج العربي',
+      label: t('stats.villasLabel'),
+      description: t('stats.villasDesc'),
       icon: FaLandmark,
       highlight: false
     },
     {
       id: 'natural-materials',
       number: '100%',
-      label: 'خامات أوروبية طبيعية',
-      description: 'أخشاب جوز إيطالي، رخام طبيعي وأفخر أنواع الجلود والمخمل',
+      label: t('stats.materialsLabel'),
+      description: t('stats.materialsDesc'),
       icon: FaGem,
       highlight: false
     },
     {
       id: 'years-experience',
       number: '2022',
-      label: 'عام التأسيس الرسمي',
+      label: t('stats.foundationLabel'),
       description: (
         <span>
-          موثقة رسمياً بسجل تجاري معتمد منذ{' '}
+          {isEn ? 'Officially certified under commercial registry since ' : 'موثقة رسمياً بسجل تجاري معتمد منذ '}
           <strong className="gold-gradient-text font-bold font-serif drop-shadow-[0_0_8px_rgba(196,160,112,0.5)]">
-            12 سبتمبر 2022
+            {foundedDateStr}
           </strong>{' '}
-          لخدمة أرقى القصور
+          {isEn ? 'serving premier estates' : 'لخدمة أرقى القصور'}
         </span>
       ),
       icon: FaAward,
@@ -81,14 +86,14 @@ export default function LuxuryStatsSection() {
         <motion.div variants={fadeUp} className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#C4A070]/20 pb-6">
           <div className="space-y-2">
             <span className="text-xs text-[#C4A070] tracking-widest uppercase font-bold flex items-center gap-2">
-              <FaArrowTrendUp className="w-3.5 h-3.5" /> معايير الفخامة والريادة
+              <FaArrowTrendUp className="w-3.5 h-3.5" /> {t('stats.badge')}
             </span>
             <h2 id="luxury-stats-heading" className="font-serif text-3xl md:text-4xl font-bold text-[#F2EFE8]">
-              أرقام تحكي مسيرة الإتقان والإبداع
+              {t('stats.title')}
             </h2>
           </div>
           <p className="text-xs text-[#B3A9A3] max-w-sm leading-relaxed">
-            نلتزم بأعلى مقاييس الجودة العالمية في صياغة وتوريد أرقى قطع الأثاث الحصري.
+            {t('stats.subtitle')}
           </p>
         </motion.div>
       </div>
@@ -100,7 +105,7 @@ export default function LuxuryStatsSection() {
           <div className="absolute top-0 right-1/4 w-96 h-96 bg-[#C4A070]/5 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-[#7A5D2B]/5 rounded-full blur-3xl pointer-events-none" />
 
-          <motion.div variants={staggerContainer} className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 divide-y sm:divide-y-0 sm:divide-x sm:divide-x-reverse divide-[#C4A070]/15 relative z-10">
+          <motion.div variants={staggerContainer} className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 divide-y sm:divide-y-0 sm:divide-x rtl:sm:divide-x-reverse divide-[#C4A070]/15 relative z-10">
             {stats.map((stat, idx) => {
               const Icon = stat.icon
               return (

@@ -1,18 +1,20 @@
 import { motion } from 'framer-motion'
 import { FaWhatsapp } from 'react-icons/fa6'
+import { useTranslation } from 'react-i18next'
 import { CONTACT_INFO } from '../../constants/contactInfo'
 
 export default function FloatingWhatsApp() {
-  const defaultMessage = 'مرحباً S&I Atelier، أود الاستفسار عن تفصيل قطع أثاث واستشارة تصميم خاصة'
+  const { t } = useTranslation()
+  const defaultMessage = t('floating.whatsappDefaultMessage')
   const whatsappUrl = `https://wa.me/${CONTACT_INFO.whatsappRaw}?text=${encodeURIComponent(defaultMessage)}`
 
   return (
-    <div className="fixed bottom-6 right-6 z-40 select-none">
+    <div className="fixed bottom-6 end-6 z-40 select-none">
       <motion.a
         href={whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="تواصل معنا عبر واتساب"
+        aria-label={t('floating.whatsappAria')}
         initial={{ opacity: 0, scale: 0.6, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ type: 'spring', stiffness: 320, damping: 24, delay: 0.2 }}
@@ -21,9 +23,9 @@ export default function FloatingWhatsApp() {
         className="group relative flex items-center cursor-pointer"
       >
         {/* Tooltip in Luxury Theme */}
-        <div className="absolute right-full mr-3 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 pointer-events-none transition-all duration-200 ease-out hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#141110]/95 backdrop-blur-md border border-[#C4A070]/40 text-[#F2EFE8] text-xs font-bold shadow-2xl shadow-black/80 whitespace-nowrap z-50">
+        <div className="absolute end-full me-3 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 pointer-events-none transition-all duration-200 ease-out hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#141110]/95 backdrop-blur-md border border-[#C4A070]/40 text-[#F2EFE8] text-xs font-bold shadow-2xl shadow-black/80 whitespace-nowrap z-50">
           <span className="w-2 h-2 rounded-full bg-[#C4A070] animate-pulse"></span>
-          <span>استشارة فورية عبر واتساب</span>
+          <span>{t('floating.whatsappTooltip')}</span>
         </div>
 
         {/* WhatsApp Button - Atelier Luxury Gold Identity */}

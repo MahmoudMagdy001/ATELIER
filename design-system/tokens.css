@@ -1,0 +1,222 @@
+/* ==========================================================================
+   S&I ATELIER — CANONICAL DESIGN SYSTEM TOKENS
+   Tailwind CSS v4 @theme configuration & CSS Custom Properties
+   ========================================================================== */
+
+@theme {
+  /* Brand Core Colors */
+  --color-brand-gold: #c4a070;
+  --color-brand-gold-hover: #d4b58c;
+  --color-brand-gold-light: #e3caa9;
+  --color-brand-gold-deep: #b88f48;
+  --color-brand-gold-bronze: #9e7939;
+  --color-brand-gold-muted: rgba(196, 160, 112, 0.15);
+  --color-brand-gold-glow: rgba(196, 160, 112, 0.35);
+
+  --color-brand-black: #141110;
+  --color-brand-charcoal: #1c1816;
+  --color-brand-cream: #f2efe8;
+
+  /* Onyx Scale (Dark Surfaces & Text) */
+  --color-onyx-950: #0f0d0c;
+  --color-onyx-900: #141110;
+  --color-onyx-800: #1c1816;
+  --color-onyx-700: #26211f;
+  --color-onyx-600: #332d2a;
+  --color-onyx-500: #423b37;
+  --color-onyx-400: #5c534e;
+  --color-onyx-300: #827771;
+  --color-onyx-200: #b3a9a3;
+  --color-onyx-100: #dedad6;
+  --color-onyx-50: #f2efe8;
+
+  /* Gold Scale (Accent & Metallics) */
+  --color-gold-950: #3d2d14;
+  --color-gold-900: #59431f;
+  --color-gold-800: #7a5d2b;
+  --color-gold-700: #9e7939;
+  --color-gold-600: #b88f48;
+  --color-gold-500: #c4a070;
+  --color-gold-400: #d4b58c;
+  --color-gold-300: #e3caa9;
+  --color-gold-200: #f0dec8;
+  --color-gold-100: #f9f1e7;
+  --color-gold-50: #fdfaf5;
+
+  /* Admin On-Light Surfaces */
+  --color-admin-bg: #faf8f5;
+  --color-admin-surface: #ffffff;
+  --color-admin-border: #e6e1dc;
+  --color-admin-text-main: #141110;
+  --color-admin-text-muted: #8c7f75;
+
+  /* Typography */
+  --font-serif: "Cinzel", "Cormorant Garamond", "El Messiri", Georgia, serif;
+  --font-sans: "Alexandria", "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: "Cinzel", Georgia, serif;
+  --font-editorial: "Cormorant Garamond", "El Messiri", serif;
+
+  /* Radii Scale */
+  --radius-pill: 9999px;
+  --radius-card: 1.5rem;
+  --radius-panel: 1rem;
+  --radius-input: 0.75rem;
+
+  /* Elevation Shadows */
+  --shadow-gold-glow: 0 4px 25px -2px rgba(196, 160, 112, 0.4);
+  --shadow-gold-glow-hover: 0 6px 30px 0 rgba(196, 160, 112, 0.55);
+  --shadow-luxury-card: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+  --shadow-luxury-card-hover: 0 20px 45px -10px rgba(0, 0, 0, 0.8), 0 0 25px 0 rgba(196, 160, 112, 0.14);
+}
+
+:root {
+  --brand-gold: #c4a070;
+  --brand-gold-hover: #d4b58c;
+  --brand-gold-deep: #b88f48;
+  --brand-black: #141110;
+  --brand-charcoal: #1c1816;
+  --brand-cream: #f2efe8;
+  --brand-border-subtle: rgba(196, 160, 112, 0.15);
+  --brand-border-medium: rgba(196, 160, 112, 0.3);
+  --brand-border-glow: rgba(196, 160, 112, 0.7);
+}
+
+/* ==========================================================================
+   CANONICAL COMPONENT UTILITY STYLES
+   ========================================================================== */
+
+/* 1. Buttons */
+.gold-btn-primary {
+  background: linear-gradient(135deg, #c4a070 0%, #a68252 100%);
+  color: #1c1816;
+  font-weight: 700;
+  border-radius: 9999px;
+  box-shadow: 0 4px 25px -2px rgba(196, 160, 112, 0.4);
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.gold-btn-primary:hover {
+  background: linear-gradient(135deg, #d4b58c 0%, #b88f48 100%);
+  box-shadow: 0 6px 30px 0 rgba(196, 160, 112, 0.55);
+  transform: translateY(-2px);
+}
+
+.gold-btn-secondary {
+  background: rgba(28, 24, 22, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #f2efe8;
+  border: 1px solid rgba(196, 160, 112, 0.35);
+  font-weight: 600;
+  border-radius: 9999px;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.gold-btn-secondary:hover {
+  background: rgba(196, 160, 112, 0.15);
+  border-color: rgba(196, 160, 112, 0.8);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px -2px rgba(196, 160, 112, 0.25);
+}
+
+.gold-btn-ghost {
+  background: transparent;
+  color: #c4a070;
+  font-weight: 600;
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.gold-btn-ghost:hover {
+  color: #f2efe8;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* 2. Cards */
+.luxury-card {
+  background: linear-gradient(145deg, #181514 0%, #13100f 100%);
+  border: 1px solid rgba(196, 160, 112, 0.18);
+  border-radius: 1.5rem;
+  transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.luxury-card:hover {
+  border-color: rgba(196, 160, 112, 0.5);
+  box-shadow: 0 12px 35px -8px rgba(0, 0, 0, 0.7), 0 0 20px 0 rgba(196, 160, 112, 0.12);
+}
+
+/* 3. Inputs & Forms (Storefront Dark) */
+.luxury-input {
+  background-color: #141110;
+  border: 1px solid rgba(196, 160, 112, 0.35);
+  border-radius: 0.75rem;
+  color: #f2efe8;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.luxury-input:focus {
+  border-color: #c4a070;
+  box-shadow: 0 0 0 1px rgba(196, 160, 112, 0.4);
+}
+
+.luxury-input::placeholder {
+  color: #827771;
+}
+
+/* 4. Glass & Metallic Visual Accents */
+.glass-panel-luxury {
+  background: rgba(28, 24, 22, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(196, 160, 112, 0.22);
+}
+
+.brass-border {
+  border: 1px solid rgba(196, 160, 112, 0.22);
+}
+
+.brass-border-subtle {
+  border: 1px solid rgba(196, 160, 112, 0.12);
+}
+
+.ambient-gold-glow {
+  background: radial-gradient(circle at 50% 0%, rgba(196, 160, 112, 0.14) 0%, rgba(28, 24, 22, 0) 70%);
+}
+
+.gold-gradient-text {
+  background: linear-gradient(180deg, #ffffff 0%, #faebd7 25%, #d4b58c 50%, #c4a070 75%, #9e7939 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.fluted-panel {
+  background-color: #141110;
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 16px,
+    rgba(255, 255, 255, 0.018) 16px,
+    rgba(255, 255, 255, 0.018) 18px,
+    rgba(0, 0, 0, 0.45) 18px,
+    rgba(0, 0, 0, 0.45) 20px
+  );
+}

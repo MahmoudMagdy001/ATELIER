@@ -3,6 +3,7 @@ import { useAdminPortfolio } from '../hooks/useAdminPortfolio'
 import { PageLoading } from '../../../components/ui/Loading'
 import Button from '../../../components/ui/Button'
 import ImagePicker from '../../../components/admin/ImagePicker'
+import AdminLanguageTabs, { type AdminLocale } from '../../../components/admin/AdminLanguageTabs'
 import { 
   FaImages, 
   FaPlus, 
@@ -15,6 +16,7 @@ import {
 } from 'react-icons/fa6'
 
 export default function AdminPortfolio() {
+  const [activeLocale, setActiveLocale] = useState<AdminLocale>('ar')
   const {
     items,
     loading,
@@ -22,10 +24,16 @@ export default function AdminPortfolio() {
     currentItem,
     title,
     setTitle,
+    titleEn,
+    setTitleEn,
     description,
     setDescription,
+    descriptionEn,
+    setDescriptionEn,
     category,
     setCategory,
+    categoryEn,
+    setCategoryEn,
     displayOrder,
     setDisplayOrder,
     isVisible,
@@ -59,7 +67,7 @@ export default function AdminPortfolio() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E6E1DC] pb-6">
         <div>
-          <h1 className="text-2xl font-bold text-[#14110F]">
+          <h1 className="text-2xl font-bold text-[#141110]">
             {isEditing ? (currentItem ? 'تعديل عمل سابق' : 'إضافة عمل جديد للمعرض') : 'معرض أسبقيات الأعمال (Portfolio Manager)'}
           </h1>
           <p className="text-xs text-[#8C7F75] mt-1">
@@ -74,100 +82,153 @@ export default function AdminPortfolio() {
       </div>
 
       {isEditing ? (
-        <form onSubmit={handleSubmit} className="space-y-8 bg-white rounded-2xl p-6 md:p-8 border border-[#E6E1DC] shadow-sm">
+        <form onSubmit={handleSubmit} className="space-y-6 bg-white rounded-2xl p-6 md:p-8 border border-[#E6E1DC] shadow-sm">
+          {/* Multilingual Tabs */}
+          <AdminLanguageTabs
+            activeLocale={activeLocale}
+            onChange={setActiveLocale}
+            hasEnglishContent={Boolean(titleEn || descriptionEn)}
+          />
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {activeLocale === 'ar' ? (
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-[#141110] mb-1.5">
+                    عنوان العمل / المشروع *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="مثال: صالون قصر العليا الفاخر - خشب جوز معتق"
+                    className="w-full px-4 py-2.5 rounded-xl border border-[#D6CDC4] text-xs font-bold text-[#141110] bg-white placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#141110] mb-1.5">
+                    التصنيف / القسم
+                  </label>
+                  <input
+                    type="text"
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    placeholder="مثال: صالونات، مجالس، غرف طعام، أجنحة خاصة"
+                    className="w-full px-4 py-2.5 rounded-xl border border-[#D6CDC4] text-xs font-medium text-[#141110] bg-white placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#141110] mb-1.5">
+                    الوصف والتفاصيل
+                  </label>
+                  <textarea
+                    rows={4}
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="تفاصيل الخامات المنفذة ونوع الرخام والخشب..."
+                    className="w-full px-4 py-2.5 rounded-xl border border-[#D6CDC4] text-xs leading-relaxed font-medium text-[#141110] bg-white placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all"
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-4" dir="ltr">
+                <div>
+                  <label className="block text-xs font-bold text-[#141110] mb-1.5 text-left">
+                    Project / Commission Title
+                  </label>
+                  <input
+                    type="text"
+                    value={titleEn}
+                    onChange={(e) => setTitleEn(e.target.value)}
+                    placeholder="e.g. Al-Olaya Palace Master Living Room"
+                    className="w-full px-4 py-2.5 rounded-xl border border-[#D6CDC4] text-xs font-bold text-[#141110] bg-white placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all text-left"
+                  />
+                  <p className="text-[11px] text-[#8C7F75] mt-1 text-left">Leave blank to use Arabic title as fallback</p>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#141110] mb-1.5 text-left">
+                    Category
+                  </label>
+                  <input
+                    type="text"
+                    value={categoryEn}
+                    onChange={(e) => setCategoryEn(e.target.value)}
+                    placeholder="e.g. Salons, Private Villas, Dining"
+                    className="w-full px-4 py-2.5 rounded-xl border border-[#D6CDC4] text-xs font-medium text-[#141110] bg-white placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all text-left"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#141110] mb-1.5 text-left">
+                    Description & Crafting Details
+                  </label>
+                  <textarea
+                    rows={4}
+                    value={descriptionEn}
+                    onChange={(e) => setDescriptionEn(e.target.value)}
+                    placeholder="Executed with custom walnut joinery, hand-carved details and natural Italian marble..."
+                    className="w-full px-4 py-2.5 rounded-xl border border-[#D6CDC4] text-xs leading-relaxed font-medium text-[#141110] bg-white placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all text-left"
+                  />
+                </div>
+              </div>
+            )}
+
             <div className="space-y-4">
-              <div>
-                <label className="block text-xs font-bold text-[#14110F] mb-1.5">
-                  عنوان العمل / المشروع *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder="مثال: صالون قصر العليا الفاخر - خشب جوز معتق"
-                  className="w-full px-4 py-2.5 rounded-xl border border-[#D6CDC4] text-xs font-bold text-[#14110F] bg-white placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-[#14110F] mb-1.5">
-                  التصنيف / القسم
-                </label>
-                <input
-                  type="text"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  placeholder="مثال: صالونات، مجالس، غرف طعام، أجنحة خاصة"
-                  className="w-full px-4 py-2.5 rounded-xl border border-[#D6CDC4] text-xs font-medium text-[#14110F] bg-white placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-[#14110F] mb-1.5">
-                  الوصف والتفاصيل
-                </label>
-                <textarea
-                  rows={4}
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="تفاصيل الخامات المنفذة ونوع الرخام والخشب..."
-                  className="w-full px-4 py-2.5 rounded-xl border border-[#D6CDC4] text-xs leading-relaxed font-medium text-[#14110F] bg-white placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
-                />
-              </div>
-
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-[#14110F] mb-1.5">
-                    ترتيب الظهور
+                  <label className="block text-xs font-bold text-[#141110] mb-1.5">
+                    {activeLocale === 'en' ? 'Display Order' : 'ترتيب الظهور'}
                   </label>
                   <input
                     type="number"
                     value={displayOrder}
                     onChange={(e) => setDisplayOrder(Number(e.target.value) || 0)}
-                    className="w-full px-4 py-2.5 rounded-xl border border-[#D6CDC4] text-xs font-bold text-[#14110F] bg-white focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
+                    className="w-full px-4 py-2.5 rounded-xl border border-[#D6CDC4] text-xs font-bold text-[#141110] bg-white focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-[#14110F] mb-1.5">
-                    الحالة في المعرض
+                  <label className="block text-xs font-bold text-[#141110] mb-1.5">
+                    {activeLocale === 'en' ? 'Visibility Status' : 'الحالة في المعرض'}
                   </label>
                   <select
                     value={isVisible ? 'true' : 'false'}
                     onChange={(e) => setIsVisible(e.target.value === 'true')}
-                    className="w-full px-4 py-2.5 rounded-xl border border-[#D6CDC4] text-xs font-bold text-[#14110F] bg-white focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all cursor-pointer"
+                    className="w-full px-4 py-2.5 rounded-xl border border-[#D6CDC4] text-xs font-bold text-[#141110] bg-white focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all cursor-pointer"
                   >
-                    <option value="true">ظاهر في الموقع</option>
-                    <option value="false">مخفي مؤقتاً</option>
+                    <option value="true">{activeLocale === 'en' ? 'Visible on Website' : 'ظاهر في الموقع'}</option>
+                    <option value="false">{activeLocale === 'en' ? 'Hidden (Draft)' : 'مخفي (مسودة)'}</option>
                   </select>
                 </div>
               </div>
-            </div>
 
-            {/* Image Upload Column with ImagePicker */}
-            <div className="space-y-4">
-              <ImagePicker
-                label="صورة العمل المنفذ *"
-                value={imageUrl}
-                onChange={(url) => {
-                  setImageUrl(url)
-                  setPreviewUrl(url)
-                }}
-                file={imageFile}
-                onFileChange={(file) => {
-                  setImageFile(file)
-                  if (file) setPreviewUrl(URL.createObjectURL(file))
-                }}
-                onRemove={() => {
-                  setImageUrl('')
-                  setImageFile(null)
-                  setPreviewUrl('')
-                }}
-                hint="صورة فوتوغرافية واضحة للعمل المنفذ"
-                title="اختر صورة من مكتبة الوسائط لمعرض الأعمال"
-              />
+              {/* Image Upload Column with ImagePicker */}
+              <div className="pt-2">
+                <ImagePicker
+                  label={activeLocale === 'en' ? 'Commission Portfolio Image *' : 'صورة العمل المنفذ *'}
+                  value={imageUrl}
+                  onChange={(url) => {
+                    setImageUrl(url)
+                    setPreviewUrl(url)
+                  }}
+                  file={imageFile}
+                  onFileChange={(file) => {
+                    setImageFile(file)
+                    if (file) setPreviewUrl(URL.createObjectURL(file))
+                  }}
+                  onRemove={() => {
+                    setImageUrl('')
+                    setImageFile(null)
+                    setPreviewUrl('')
+                  }}
+                  hint={activeLocale === 'en' ? 'High-resolution photograph of the completed work' : 'صورة فوتوغرافية واضحة للعمل المنفذ'}
+                  title={activeLocale === 'en' ? 'Select portfolio image from Media Library' : 'اختر صورة من مكتبة الوسائط لمعرض الأعمال'}
+                />
+              </div>
             </div>
           </div>
 
@@ -178,14 +239,18 @@ export default function AdminPortfolio() {
               variant="secondary"
               onClick={() => setIsEditing(false)}
             >
-              إلغاء
+              {activeLocale === 'en' ? 'Cancel' : 'إلغاء'}
             </Button>
             <Button
               type="submit"
               disabled={submitting}
               icon={<FaCheck />}
             >
-              {submitting ? 'جار الحفظ...' : (currentItem ? 'تحديث العمل' : 'حفظ ونشر العمل')}
+              {submitting 
+                ? (activeLocale === 'en' ? 'Saving...' : 'جار الحفظ...') 
+                : (currentItem 
+                    ? (activeLocale === 'en' ? 'Update Item' : 'تحديث العمل') 
+                    : (activeLocale === 'en' ? 'Save & Publish Item' : 'حفظ ونشر العمل'))}
             </Button>
           </div>
         </form>
@@ -194,8 +259,8 @@ export default function AdminPortfolio() {
         <div>
           {items.length === 0 ? (
             <div className="text-center py-16 bg-white rounded-2xl border border-[#E6E1DC] p-8 space-y-3">
-              <FaImages className="w-12 h-12 text-[#C5A880]/40 mx-auto" />
-              <h3 className="text-sm font-bold text-[#14110F]">لا توجد أعمال في المعرض حالياً</h3>
+              <FaImages className="w-12 h-12 text-[#C4A070]/40 mx-auto" />
+              <h3 className="text-sm font-bold text-[#141110]">لا توجد أعمال في المعرض حالياً</h3>
               <p className="text-xs text-[#8C7F75]">أضف صور مشاريعك وقصور عملائك لتظهر في الصفحة الرئيسية لموقعك</p>
               <div className="pt-2">
                 <Button onClick={handleCreateNew} icon={<FaPlus />}>
@@ -217,7 +282,7 @@ export default function AdminPortfolio() {
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute top-3 right-3 flex items-center gap-1.5">
-                      <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#14110F]/80 backdrop-blur-md text-white">
+                      <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#141110]/80 backdrop-blur-md text-white">
                         {item.category || 'عام'}
                       </span>
                     </div>
@@ -231,7 +296,18 @@ export default function AdminPortfolio() {
 
                   <div className="p-4 space-y-2 flex-1 flex flex-col justify-between">
                     <div>
-                      <h3 className="font-bold text-sm text-[#14110F]">{item.title}</h3>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-bold text-sm text-[#141110]">{item.title}</h3>
+                        {item.title_en ? (
+                          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200" title={`English: ${item.title_en}`}>
+                            🇬🇧 EN
+                          </span>
+                        ) : (
+                          <span className="px-1.5 py-0.5 rounded text-[9px] text-[#8C7F75] bg-gray-100" title="بدون ترجمة إنجليزية">
+                            عربي فقط
+                          </span>
+                        )}
+                      </div>
                       {item.description && (
                         <p className="text-xs text-[#8C7F75] line-clamp-2 mt-1">{item.description}</p>
                       )}
@@ -242,7 +318,7 @@ export default function AdminPortfolio() {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => handleEdit(item)}
-                          className="p-2 rounded-lg text-[#C5A880] hover:bg-[#C5A880]/10 transition-colors"
+                          className="p-2 rounded-lg text-[#C4A070] hover:bg-[#C4A070]/10 transition-colors"
                           title="تعديل"
                         >
                           <FaPenToSquare className="w-3.5 h-3.5" />

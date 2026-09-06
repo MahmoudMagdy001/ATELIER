@@ -4,6 +4,7 @@ import { regenerateSitemapAndRobots } from '../../../lib/sitemapGenerator'
 import { PageLoading } from '../../../components/ui/Loading'
 import Button from '../../../components/ui/Button'
 import ImagePicker from '../../../components/admin/ImagePicker'
+import AdminLanguageTabs, { type AdminLocale } from '../../../components/admin/AdminLanguageTabs'
 import { 
   FaFloppyDisk, 
   FaArrowsRotate, 
@@ -23,18 +24,23 @@ import type { CustomScript } from '../../../types/database'
 
 export default function AdminSettings() {
   const [activeTab, setActiveTab] = useState<string>('general')
+  const [adminLocale, setAdminLocale] = useState<AdminLocale>('ar')
   const [loading, setLoading] = useState<boolean>(true)
   const [submitting, setSubmitting] = useState<boolean>(false)
 
   // 1. General Settings State
   const [siteName, setSiteName] = useState<string>('')
+  const [siteNameEn, setSiteNameEn] = useState<string>('')
   const [logoUrl, setLogoUrl] = useState<string>('')
   const [faviconUrl, setFaviconUrl] = useState<string>('')
   const [siteDescription, setSiteDescription] = useState<string>('')
+  const [siteDescriptionEn, setSiteDescriptionEn] = useState<string>('')
 
   // 2. SEO & Verification Defaults State
   const [defaultMetaTitle, setDefaultMetaTitle] = useState<string>('')
+  const [defaultMetaTitleEn, setDefaultMetaTitleEn] = useState<string>('')
   const [defaultMetaDescription, setDefaultMetaDescription] = useState<string>('')
+  const [defaultMetaDescriptionEn, setDefaultMetaDescriptionEn] = useState<string>('')
   const [defaultCanonical, setDefaultCanonical] = useState<string>('')
   const [defaultRobots, setDefaultRobots] = useState<string>('index, follow')
   const [defaultOgImage, setDefaultOgImage] = useState<string>('')
@@ -73,11 +79,15 @@ export default function AdminSettings() {
 
       if (settings) {
         setSiteName(settings.site_name || 'S&I Atelier')
+        setSiteNameEn(settings.site_name_en || '')
         setLogoUrl(settings.logo_url || '/logo.png')
         setFaviconUrl(settings.favicon_url || '/logo.png')
         setSiteDescription(settings.site_description || 'دار أثاث فاخر متخصصة في ابتكار وتصنيع القطع الحصرية للقصور والفيلات العصرية بالطلب.')
+        setSiteDescriptionEn(settings.site_description_en || '')
         setDefaultMetaTitle(settings.default_meta_title || 'ATELIER | صياغة الأثاث الفاخر والتصميم الداخلي')
+        setDefaultMetaTitleEn(settings.default_meta_title_en || '')
         setDefaultMetaDescription(settings.default_meta_description || 'استكشف أرقى تشكيلات الأثاث الإيطالي المصنوع بالطلب من الصالونات وغرف الطعام والمجالس الملكية.')
+        setDefaultMetaDescriptionEn(settings.default_meta_description_en || '')
         setDefaultCanonical(settings.default_canonical || '')
         setDefaultRobots(settings.default_robots || 'index, follow')
         setDefaultOgImage(settings.default_og_image || '/assets/hero-banner.jpg')
@@ -128,11 +138,15 @@ export default function AdminSettings() {
 
       await adminService.updateSettings({
         site_name: siteName,
+        site_name_en: siteNameEn.trim() || null,
         logo_url: logoUrl,
         favicon_url: faviconUrl,
         site_description: siteDescription,
+        site_description_en: siteDescriptionEn.trim() || null,
         default_meta_title: defaultMetaTitle,
+        default_meta_title_en: defaultMetaTitleEn.trim() || null,
         default_meta_description: defaultMetaDescription,
+        default_meta_description_en: defaultMetaDescriptionEn.trim() || null,
         default_canonical: defaultCanonical,
         default_robots: defaultRobots,
         default_og_image: defaultOgImage,
@@ -142,7 +156,7 @@ export default function AdminSettings() {
         pinterest_verification: cleanPinterest,
         yandex_verification: cleanYandex,
       })
-      alert('تم حفظ إعدادات الموقع بنجاح!')
+      alert(adminLocale === 'en' ? 'Settings saved successfully!' : 'تم حفظ إعدادات الموقع بنجاح!')
     } catch (err: unknown) {
       alert('حدث خطأ أثناء الحفظ: ' + ((err as Error)?.message || String(err)))
     } finally {
@@ -236,7 +250,7 @@ export default function AdminSettings() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E6E1DC] pb-6">
         <div>
-          <h1 className="text-2xl font-bold text-[#14110F]">إعدادات النظام والـ SEO المركزي</h1>
+          <h1 className="text-2xl font-bold text-[#141110]">إعدادات النظام والـ SEO المركزي</h1>
           <p className="text-xs text-[#8C7F75] mt-1">التحكم في بيانات العلامة التجارية، أكواد التتبع، خريطة الموقع، ووسوم محركات البحث</p>
         </div>
       </div>
@@ -254,7 +268,7 @@ export default function AdminSettings() {
             onClick={() => setActiveTab(tab.id)}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === tab.id
-                ? 'bg-[#C5A880] text-white shadow-md shadow-[#C5A880]/20'
+                ? 'bg-[#C4A070] text-white shadow-md shadow-[#C4A070]/20'
                 : 'bg-white border border-[#E6E1DC] text-[#5C544E] hover:bg-[#FAF8F5]'
             }`}
           >
@@ -267,67 +281,114 @@ export default function AdminSettings() {
       {/* TAB 1: General */}
       {activeTab === 'general' && (
         <form onSubmit={handleSaveGeneralOrSEO} className="bg-white rounded-2xl border border-[#E6E1DC] p-6 shadow-sm space-y-6">
-          <h3 className="font-bold text-base text-[#14110F] border-b border-[#E6E1DC] pb-3">معلومات وهوية الموقع</h3>
+          <div className="flex items-center justify-between border-b border-[#E6E1DC] pb-3">
+            <h3 className="font-bold text-base text-[#141110]">
+              {adminLocale === 'en' ? 'Brand & Website Identity' : 'معلومات وهوية الموقع'}
+            </h3>
+            <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-[#FAF8F5] text-[#8C7F75] border border-[#E6E1DC]">
+              {adminLocale === 'ar' ? '🇸🇦 العربية (الرئيسية)' : '🇬🇧 English (Optional)'}
+            </span>
+          </div>
+
+          {/* Multilingual Tabs */}
+          <AdminLanguageTabs
+            activeLocale={adminLocale}
+            onChange={setAdminLocale}
+            hasEnglishContent={Boolean(siteNameEn || siteDescriptionEn)}
+          />
           
           <div className="space-y-6">
-            <div>
-              <label className="block text-xs font-bold text-[#5C544E] mb-1.5">اسم الموقع / العلامة التجارية</label>
-              <input
-                type="text"
-                className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
-                value={siteName}
-                onChange={(e) => setSiteName(e.target.value)}
-                placeholder="أتيليه للأثاث والتصميم الداخلي الفاخر"
-              />
-            </div>
+            {adminLocale === 'ar' ? (
+              <>
+                <div>
+                  <label className="block text-xs font-bold text-[#5C544E] mb-1.5">اسم الموقع / العلامة التجارية *</label>
+                  <input
+                    type="text"
+                    required
+                    className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all"
+                    value={siteName}
+                    onChange={(e) => setSiteName(e.target.value)}
+                    placeholder="أتيليه للأثاث والتصميم الداخلي الفاخر"
+                  />
+                </div>
 
-            <div className="grid gap-6 md:grid-cols-2">
-              <ImagePicker
-                label="شعار الموقع (Logo)"
-                value={logoUrl}
-                onChange={setLogoUrl}
-                hint="الشعار الرئيسي للعلامة (PNG أو SVG بخلفية شفافة)"
-                title="اختر شعار الموقع من مكتبة الوسائط"
-                placeholder="/assets/logo.png أو رابط مباشر..."
-              />
+                <div>
+                  <label className="block text-xs font-bold text-[#5C544E] mb-1.5">الوصف العام للعلامة</label>
+                  <textarea
+                    rows={3}
+                    className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all"
+                    value={siteDescription}
+                    onChange={(e) => setSiteDescription(e.target.value)}
+                    placeholder="اكتب نبذة شاملة عن العلامة التجارية..."
+                  />
+                </div>
+              </>
+            ) : (
+              <div className="space-y-6" dir="ltr">
+                <div>
+                  <label className="block text-xs font-bold text-[#5C544E] mb-1.5 text-left">Website / Brand Name (English)</label>
+                  <input
+                    type="text"
+                    className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all text-left"
+                    value={siteNameEn}
+                    onChange={(e) => setSiteNameEn(e.target.value)}
+                    placeholder="S&I Atelier Luxury Furniture"
+                  />
+                  <p className="text-[11px] text-[#8C7F75] mt-1 text-left">Leave blank to use Arabic brand name as fallback</p>
+                </div>
 
-              <ImagePicker
-                compact
-                label="أيقونة التبويب (Favicon)"
-                value={faviconUrl}
-                onChange={setFaviconUrl}
-                hint="أيقونة مربعة صغيرة تظهر في تبويب المتصفح (SVG أو PNG)"
-                title="اختر أيقونة التبويب من مكتبة الوسائط"
-                placeholder="/favicon.svg أو رابط مباشر..."
-              />
-            </div>
+                <div>
+                  <label className="block text-xs font-bold text-[#5C544E] mb-1.5 text-left">Brand Overview / Description (English)</label>
+                  <textarea
+                    rows={3}
+                    className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all text-left"
+                    value={siteDescriptionEn}
+                    onChange={(e) => setSiteDescriptionEn(e.target.value)}
+                    placeholder="Comprehensive English description of the luxury atelier and bespoke commissions..."
+                  />
+                </div>
+              </div>
+            )}
 
-            <div>
-              <ImagePicker
-                label="صورة المشاركة الافتراضية (Default OG Image)"
-                value={defaultOgImage}
-                onChange={setDefaultOgImage}
-                hint="الصورة التي تظهر عند مشاركة رابط الموقع على واتساب وشبكات التواصل"
-                title="اختر صورة المشاركة الافتراضية من مكتبة الوسائط"
-                placeholder="https://... أو مسار صورة"
-              />
-            </div>
+            {/* Shared Visual Assets */}
+            <div className="pt-4 border-t border-[#E6E1DC] space-y-6">
+              <div className="grid gap-6 md:grid-cols-2">
+                <ImagePicker
+                  label={adminLocale === 'en' ? 'Website Logo' : 'شعار الموقع (Logo)'}
+                  value={logoUrl}
+                  onChange={setLogoUrl}
+                  hint={adminLocale === 'en' ? 'Primary brand logo (PNG or SVG with transparent background)' : 'الشعار الرئيسي للعلامة (PNG أو SVG بخلفية شفافة)'}
+                  title={adminLocale === 'en' ? 'Select brand logo from Media Library' : 'اختر شعار الموقع من مكتبة الوسائط'}
+                  placeholder="/assets/logo.png"
+                />
 
-            <div>
-              <label className="block text-xs font-bold text-[#5C544E] mb-1.5">الوصف العام للعلامة</label>
-              <textarea
-                rows={3}
-                className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
-                value={siteDescription}
-                onChange={(e) => setSiteDescription(e.target.value)}
-                placeholder="اكتب نبذة شاملة عن العلامة التجارية..."
-              />
+                <ImagePicker
+                  compact
+                  label={adminLocale === 'en' ? 'Browser Tab Favicon' : 'أيقونة التبويب (Favicon)'}
+                  value={faviconUrl}
+                  onChange={setFaviconUrl}
+                  hint={adminLocale === 'en' ? 'Square icon for browser tab (SVG or PNG)' : 'أيقونة مربعة صغيرة تظهر في تبويب المتصفح (SVG أو PNG)'}
+                  title={adminLocale === 'en' ? 'Select favicon from Media Library' : 'اختر أيقونة التبويب من مكتبة الوسائط'}
+                  placeholder="/favicon.svg"
+                />
+              </div>
+
+              <div>
+                <ImagePicker
+                  label={adminLocale === 'en' ? 'Default Social Share Image (OG Image)' : 'صورة المشاركة الافتراضية (Default OG Image)'}
+                  value={defaultOgImage}
+                  onChange={setDefaultOgImage}
+                  hint={adminLocale === 'en' ? 'Image preview when sharing website link on WhatsApp and social platforms' : 'الصورة التي تظهر عند مشاركة رابط الموقع على واتساب وشبكات التواصل'}
+                  title={adminLocale === 'en' ? 'Select social share image from Media Library' : 'اختر صورة المشاركة الافتراضية من مكتبة الوسائط'}
+                  placeholder="https://..."
+                />
+              </div>
             </div>
           </div>
 
           <div className="flex justify-end pt-4 border-t border-[#E6E1DC]">
             <Button type="submit" disabled={submitting} icon={<FaFloppyDisk />}>
-              {submitting ? 'جار الحفظ...' : 'حفظ التغييرات'}
+              {submitting ? (adminLocale === 'en' ? 'Saving...' : 'جار الحفظ...') : (adminLocale === 'en' ? 'Save Changes' : 'حفظ التغييرات')}
             </Button>
           </div>
         </form>
@@ -336,56 +397,115 @@ export default function AdminSettings() {
       {/* TAB 2: SEO & Verifications */}
       {activeTab === 'seo' && (
         <form onSubmit={handleSaveGeneralOrSEO} className="bg-white rounded-2xl border border-[#E6E1DC] p-6 shadow-sm space-y-6">
-          <h3 className="font-bold text-base text-[#14110F] border-b border-[#E6E1DC] pb-3">إعدادات الـ SEO والتوثيق الافتراضية</h3>
-
-          <div className="grid gap-6 md:grid-cols-2">
-            <div>
-              <label className="block text-xs font-bold text-[#5C544E] mb-1.5">عنوان الميتا الافتراضي (Default Meta Title)</label>
-              <input
-                type="text"
-                className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
-                value={defaultMetaTitle}
-                onChange={(e) => setDefaultMetaTitle(e.target.value)}
-                placeholder="ATELIER | صياغة الأثاث الفاخر والتصميم الداخلي"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-[#5C544E] mb-1.5">الرابط النموذجي الافتراضي (Canonical URL)</label>
-              <input
-                type="url"
-                className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-mono text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
-                placeholder="https://atelier-luxury.com"
-                value={defaultCanonical}
-                onChange={(e) => setDefaultCanonical(e.target.value)}
-              />
-            </div>
+          <div className="flex items-center justify-between border-b border-[#E6E1DC] pb-3">
+            <h3 className="font-bold text-base text-[#141110]">
+              {adminLocale === 'en' ? 'Default SEO & Verification Settings' : 'إعدادات الـ SEO والتوثيق الافتراضية'}
+            </h3>
+            <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-[#FAF8F5] text-[#8C7F75] border border-[#E6E1DC]">
+              {adminLocale === 'ar' ? '🇸🇦 العربية (الرئيسية)' : '🇬🇧 English (Optional)'}
+            </span>
           </div>
 
-          <div>
-            <label className="block text-xs font-bold text-[#5C544E] mb-1.5">الوصف التعريفي الافتراضي (Default Meta Description)</label>
-            <textarea
-              rows={2}
-              className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
-              value={defaultMetaDescription}
-              onChange={(e) => setDefaultMetaDescription(e.target.value)}
-              placeholder="استكشف أرقى تشكيلات الأثاث الإيطالي المصنوع بالطلب من الصالونات وغرف الطعام والمجالس الملكية."
-            />
-          </div>
+          {/* Multilingual Tabs */}
+          <AdminLanguageTabs
+            activeLocale={adminLocale}
+            onChange={setAdminLocale}
+            hasEnglishContent={Boolean(defaultMetaTitleEn || defaultMetaDescriptionEn)}
+          />
+
+          {adminLocale === 'ar' ? (
+            <div className="space-y-6">
+              <div className="grid gap-6 md:grid-cols-2">
+                <div>
+                  <label className="block text-xs font-bold text-[#5C544E] mb-1.5">عنوان الميتا الافتراضي *</label>
+                  <input
+                    type="text"
+                    required
+                    className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all"
+                    value={defaultMetaTitle}
+                    onChange={(e) => setDefaultMetaTitle(e.target.value)}
+                    placeholder="ATELIER | صياغة الأثاث الفاخر والتصميم الداخلي"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#5C544E] mb-1.5">الرابط النموذجي الافتراضي (Canonical URL)</label>
+                  <input
+                    type="url"
+                    className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-mono text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all"
+                    placeholder="https://atelier-luxury.com"
+                    value={defaultCanonical}
+                    onChange={(e) => setDefaultCanonical(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-[#5C544E] mb-1.5">الوصف التعريفي الافتراضي</label>
+                <textarea
+                  rows={2}
+                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all"
+                  value={defaultMetaDescription}
+                  onChange={(e) => setDefaultMetaDescription(e.target.value)}
+                  placeholder="استكشف أرقى تشكيلات الأثاث الإيطالي المصنوع بالطلب من الصالونات وغرف الطعام والمجالس الملكية."
+                />
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-6" dir="ltr">
+              <div className="grid gap-6 md:grid-cols-2">
+                <div>
+                  <label className="block text-xs font-bold text-[#5C544E] mb-1.5 text-left">Default Meta Title (English)</label>
+                  <input
+                    type="text"
+                    className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all text-left"
+                    value={defaultMetaTitleEn}
+                    onChange={(e) => setDefaultMetaTitleEn(e.target.value)}
+                    placeholder="ATELIER | Haute Living & Bespoke Commissions"
+                  />
+                  <p className="text-[11px] text-[#8C7F75] mt-1 text-left">Leave blank to use Arabic meta title as fallback</p>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#5C544E] mb-1.5 text-left">Default Canonical URL</label>
+                  <input
+                    type="url"
+                    className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-mono text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all text-left"
+                    placeholder="https://atelier-luxury.com"
+                    value={defaultCanonical}
+                    onChange={(e) => setDefaultCanonical(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-[#5C544E] mb-1.5 text-left">Default Meta Description (English)</label>
+                <textarea
+                  rows={2}
+                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all text-left"
+                  value={defaultMetaDescriptionEn}
+                  onChange={(e) => setDefaultMetaDescriptionEn(e.target.value)}
+                  placeholder="Explore prestigious Italian furniture commissions tailored for royal villas and architectural sanctuaries."
+                />
+              </div>
+            </div>
+          )}
 
           {/* Verification Tokens */}
           <div className="bg-[#FAF8F5] rounded-2xl p-5 border border-[#E6E1DC] space-y-4">
-            <h4 className="font-bold text-xs text-[#14110F] flex items-center gap-2">
-              <FaCircleInfo className="text-[#C5A880] w-4 h-4" />
-              <span>رموز توثيق محركات البحث وأدوات مشرفي المواقع (Webmaster Tokens)</span>
+            <h4 className="font-bold text-xs text-[#141110] flex items-center gap-2">
+              <FaCircleInfo className="text-[#C4A070] w-4 h-4" />
+              <span>
+                {adminLocale === 'en' ? 'Search Engine & Webmaster Verification Tokens' : 'رموز توثيق محركات البحث وأدوات مشرفي المواقع (Webmaster Tokens)'}
+              </span>
             </h4>
             <div className="grid gap-4 md:grid-cols-2">
               <div>
                 <label className="block text-xs font-semibold text-[#5C544E] mb-1">Google Site Verification</label>
                 <input
                   type="text"
-                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-3.5 py-2 text-xs font-mono text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none"
-                  placeholder="رمز جوجل أو وسم الميتا الكامل"
+                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-3.5 py-2 text-xs font-mono text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none"
+                  placeholder="Google Token or Meta Tag"
                   value={googleVerification}
                   onChange={(e) => setGoogleVerification(e.target.value)}
                 />
@@ -395,8 +515,8 @@ export default function AdminSettings() {
                 <label className="block text-xs font-semibold text-[#5C544E] mb-1">Bing Webmaster (msvalidate.01)</label>
                 <input
                   type="text"
-                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-3.5 py-2 text-xs font-mono text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none"
-                  placeholder="رمز توثيق بينج"
+                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-3.5 py-2 text-xs font-mono text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none"
+                  placeholder="Bing Token"
                   value={bingVerification}
                   onChange={(e) => setBingVerification(e.target.value)}
                 />
@@ -408,7 +528,7 @@ export default function AdminSettings() {
                 <label className="block text-xs font-semibold text-[#5C544E] mb-1">Facebook Domain Verification</label>
                 <input
                   type="text"
-                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-3.5 py-2 text-xs font-mono text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none"
+                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-3.5 py-2 text-xs font-mono text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none"
                   placeholder="Facebook Token"
                   value={facebookVerification}
                   onChange={(e) => setFacebookVerification(e.target.value)}
@@ -418,7 +538,7 @@ export default function AdminSettings() {
                 <label className="block text-xs font-semibold text-[#5C544E] mb-1">Pinterest Verification</label>
                 <input
                   type="text"
-                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-3.5 py-2 text-xs font-mono text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none"
+                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-3.5 py-2 text-xs font-mono text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none"
                   placeholder="Pinterest Token"
                   value={pinterestVerification}
                   onChange={(e) => setPinterestVerification(e.target.value)}
@@ -428,7 +548,7 @@ export default function AdminSettings() {
                 <label className="block text-xs font-semibold text-[#5C544E] mb-1">Yandex Verification</label>
                 <input
                   type="text"
-                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-3.5 py-2 text-xs font-mono text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none"
+                  className="w-full rounded-xl border border-[#E6E1DC] bg-white px-3.5 py-2 text-xs font-mono text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none"
                   placeholder="Yandex Token"
                   value={yandexVerification}
                   onChange={(e) => setYandexVerification(e.target.value)}
@@ -439,7 +559,7 @@ export default function AdminSettings() {
 
           <div className="flex justify-end pt-4 border-t border-[#E6E1DC]">
             <Button type="submit" disabled={submitting} icon={<FaFloppyDisk />}>
-              {submitting ? 'جار الحفظ...' : 'حفظ إعدادات الـ SEO'}
+              {submitting ? (adminLocale === 'en' ? 'Saving...' : 'جار الحفظ...') : (adminLocale === 'en' ? 'Save SEO Settings' : 'حفظ إعدادات الـ SEO')}
             </Button>
           </div>
         </form>
@@ -450,14 +570,14 @@ export default function AdminSettings() {
         <div className="space-y-6">
           <div className="bg-white rounded-2xl border border-[#E6E1DC] p-6 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <h3 className="font-bold text-base text-[#14110F]">توليد خريطة الموقع الآلية (Sitemap.xml Generator)</h3>
+              <h3 className="font-bold text-base text-[#141110]">توليد خريطة الموقع الآلية (Sitemap.xml Generator)</h3>
               <p className="text-xs text-[#8C7F75] mt-1">إنشاء ملف Sitemap.xml محدث يضم كافة المقالات، الخدمات، والعروض ورفعه للتخزين السحابي</p>
             </div>
             <button
               type="button"
               onClick={handleManualRegenerate}
               disabled={regenerating}
-              className="px-5 py-2.5 rounded-xl bg-[#2B2623] text-white hover:bg-[#14110F] text-xs font-bold flex items-center gap-2 transition-all cursor-pointer"
+              className="px-5 py-2.5 rounded-xl bg-[#26211F] text-white hover:bg-[#141110] text-xs font-bold flex items-center gap-2 transition-all cursor-pointer"
             >
               <FaArrowsRotate className={`w-3.5 h-3.5 ${regenerating ? 'animate-spin' : ''}`} />
               <span>{regenerating ? 'جار التوليد والرفع...' : 'تحديث Sitemap.xml الآن'}</span>
@@ -465,13 +585,13 @@ export default function AdminSettings() {
           </div>
 
           <form onSubmit={handleSaveRobots} className="bg-white rounded-2xl border border-[#E6E1DC] p-6 shadow-sm space-y-6">
-            <h3 className="font-bold text-base text-[#14110F] border-b border-[#E6E1DC] pb-3">إعدادات ملف Robots.txt</h3>
+            <h3 className="font-bold text-base text-[#141110] border-b border-[#E6E1DC] pb-3">إعدادات ملف Robots.txt</h3>
 
             <div>
               <label className="block text-xs font-bold text-[#5C544E] mb-1.5">رابط خريطة الموقع داخل Robots.txt</label>
               <input
                 type="url"
-                className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-mono text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
+                className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-mono text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all"
                 placeholder="https://atelier-luxury.com/sitemap.xml"
                 value={robotsSitemapUrl}
                 onChange={(e) => setRobotsSitemapUrl(e.target.value)}
@@ -482,7 +602,7 @@ export default function AdminSettings() {
               <label className="block text-xs font-bold text-[#5C544E] mb-1.5">محتوى ملف Robots.txt المخصص</label>
               <textarea
                 rows={6}
-                className="w-full rounded-xl border border-[#E6E1DC] bg-[#FAF8F5] px-4 py-2.5 text-xs font-mono text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:ring-1 focus:ring-[#C5A880] focus:outline-none transition-all"
+                className="w-full rounded-xl border border-[#E6E1DC] bg-[#FAF8F5] px-4 py-2.5 text-xs font-mono text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all"
                 value={robotsCustomContent}
                 onChange={(e) => setRobotsCustomContent(e.target.value)}
               />
@@ -502,7 +622,7 @@ export default function AdminSettings() {
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-bold text-base text-[#14110F]">إدارة سكريبتات الرأس والذيل (Custom Scripts)</h3>
+              <h3 className="font-bold text-base text-[#141110]">إدارة سكريبتات الرأس والذيل (Custom Scripts)</h3>
               <p className="text-xs text-[#8C7F75] mt-1">حقن أكواد التتبع مثل Google Tag Manager و Meta Pixel بدون تعديل الكود المصدري</p>
             </div>
             <button
@@ -514,7 +634,7 @@ export default function AdminSettings() {
                 setScriptIsActive(true)
                 setScriptFormOpen(true)
               }}
-              className="px-4 py-2 bg-[#C5A880] text-white rounded-xl text-xs font-bold flex items-center gap-2 hover:bg-[#B59362] cursor-pointer"
+              className="px-4 py-2 bg-[#C4A070] text-white rounded-xl text-xs font-bold flex items-center gap-2 hover:bg-[#B88F48] cursor-pointer"
             >
               <FaPlus className="w-3.5 h-3.5" />
               <span>إضافة كود جديد</span>
@@ -525,13 +645,13 @@ export default function AdminSettings() {
           {scriptFormOpen && (
             <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
               <form onSubmit={handleSaveScript} className="bg-white rounded-2xl p-6 shadow-2xl max-w-lg w-full border border-[#E6E1DC] space-y-4">
-                <h4 className="font-bold text-base text-[#14110F]">{editingScriptId ? 'تعديل السكريبت' : 'إضافة سكريبت جديد'}</h4>
+                <h4 className="font-bold text-base text-[#141110]">{editingScriptId ? 'تعديل السكريبت' : 'إضافة سكريبت جديد'}</h4>
                 <div>
                   <label className="block text-xs font-semibold text-[#5C544E] mb-1">اسم السكريبت</label>
                   <input
                     type="text"
                     required
-                    className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs text-[#14110F] bg-white placeholder-[#8C7F75] focus:border-[#C5A880] focus:outline-none"
+                    className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs text-[#141110] bg-white placeholder-[#8C7F75] focus:border-[#C4A070] focus:outline-none"
                     placeholder="مثال: Google Analytics 4"
                     value={scriptName}
                     onChange={(e) => setScriptName(e.target.value)}
@@ -540,7 +660,7 @@ export default function AdminSettings() {
                 <div>
                   <label className="block text-xs font-semibold text-[#5C544E] mb-1">موضع الحقن (Location)</label>
                   <select
-                    className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs text-[#14110F] bg-white focus:border-[#C5A880] focus:outline-none cursor-pointer"
+                    className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs text-[#141110] bg-white focus:border-[#C4A070] focus:outline-none cursor-pointer"
                     value={scriptLocation}
                     onChange={(e) => setScriptLocation(e.target.value)}
                   >
@@ -553,7 +673,7 @@ export default function AdminSettings() {
                   <textarea
                     rows={5}
                     required
-                    className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] font-mono text-xs text-[#14110F] bg-[#FAF8F5] placeholder-[#8C7F75] focus:border-[#C5A880] focus:outline-none"
+                    className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] font-mono text-xs text-[#141110] bg-[#FAF8F5] placeholder-[#8C7F75] focus:border-[#C4A070] focus:outline-none"
                     placeholder="<script>...</script>"
                     value={scriptSrc}
                     onChange={(e) => setScriptSrc(e.target.value)}
@@ -569,7 +689,7 @@ export default function AdminSettings() {
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 text-xs font-bold bg-[#C5A880] text-white rounded-xl"
+                    className="px-5 py-2 text-xs font-bold bg-[#C4A070] text-white rounded-xl"
                   >
                     حفظ السكريبت
                   </button>
@@ -588,11 +708,11 @@ export default function AdminSettings() {
               scripts.map((sc) => (
                 <div key={sc.id} className="bg-white rounded-2xl border border-[#E6E1DC] p-4 flex items-center justify-between shadow-sm">
                   <div className="flex items-center gap-3">
-                    <div className="p-2.5 rounded-xl bg-[#FAF8F5] text-[#C5A880]">
+                    <div className="p-2.5 rounded-xl bg-[#FAF8F5] text-[#C4A070]">
                       <FaRegFileCode className="w-5 h-5" />
                     </div>
                     <div>
-                      <h4 className="font-bold text-sm text-[#14110F]">{sc.name}</h4>
+                      <h4 className="font-bold text-sm text-[#141110]">{sc.name}</h4>
                       <p className="text-[11px] text-[#8C7F75] mt-0.5">
                         الموضع: {sc.location === 'head' ? 'داخل الرأس (Head)' : 'نهاية الصفحة (Body)'}
                       </p>

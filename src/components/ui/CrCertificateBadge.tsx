@@ -1,4 +1,5 @@
 import { FaAward } from 'react-icons/fa6'
+import { useTranslation } from 'react-i18next'
 import crCertificatePdf from '../../assets/CrCertificate.pdf'
 import { CONTACT_INFO } from '../../constants/contactInfo'
 
@@ -7,13 +8,15 @@ export interface CrCertificateBadgeProps {
 }
 
 export default function CrCertificateBadge({ className = '' }: CrCertificateBadgeProps) {
+  const { t } = useTranslation()
+
   return (
     <a
       href={crCertificatePdf}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label={`استعراض شهادة السجل التجاري المعتمدة لشركة S&I Atelier (تاريخ التأسيس: ${CONTACT_INFO.foundedDate})`}
-      title={`استعراض شهادة السجل التجاري المعتمدة • تاريخ التأسيس: ${CONTACT_INFO.foundedDate}`}
+      aria-label={t('certificate.ariaLabel', { date: CONTACT_INFO.foundedDate })}
+      title={`${t('certificate.title')} • ${t('certificate.founded', { year: CONTACT_INFO.foundedYear })}`}
       className={`group relative inline-flex items-center justify-center select-none ${className}`}
     >
       {/* Ambient Gold Glow on Hover */}
@@ -36,19 +39,19 @@ export default function CrCertificateBadge({ className = '' }: CrCertificateBadg
 
           {/* Central Title */}
           <span className="text-[10px] sm:text-[11px] font-bold text-[#F2EFE8] leading-tight font-serif tracking-wide">
-            السجل التجاري
+            {t('certificate.title')}
           </span>
 
           {/* Verification Tag */}
           <span className="text-[7.5px] sm:text-[8px] text-[#C4A070] font-medium tracking-wider mt-0.5 flex items-center gap-1">
             <span className="text-[5px] text-[#C4A070]/80">✦</span>
-            معتمد
+            {t('certificate.verified')}
             <span className="text-[5px] text-[#C4A070]/80">✦</span>
           </span>
 
           {/* Founding Year */}
           <span className="text-[7px] sm:text-[7.5px] text-[#B3A9A3]/90 font-mono tracking-wider mt-0.5">
-            تأسست {CONTACT_INFO.foundedYear}
+            {t('certificate.founded', { year: CONTACT_INFO.foundedYear })}
           </span>
         </div>
       </div>

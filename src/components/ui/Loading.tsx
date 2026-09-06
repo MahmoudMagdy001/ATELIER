@@ -1,4 +1,5 @@
 import { memo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export interface SpinnerProps {
   size?: 'sm' | 'md' | 'lg'
@@ -6,6 +7,7 @@ export interface SpinnerProps {
 }
 
 export const Spinner = memo(function Spinner({ size = 'md', className = '' }: SpinnerProps) {
+  const { t } = useTranslation()
   const sizeClasses: Record<string, string> = {
     sm: 'w-4 h-4 border-2',
     md: 'w-8 h-8 border-3',
@@ -16,7 +18,7 @@ export const Spinner = memo(function Spinner({ size = 'md', className = '' }: Sp
     <div
       className={`rounded-full border-[#C4A070]/20 border-t-[#C4A070] animate-spin ${sizeClasses[size] || sizeClasses.md} ${className}`}
       role="status"
-      aria-label="جار التحميل..."
+      aria-label={t('loading.spinnerAria')}
     />
   )
 })
@@ -25,11 +27,14 @@ export interface PageLoadingProps {
   text?: string
 }
 
-export const PageLoading = memo(function PageLoading({ text = 'جار تحميل البيانات...' }: PageLoadingProps) {
+export const PageLoading = memo(function PageLoading({ text }: PageLoadingProps) {
+  const { t } = useTranslation()
+  const displayText = text || t('loading.pageDefault')
+
   return (
     <div className="flex flex-col items-center justify-center min-h-[300px] gap-3 p-8">
       <Spinner size="lg" />
-      <p className="text-xs text-[#827771] font-medium">{text}</p>
+      <p className="text-xs text-[#827771] font-medium">{displayText}</p>
     </div>
   )
 })

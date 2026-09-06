@@ -1,6 +1,7 @@
 import { memo, useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { supabase } from '../../lib/supabase'
+import { useTranslation } from 'react-i18next'
+import { adminService } from '../../features/admin/services/adminService'
 import { CONTACT_INFO } from '../../constants/contactInfo'
 import type { SiteSettings } from '../../types/database'
 import type { SEOProps } from '../../types'
@@ -48,34 +49,46 @@ const SEO = memo(function SEO({
   const siteUrl = typeof window !== 'undefined' && window.location.origin ? window.location.origin : 'https://atelier-luxury.com'
 
   useEffect(() => {
-    async function loadSettings() {
-      try {
-        const { data } = await supabase
-          .from('site_settings')
-          .select('*')
-          .eq('id', 1)
-          .maybeSingle()
-        if (data) {
-          setSettings(data as SiteSettings)
-        }
-      } catch {
-        // quiet fallback
+    let isMounted = true
+    adminService.fetchSettings().then(data => {
+      if (isMounted && data) {
+        setSettings(data)
       }
+    }).catch(() => {})
+
+    return () => {
+      isMounted = false
     }
-    loadSettings()
   }, [])
 
-  const defaultBrand = 'أتيليه للأثاث والتصميم الداخلي الفاخر'
-  const defaultDesc = 'أتيليه - علامة رائدة في صناعة الأثاث الفاخر بالطلب والتصميم الداخلي المعماري للقصور والفيلات الراقية.'
+  const { t, i18n } = useTranslation()
+  const currentLang = i18n.language?.startsWith('en') ? 'en' : 'ar'
+  const currentDir = currentLang === 'ar' ? 'rtl' : 'ltr'
+  const isEn = currentLang === 'en'
 
-  const finalTitle = title || settings?.default_meta_title || settings?.site_name || defaultBrand
-  const finalDesc = description || settings?.default_meta_description || settings?.site_description || defaultDesc
+  const defaultBrand = t('seo.defaultTitle')
+  const defaultDesc = t('seo.defaultDescription')
+
+  const dbTitle = isEn 
+    ? (settings?.default_meta_title_en || settings?.site_name_en) 
+    : (settings?.default_meta_title || settings?.site_name)
+
+  const dbDesc = isEn
+    ? (settings?.default_meta_description_en || settings?.site_description_en)
+    : (settings?.default_meta_description || settings?.site_description)
+
+  const rawTitle = title || dbTitle || defaultBrand || (isEn ? 'S&I Atelier | Bespoke Luxury Furniture & Interiors' : 'S&I Atelier | قطع حصرية وتنفيذ حسب الطلب')
+  
+  // Prevent duplicate brand name in title
+  let fullTitle = rawTitle.trim()
+  const hasBrand = /atelier/i.test(fullTitle)
+  if (!hasBrand) {
+    fullTitle = `${fullTitle} | S&I Atelier`
+  }
+
+  const finalDesc = description || dbDesc || defaultDesc
   const finalImage = image || ogImage || settings?.default_og_image || '/assets/hero.png'
   const finalSlug = slug || ''
-  
-  const fullTitle = title 
-    ? `${title} | S&I Atelier` 
-    : 'S&I Atelier | Bespoke Luxury Furniture & Interiors'
 
   const finalCanonical = canonicalUrl || settings?.default_canonical || `${siteUrl}/${finalSlug}`
   const imageUrl = finalImage.startsWith('http') ? finalImage : `${siteUrl}${finalImage}`
@@ -92,6 +105,9 @@ const SEO = memo(function SEO({
 
   return (
     <Helmet>
+      {/* HTML Lang and Direction */}
+      <html lang={currentLang} dir={currentDir} />
+
       {/* Primary HTML Meta Tags */}
       <title>{fullTitle}</title>
       <meta name="title" content={fullTitle} />

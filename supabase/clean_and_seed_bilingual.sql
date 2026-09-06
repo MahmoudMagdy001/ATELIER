@@ -1,0 +1,1438 @@
+-- ==============================================================================
+-- S&I ATELIER - CLEAN & SEED DATABASE (100% BILINGUAL AR/EN + COMPLETE SEO)
+-- انسخ هذا الكود بالكامل وشغّله في Supabase SQL Editor:
+-- https://supabase.com/dashboard/project/_/sql
+-- ==============================================================================
+
+-- [المرحلة 1]: تحديث جداول قاعدة البيانات وإضافة أعمدة اللغتين والسيو تلقائياً إذا لم تكن موجودة
+-- ==============================================================================
+-- S&I ATELIER - Multilingual Database Schema Migration (EXACT & SAFE)
+-- Run this script in your Supabase Project SQL Editor:
+-- https://supabase.com/dashboard/project/_/sql
+-- Matches `supabase_schema.sql` table names exactly.
+-- ==============================================================================
+
+-- 1. Limited Editions Table (القطع ذات الإصدار المحدود)
+ALTER TABLE IF EXISTS public.limited_editions 
+  ADD COLUMN IF NOT EXISTS title_en TEXT,
+  ADD COLUMN IF NOT EXISTS description_en TEXT,
+  ADD COLUMN IF NOT EXISTS badge_en TEXT,
+  ADD COLUMN IF NOT EXISTS meta_title_en TEXT,
+  ADD COLUMN IF NOT EXISTS meta_description_en TEXT;
+
+-- Fallback if your table is named 'products'
+ALTER TABLE IF EXISTS public.products 
+  ADD COLUMN IF NOT EXISTS title_en TEXT,
+  ADD COLUMN IF NOT EXISTS description_en TEXT,
+  ADD COLUMN IF NOT EXISTS badge_en TEXT,
+  ADD COLUMN IF NOT EXISTS meta_title_en TEXT,
+  ADD COLUMN IF NOT EXISTS meta_description_en TEXT;
+
+-- 2. Bespoke Service Table (صفحة خدمة التنفيذ حسب الطلب)
+ALTER TABLE IF EXISTS public.bespoke_service 
+  ADD COLUMN IF NOT EXISTS hero_title_en TEXT,
+  ADD COLUMN IF NOT EXISTS hero_subtitle_en TEXT,
+  ADD COLUMN IF NOT EXISTS service_description_en TEXT,
+  ADD COLUMN IF NOT EXISTS steps_en JSONB,
+  ADD COLUMN IF NOT EXISTS cta_text_en TEXT;
+
+-- Fallback if table was previously named 'bespoke_content'
+ALTER TABLE IF EXISTS public.bespoke_content 
+  ADD COLUMN IF NOT EXISTS hero_title_en TEXT,
+  ADD COLUMN IF NOT EXISTS hero_subtitle_en TEXT,
+  ADD COLUMN IF NOT EXISTS service_description_en TEXT,
+  ADD COLUMN IF NOT EXISTS steps_en JSONB,
+  ADD COLUMN IF NOT EXISTS cta_text_en TEXT;
+
+-- 3. Categories Table (التصنيفات للأثاث والمقالات)
+ALTER TABLE IF EXISTS public.categories 
+  ADD COLUMN IF NOT EXISTS name_en TEXT,
+  ADD COLUMN IF NOT EXISTS description_en TEXT,
+  ADD COLUMN IF NOT EXISTS meta_title_en TEXT,
+  ADD COLUMN IF NOT EXISTS meta_description_en TEXT;
+
+-- 3b. Site Settings Table (إعدادات الموقع العامة)
+ALTER TABLE IF EXISTS public.site_settings 
+  ADD COLUMN IF NOT EXISTS site_name_en TEXT,
+  ADD COLUMN IF NOT EXISTS site_description_en TEXT,
+  ADD COLUMN IF NOT EXISTS default_meta_title_en TEXT,
+  ADD COLUMN IF NOT EXISTS default_meta_description_en TEXT;
+
+-- 4. Portfolio Table (معرض أسبقيات الأعمال)
+ALTER TABLE IF EXISTS public.portfolio 
+  ADD COLUMN IF NOT EXISTS title_en TEXT,
+  ADD COLUMN IF NOT EXISTS description_en TEXT,
+  ADD COLUMN IF NOT EXISTS category_en TEXT;
+
+-- 5. Offers Table (العروض والباقات الحصرية)
+ALTER TABLE IF EXISTS public.offers 
+  ADD COLUMN IF NOT EXISTS title_en TEXT,
+  ADD COLUMN IF NOT EXISTS description_en TEXT,
+  ADD COLUMN IF NOT EXISTS discount_label_en TEXT,
+  ADD COLUMN IF NOT EXISTS badge_en TEXT,
+  ADD COLUMN IF NOT EXISTS meta_title_en TEXT,
+  ADD COLUMN IF NOT EXISTS meta_description_en TEXT;
+
+-- 6. Articles Table (المقالات والمجلة المعمارية)
+ALTER TABLE IF EXISTS public.articles 
+  ADD COLUMN IF NOT EXISTS title_en TEXT,
+  ADD COLUMN IF NOT EXISTS excerpt_en TEXT,
+  ADD COLUMN IF NOT EXISTS content_en TEXT,
+  ADD COLUMN IF NOT EXISTS author_en TEXT,
+  ADD COLUMN IF NOT EXISTS meta_title_en TEXT,
+  ADD COLUMN IF NOT EXISTS meta_description_en TEXT;
+
+-- Fallback if articles table is named 'posts'
+ALTER TABLE IF EXISTS public.posts 
+  ADD COLUMN IF NOT EXISTS title_en TEXT,
+  ADD COLUMN IF NOT EXISTS excerpt_en TEXT,
+  ADD COLUMN IF NOT EXISTS content_en TEXT,
+  ADD COLUMN IF NOT EXISTS author_en TEXT,
+  ADD COLUMN IF NOT EXISTS meta_title_en TEXT,
+  ADD COLUMN IF NOT EXISTS meta_description_en TEXT;
+
+-- 7. Media Library Table (مكتبة الوسائط)
+ALTER TABLE IF EXISTS public.media_library 
+  ADD COLUMN IF NOT EXISTS url TEXT,
+  ADD COLUMN IF NOT EXISTS file_url TEXT;
+
+-- ==============================================================================
+-- Migration complete! You can run this script safely anytime (idempotent).
+-- ==============================================================================
+
+
+-- [المرحلة 2]: مسح البيانات القديمة بالكامل لبدء الموقع على نظافة
+
+-- ==============================================================================
+-- خطوة مسح البيانات القديمة بالكامل (Clean Old Data)
+-- يتم مسح الجداول مع الـ CASCADE لضمان حذف كافة البيانات السابقة بدون تعارض المفاتيح
+-- ==============================================================================
+TRUNCATE TABLE 
+  public.limited_editions,
+  public.offers,
+  public.articles,
+  public.portfolio,
+  public.categories,
+  public.bespoke_service,
+  public.site_settings
+CASCADE;
+
+
+-- [المرحلة 3]: إضافة البيانات الواقعية الفاخرة بالكامل (عربي + إنجليزي + SEO كامل)
+-- ==============================================================================
+-- S&I ATELIER - Complete 100% Bilingual Seed Data (Arabic & English)
+-- Run this in your Supabase SQL Editor:
+-- https://supabase.com/dashboard/project/_/sql
+-- Safe & Idempotent: Uses ON CONFLICT (slug) and ON CONFLICT (id)
+-- ==============================================================================
+
+-- ------------------------------------------------------------------------------
+-- 1. CATEGORIES (10 Categories - Products & Blog)
+-- ------------------------------------------------------------------------------
+INSERT INTO public.categories (
+  name, name_en, slug, description, description_en,
+  meta_title, meta_title_en, meta_description, meta_description_en,
+  type, display_order, image_url
+) VALUES
+  (
+    'صالونات ومجالس فاخرة',
+    'Luxury Living & Majlis',
+    'living-majlis',
+    'أطقم جلوس وصالونات حصرية بتصاميم منحوتة تجمع الراحة المطلقة مع الهيبة المعمارية.',
+    'Curated seating suites and exclusive majlis lounges blending sculptural elegance with absolute comfort.',
+    'صالونات ومجالس فاخرة للقصور | S&I Atelier',
+    'Luxury Living & Majlis Suites | S&I Atelier',
+    'أرقى أطقم الجلوس والصالونات المنحوتة المخصصة للقصور والمجالس الكبرى.',
+    'Discover bespoke curved sofas and sculptural lounge furniture for palaces.',
+    'products',
+    1,
+    'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80'
+  ),
+  (
+    'طاولات طعام ملكية',
+    'Royal Dining Tables',
+    'royal-dining',
+    'طاولات طعام من الرخام الإيطالي وأندر أخشاب الجوز لتجارب ضيافة استثنائية.',
+    'Dining centerpieces crafted from Italian marble and rare walnut for unforgettable banquet experiences.',
+    'طاولات طعام ملكية فاخرة | S&I Atelier',
+    'Royal Dining Centerpieces | S&I Atelier',
+    'طاولات طعام من رخام كلكتا وأخشاب الجوز الصلب تتسع لـ 10 إلى 16 ضيفاً.',
+    'Monolithic dining tables sculpted from Italian marble slabs and solid timber.',
+    'products',
+    2,
+    'https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=1200&q=80'
+  ),
+  (
+    'أجنحة النوم الرئيسية',
+    'Master Bedroom Suites',
+    'master-bedrooms',
+    'أسرّة وخزائن مكسوة بجلود النابا والمخمل الطبيعي مع صياغة خشبية دقيقة.',
+    'Bespoke beds and headboards dressed in Italian Nappa leather and natural velvet.',
+    'أجنحة النوم الماستر للقصور | S&I Atelier',
+    'Master Bedroom Suites | S&I Atelier',
+    'أسرّة ملكية وتسريحات وخزائن حصرية مصممة لأرقى أجنحة النوم.',
+    'Exclusive master beds and boutique dressing suites in Italian leather.',
+    'products',
+    3,
+    'https://images.unsplash.com/photo-1540518614846-7ede433c4550?auto=format&fit=crop&w=1200&q=80'
+  ),
+  (
+    'كونسول ومداخل معمارية',
+    'Architectural Consoles',
+    'architectural-consoles',
+    'قطع نحتية ترحيبية للمداخل والبهو الرئيسي تعكس هوية القصر من اللحظة الأولى.',
+    'Sculptural foyer consoles creating an awe-inspiring entrance for modern palaces.',
+    'كونسول ومداخل بهو فاخرة | S&I Atelier',
+    'Architectural Consoles & Foyers | S&I Atelier',
+    'كونسولات رخامية برونزية تمنح بهو الاستقبال هيبة استثنائية.',
+    'Sculptural entrance foyer consoles handcrafted in Nero Marquina and bronze.',
+    'products',
+    4,
+    'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1200&q=80'
+  ),
+  (
+    'مكاتب تنفيذية ومكتبات',
+    'Executive Desks & Libraries',
+    'executive-desks',
+    'أثاث المكاتب الخاصة والقصور التنفيذية بتفاصيل البرونز المعتّق والجلد الفاخر.',
+    'Private executive furniture accented with aged patinated bronze and full-grain leather.',
+    'مكاتب تنفيذية فاخرة | S&I Atelier',
+    'Executive Desks & Libraries | S&I Atelier',
+    'مكاتب رئاسية ومكتبات جدارية شاهقة لقصور القيادات ورجال الأعمال.',
+    'Commanding presidential executive desks and modular wall library collections.',
+    'products',
+    5,
+    'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=80'
+  ),
+  (
+    'فلسفة التصميم المعماري',
+    'Architectural Philosophy',
+    'architectural-philosophy',
+    'مقالات نقدية ورؤى في تناغم النسب والارتفاعات في القصور المعاصرة.',
+    'Critical essays and design perspectives on proportion and spatial harmony in contemporary palaces.',
+    'فلسفة التصميم المعماري | مجلة S&I Atelier',
+    'Architectural Philosophy | S&I Atelier Journal',
+    'رؤى معمارية وتأملات في صياغة الفراغات الفاخرة والأثاث النحتي.',
+    'Critical essays on spatial harmony and sculptural interior architecture.',
+    'blog',
+    1,
+    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80'
+  ),
+  (
+    'دليل الخامات والرخام النادر',
+    'Rare Materials & Marbles',
+    'materials-craftsmanship',
+    'رحلات استكشافية لانتقاء حجر الكلكتا والكوارتزايت الطبيعي وأخشاب الجوز الكناري.',
+    'Behind-the-scenes procurement of Calacatta marble, natural quartzite, and Canary walnut.',
+    'دليل الخامات والرخام النادر | S&I Atelier',
+    'Rare Materials & Natural Marbles Guide | S&I Atelier',
+    'أسرار اختيار الأحجار الطبيعية الإيطالية وأخشاب الجوز الصلبة.',
+    'Curated insights into Italian marble quarries and generational timber finishing.',
+    'blog',
+    2,
+    'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=80'
+  ),
+  (
+    'اتجاهات الديكور العالمي',
+    'Global Design Trends',
+    'global-trends',
+    'قراءة في أبرز ملامح أسبوع ميلانو للتصميم وأحدث صيحات الأثاث النحتي.',
+    'Curated insights from Milan Design Week and the forefront of sculptural bespoke living.',
+    'اتجاهات الديكور والتصميم العالمي | S&I Atelier',
+    'Global Design & Interior Trends | S&I Atelier',
+    'تغطية حصرية لأحدث اتجاهات التصميم العالمي في باريس وميلانو.',
+    'Global perspectives from the vanguard of luxury interior architecture.',
+    'blog',
+    3,
+    'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80'
+  ),
+  (
+    'طاولات قهوة وجانبية نحتية',
+    'Sculptural Coffee & Side Tables',
+    'coffee-side-tables',
+    'طاولات ضيافة حجرية وخشبية مصممة كنقاط ارتكاز بصرية في الصالونات الفسيحة.',
+    'Stone and solid wood occasional tables designed as visual anchors for spacious living salons.',
+    'طاولات قهوة وجانبية فاخرة | S&I Atelier',
+    'Sculptural Coffee & Side Tables | S&I Atelier',
+    'طاولات قهوة وجانبية مصبوبة من الرخام الإيطالي وأندر أخشاب الجوز.',
+    'Discover monolithic coffee centerpieces and accent tables crafted in rare marble.',
+    'products',
+    6,
+    'https://images.unsplash.com/photo-1532372320572-cda25653a26d?auto=format&fit=crop&w=1200&q=80'
+  ),
+  (
+    'إضاءة وتحف نحتية معمارية',
+    'Architectural Lighting & Accents',
+    'sculptural-lighting',
+    'أعمدة إضاءة برونزية وقطع فنية مضيئة تمنح المجالس دفئاً سينمائياً استثنائياً.',
+    'Cast bronze floor lamps and illuminated sculptural accents imbuing halls with cinematic warmth.',
+    'إضاءة وتحف نحتية معمارية | S&I Atelier',
+    'Architectural Lighting & Sculptural Accents | S&I Atelier',
+    'إضاءات قائمة وتحف برونزية حصرية مصممة لقصور النخبة.',
+    'Limited edition patinated bronze lighting totems and illuminated art accents.',
+    'products',
+    7,
+    'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=1200&q=80'
+  )
+ON CONFLICT (slug) DO UPDATE SET
+  name = EXCLUDED.name,
+  name_en = EXCLUDED.name_en,
+  description = EXCLUDED.description,
+  description_en = EXCLUDED.description_en,
+  meta_title = EXCLUDED.meta_title,
+  meta_title_en = EXCLUDED.meta_title_en,
+  meta_description = EXCLUDED.meta_description,
+  meta_description_en = EXCLUDED.meta_description_en,
+  image_url = EXCLUDED.image_url,
+  type = EXCLUDED.type,
+  display_order = EXCLUDED.display_order;
+
+
+-- ------------------------------------------------------------------------------
+-- 2. LIMITED EDITIONS (12 Luxury Pieces - 100% Bilingual)
+-- ------------------------------------------------------------------------------
+INSERT INTO public.limited_editions (
+  title, title_en, slug, description, description_en, badge, badge_en,
+  category_id, main_image, display_order, status, variants,
+  meta_title, meta_title_en, meta_description, meta_description_en,
+  image_alt, image_title
+) VALUES
+  (
+    'أريكة أوريليوس المنحوتة',
+    'Aurelius Sculptural Curved Sofa',
+    'aurelius-sculptural-sofa',
+    'أريكة انسيابية منحوتة بالكامل بقماش البوكليه العاجي الإيطالي، تستند على قاعدة خفية من خشب البلوط المدخن.',
+    'An organic curved sofa upholstered in Italian ivory boucle, floating on a recessed smoked oak plinth.',
+    'إصدار محدود (12 قطعة)',
+    'Limited Edition (12 Pieces)',
+    (SELECT id FROM public.categories WHERE slug = 'living-majlis' LIMIT 1),
+    'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80',
+    1,
+    'published',
+    '[
+      {"id":"v1","name":"مقاس 3.20م - بوكليه عاجي","name_en":"3.20m Width - Ivory Boucle","price":38500,"sku":"AUR-SOF-320","image":"https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80"},
+      {"id":"v2","name":"مقاس 3.80م - مخمل غرافيت فاخر","name_en":"3.80m Width - Graphite Velvet","price":44000,"sku":"AUR-SOF-380","image":"https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=1200&q=80"}
+    ]'::jsonb,
+    'أريكة أوريليوس الفاخرة | S&I Atelier',
+    'Aurelius Sculptural Sofa | S&I Atelier',
+    'أريكة أوريليوس المنحوتة بقماش البوكليه الإيطالي الفاخر للصالونات والقصور.',
+    'The Aurelius sculptural curved sofa handcrafted in Italian boucle for royal residences.',
+    'أريكة أوريليوس المنحوتة العاجية',
+    'Aurelius Sculptural Curved Sofa in Ivory Boucle'
+  ),
+  (
+    'طاولة طعام بالاتزو من رخام كلكتا',
+    'Palazzo Calacatta Dining Table',
+    'palazzo-calacatta-dining-table',
+    'سطح بيضاوي متصل من رخام كلكتا فاجلي الإيطالي النادر مع حواف مشطوفة يدوياً وقاعدتين أسطوانيتين من خشب الجوز.',
+    'A monolithic oval slab of rare Italian Calacatta Vagli marble resting on dual fluted walnut pedestals.',
+    'رخام طبيعي نادر',
+    'Rare Natural Marble',
+    (SELECT id FROM public.categories WHERE slug = 'royal-dining' LIMIT 1),
+    'https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=1200&q=80',
+    2,
+    'published',
+    '[
+      {"id":"v1","name":"طول 3.00م - 10 مقاعد (رخام كلكتا)","name_en":"3.00m - 10 Seats (Calacatta)","price":62000,"sku":"PLZ-DIN-300","image":"https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=1200&q=80"},
+      {"id":"v2","name":"طول 3.60م - 12 مقعداً (رخام بترا جراي)","name_en":"3.60m - 12 Seats (Pietra Grey)","price":69500,"sku":"PLZ-DIN-360","image":"https://images.unsplash.com/photo-1530018607912-eff2daa1bac4?auto=format&fit=crop&w=1200&q=80"}
+    ]'::jsonb,
+    'طاولة طعام بالاتزو رخام كلكتا | S&I Atelier',
+    'Palazzo Calacatta Dining Table | S&I Atelier',
+    'طاولة طعام ملكية من رخام كلكتا الإيطالي الطبيعي وخشب الجوز الصلب.',
+    'The Palazzo dining table sculpted from Italian Calacatta marble and solid walnut.',
+    'طاولة طعام بالاتزو رخام إيطالي',
+    'Palazzo Calacatta Italian Marble Dining Table'
+  ),
+  (
+    'سرير كينغستون الملكي بجلد النابا',
+    'Kingston Royal Master Bed',
+    'kingston-royal-master-bed',
+    'ظهر سرير ممتد بعرض الجدار من ألواح جلد النابا الإيطالي المحبوكة مع حواشي برونزية وإضاءة محيطية دافئة مدمجة.',
+    'An expansive wall-width headboard layered with Italian Nappa leather, brushed bronze trims, and integrated ambient lighting.',
+    'تصميم حصري',
+    'Exclusive Design',
+    (SELECT id FROM public.categories WHERE slug = 'master-bedrooms' LIMIT 1),
+    'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80',
+    3,
+    'published',
+    '[
+      {"id":"v1","name":"مقاس كينغ 200x200 سم - جلد جملي","name_en":"King 200x200cm - Camel Nappa Leather","price":48000,"sku":"KNG-BED-200","image":"https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80"},
+      {"id":"v2","name":"مقاس سوبر كينغ 220x200 سم - جلد أسود ملكي","name_en":"Super King 220x200cm - Royal Onyx Leather","price":53500,"sku":"KNG-BED-220","image":"https://images.unsplash.com/photo-1540518614846-7ede433c4550?auto=format&fit=crop&w=1200&q=80"}
+    ]'::jsonb,
+    'سرير كينغستون الملكي | S&I Atelier',
+    'Kingston Royal Master Bed | S&I Atelier',
+    'سرير فاخر بظهر جلدي ممتد وتفاصيل برونزية متقنة لأجنحة النوم الرئيسية.',
+    'The Kingston master bed featuring architectural leather paneling and bronze accents.',
+    'سرير كينغستون بجلد النابا الفاخر',
+    'Kingston Royal Bed in Italian Nappa Leather'
+  ),
+  (
+    'كونسول نيبولا المعماري',
+    'Nebula Architectural Console',
+    'nebula-architectural-console',
+    'قطعة استقبال نحتية تجمع بين كتلة رخام نيرو ماركينا الأسود مع قاعدة معدنية متموجة بالبرونز المصقول.',
+    'A dramatic entrance console uniting a sculpted Nero Marquina marble slab with an undulating cast bronze base.',
+    'تحفة البهو',
+    'Foyer Statement',
+    (SELECT id FROM public.categories WHERE slug = 'architectural-consoles' LIMIT 1),
+    'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1200&q=80',
+    4,
+    'published',
+    '[
+      {"id":"v1","name":"طول 1.80م - رخام نيرو ماركينا","name_en":"1.80m Length - Nero Marquina Marble","price":27500,"sku":"NEB-CNS-180","image":"https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1200&q=80"},
+      {"id":"v2","name":"طول 2.20م - رخام ترافنتينو رومانو","name_en":"2.20m Length - Travertino Romano","price":31000,"sku":"NEB-CNS-220","image":"https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80"}
+    ]'::jsonb,
+    'كونسول نيبولا المعماري | S&I Atelier',
+    'Nebula Architectural Console | S&I Atelier',
+    'كونسول رخامي برونزي مصمم لمداخل القصور الفاخرة.',
+    'The Nebula sculptural marble and bronze foyer console.',
+    'كونسول نيبولا المعماري الرخامي',
+    'Nebula Architectural Marble Foyer Console'
+  ),
+  (
+    'كرسي لاونج إمبريال الدوار',
+    'Imperial Swivel Lounge Armchair',
+    'imperial-swivel-armchair',
+    'كرسي استرخاء نحتي بتصميم عضوي يحتضن الجالس، مبطن بجلد السادل الفاخر مع قاعدة دوارة من البرونز المعتق.',
+    'An ergonomic cocoon lounge chair cloaked in saddle leather on a silent 360-degree brushed bronze swivel.',
+    'صناعة يدوية',
+    'Artisanal Craft',
+    (SELECT id FROM public.categories WHERE slug = 'living-majlis' LIMIT 1),
+    'https://images.unsplash.com/photo-1580481077194-406a48057a62?auto=format&fit=crop&w=1200&q=80',
+    5,
+    'published',
+    '[
+      {"id":"v1","name":"جلد سادل كونياك أصلي","name_en":"Authentic Cognac Saddle Leather","price":16800,"sku":"IMP-ARM-CGN","image":"https://images.unsplash.com/photo-1580481077194-406a48057a62?auto=format&fit=crop&w=1200&q=80"},
+      {"id":"v2","name":"قماش صوف كشميري زيتوني","name_en":"Olive Cashmere Wool Blend","price":15200,"sku":"IMP-ARM-OLV","image":"https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=1200&q=80"}
+    ]'::jsonb,
+    'كرسي لاونج إمبريال الدوار | S&I Atelier',
+    'Imperial Swivel Armchair | S&I Atelier',
+    'كرسي لاونج فاخر للصالونات والمكاتب التنفيذية.',
+    'The Imperial sculptural swivel lounge chair.',
+    'كرسي لاونج إمبريال الدوار',
+    'Imperial Swivel Lounge Armchair in Saddle Leather'
+  ),
+  (
+    'مكتب سيناتور الرئاسي',
+    'Senator Presidential Executive Desk',
+    'senator-presidential-desk',
+    'مكتب تنفيذي مهيب يجمع بين خشب الجوز الفرنسي وجلد المكتب الإيطالي المدمج مع وحدات شحن ومخارج مخفية.',
+    'A commanding presidential executive desk marrying French walnut, hand-stitched leather, and concealed power bays.',
+    'للقصور والمكاتب العليا',
+    'Presidential Suite',
+    (SELECT id FROM public.categories WHERE slug = 'executive-desks' LIMIT 1),
+    'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=80',
+    6,
+    'published',
+    '[
+      {"id":"v1","name":"طول 2.60م - خشب جوز فرنسي","name_en":"2.60m Length - French Walnut","price":52000,"sku":"SNT-DSK-260","image":"https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=80"},
+      {"id":"v2","name":"طول 3.00م مع وحدة جانبية متصلة","name_en":"3.00m Length with Integrated Credenza","price":61000,"sku":"SNT-DSK-300","image":"https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?auto=format&fit=crop&w=1200&q=80"}
+    ]'::jsonb,
+    'مكتب سيناتور الرئاسي | S&I Atelier',
+    'Senator Presidential Desk | S&I Atelier',
+    'مكتب تنفيذي ملكي بتصميم نحتي معاصر.',
+    'The Senator presidential desk crafted in French walnut and Italian leather.',
+    'مكتب سيناتور الرئاسي من خشب الجوز',
+    'Senator Presidential Executive Desk in French Walnut'
+  ),
+  (
+    'طاولة قهوة سولاريس المزدوجة',
+    'Solaris Nesting Coffee Tables',
+    'solaris-nesting-coffee-tables',
+    'طاولتان متداخلتان تجمعان بين قرص رخام باتاغونيا الشبه شفاف مع قرص خشب الورد المصمت بحواف ناعمة.',
+    'A duet of organic nesting tables combining translucent Patagonia quartzite with solid hand-shaped rosewood.',
+    'إصدار حصري',
+    'Exclusive Duo',
+    (SELECT id FROM public.categories WHERE slug = 'living-majlis' LIMIT 1),
+    'https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=1200&q=80',
+    7,
+    'published',
+    '[
+      {"id":"v1","name":"طقم قطعتين (رخام باتاغونيا وخشب ورد)","name_en":"2-Piece Set (Patagonia & Rosewood)","price":21500,"sku":"SOL-COF-SET","image":"https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=1200&q=80"}
+    ]'::jsonb,
+    'طاولة قهوة سولاريس المزدوجة | S&I Atelier',
+    'Solaris Coffee Tables | S&I Atelier',
+    'طاولات قهوة متداخلة من الكوارتزايت الطبيعي وخشب الورد.',
+    'The Solaris nesting coffee table pair in Patagonia quartzite.',
+    'طاولة قهوة سولاريس المتداخلة',
+    'Solaris Nesting Coffee Table Pair'
+  ),
+  (
+    'خزانة بوفيه فيرونا العائمة',
+    'Verona Floating Credenza',
+    'verona-floating-credenza',
+    'بوفيه جداري مهيب بأبواب مخددة ثلاثية الأبعاد من خشب البلوط الداكن مع سطح من حجر الكلكتا الذهبي ومقابض برونز.',
+    'A wall-hung credenza featuring 3D fluted dark oak facades, topped with Calacatta Oro marble and cast bronze pulls.',
+    'نحت خشبي',
+    'Wood Sculpture',
+    (SELECT id FROM public.categories WHERE slug = 'royal-dining' LIMIT 1),
+    'https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=1200&q=80',
+    8,
+    'published',
+    '[
+      {"id":"v1","name":"طول 2.40م - 4 أبواب مخددة","name_en":"2.40m Length - 4 Fluted Doors","price":34000,"sku":"VRN-CRD-240","image":"https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=1200&q=80"},
+      {"id":"v2","name":"طول 2.80م - 5 أبواب مع إضاءة داخلية","name_en":"2.80m Length - 5 Doors with LED","price":39500,"sku":"VRN-CRD-280","image":"https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80"}
+    ]'::jsonb,
+    'خزانة بوفيه فيرونا | S&I Atelier',
+    'Verona Floating Credenza | S&I Atelier',
+    'بوفيه وصوان فاخر لغرف الطعام والمجالس الكبرى.',
+    'The Verona sculptural dining credenza.',
+    'خزانة بوفيه فيرونا المخددة',
+    'Verona Fluted Floating Credenza'
+  ),
+  (
+    'طقم كراسي سفرة فينتشنزو (8 قطع)',
+    'Vincenzo Dining Chairs Suite',
+    'vincenzo-dining-chairs',
+    'كراسي طعام منحوتة الظهر من خشب الماهوجني الصلب، مكسوة بمخمل حريري مع مساند محبوكة يدوياً.',
+    'A tailored dining chair suite featuring sculpted mahogany frames and fine Italian silk-velvet upholstery.',
+    'طقم ضيافة ملكي',
+    'Banquet Suite',
+    (SELECT id FROM public.categories WHERE slug = 'royal-dining' LIMIT 1),
+    'https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=1200&q=80',
+    9,
+    'published',
+    '[
+      {"id":"v1","name":"طقم 8 كراسي - مخمل عاجي","name_en":"Set of 8 Chairs - Ivory Velvet","price":28000,"sku":"VNC-CHR-8","image":"https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=1200&q=80"},
+      {"id":"v2","name":"طقم 12 كرسي - مخمل رملي فاخر","name_en":"Set of 12 Chairs - Warm Sand Velvet","price":39000,"sku":"VNC-CHR-12","image":"https://images.unsplash.com/photo-1541558869434-2840d308329a?auto=format&fit=crop&w=1200&q=80"}
+    ]'::jsonb,
+    'كراسي سفرة فينتشنزو | S&I Atelier',
+    'Vincenzo Dining Chairs | S&I Atelier',
+    'كراسي طعام ملكية مريحة وفخمة لطاولات الطعام الكبرى.',
+    'The Vincenzo luxury tailored dining chairs suite.',
+    'طقم كراسي سفرة فينتشنزو',
+    'Vincenzo Luxury Dining Chairs Suite'
+  ),
+  (
+    'تسريحة أريا الملكية مع مرآة مضيئة',
+    'Aria Royal Vanity Dressing Suite',
+    'aria-royal-vanity-suite',
+    'تسريحة غرفة النوم الرئيسية بسطح من الكوارتز الوردي الفاخر وأدراج جلدية مع مرآة نحتية بإضاءة هالو.',
+    'An opulent dressing vanity with soft pink quartz top, lined leather drawers, and a halo-lit bronze mirror.',
+    'جناح العروس والقصور',
+    'Bridal Masterpiece',
+    (SELECT id FROM public.categories WHERE slug = 'master-bedrooms' LIMIT 1),
+    'https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1200&q=80',
+    10,
+    'published',
+    '[
+      {"id":"v1","name":"تسريحة كاملة مع المرآة والمقعد العثماني","name_en":"Complete Vanity Suite with Mirror & Ottoman","price":36000,"sku":"ARA-VNT-SET","image":"https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1200&q=80"}
+    ]'::jsonb,
+    'تسريحة أريا الملكية | S&I Atelier',
+    'Aria Royal Vanity Suite | S&I Atelier',
+    'تسريحة فاخرة متكاملة لأجنحة القصور الرئيسية.',
+    'The Aria royal vanity dressing table and mirror set.',
+    'تسريحة أريا الملكية مع المرآة والمقعد',
+    'Aria Royal Vanity Dressing Suite with Mirror'
+  ),
+  (
+    'مكتبة فيلوكس المعمارية المفتوحة',
+    'Velox Architectural Wall Library',
+    'velox-architectural-library',
+    'مكتبة جدارية شاهقة بهيكل برونزي معلق ورفوف من خشب البلوط السويسري مع فواصل رخامية رفيعة.',
+    'A floor-to-ceiling modular wall library framed in brushed bronze, Swiss oak shelves, and marble dividers.',
+    'تنفيذ بالمتر',
+    'Modular System',
+    (SELECT id FROM public.categories WHERE slug = 'executive-desks' LIMIT 1),
+    'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80',
+    11,
+    'published',
+    '[
+      {"id":"v1","name":"عرض 3.50م × ارتفاع 2.80م","name_en":"3.50m Width x 2.80m Height","price":45000,"sku":"VLX-LIB-350","image":"https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80"},
+      {"id":"v2","name":"عرض 5.00م × ارتفاع 3.20م (مع سلم برونزي)","name_en":"5.00m Width x 3.20m Height (with Bronze Ladder)","price":62000,"sku":"VLX-LIB-500","image":"https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80"}
+    ]'::jsonb,
+    'مكتبة فيلوكس المعمارية | S&I Atelier',
+    'Velox Architectural Library | S&I Atelier',
+    'مكتبة معمارية فاخرة للقصور والمكاتب الخاصة.',
+    'The Velox floor-to-ceiling architectural wall library.',
+    'مكتبة فيلوكس المعمارية الجدارية',
+    'Velox Architectural Wall Library in Swiss Oak'
+  ),
+  (
+    'طاولة شاي مونو المعمارية المستديرة',
+    'Mono Monolithic Accent Side Table',
+    'mono-accent-side-table',
+    'طاولة جانبية نحتية مصبوبة من قطعة رخام أونيكس واحدة تضيء ذاتياً عند سقوط الضوء الطبيعي.',
+    'A monolithic round accent table sculpted from a single block of translucent backlit Onyx.',
+    'حجر أونيكس نادر',
+    'Translucent Onyx',
+    (SELECT id FROM public.categories WHERE slug = 'living-majlis' LIMIT 1),
+    'https://images.unsplash.com/photo-1532372320572-cda25653a26d?auto=format&fit=crop&w=1200&q=80',
+    12,
+    'published',
+    '[
+      {"id":"v1","name":"قطر 45 سم - رخام أونيكس عسلي","name_en":"45cm Diameter - Honey Onyx","price":11500,"sku":"MON-SDE-45","image":"https://images.unsplash.com/photo-1532372320572-cda25653a26d?auto=format&fit=crop&w=1200&q=80"},
+      {"id":"v2","name":"قطر 55 سم - رخام أخضر غواتيمالا","name_en":"55cm Diameter - Verde Guatemala","price":12800,"sku":"MON-SDE-55","image":"https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=1200&q=80"}
+    ]'::jsonb,
+    'طاولة شاي مونو المعمارية | S&I Atelier',
+    'Mono Monolithic Side Table | S&I Atelier',
+    'طاولة جانبية رخامية نادرة لصالونات الضيافة.',
+    'The Mono monolithic Onyx architectural side table.',
+    'طاولة جانبية مونو من حجر الأونيكس',
+    'Mono Monolithic Accent Side Table in Backlit Onyx'
+  )
+ON CONFLICT (slug) DO UPDATE SET
+  title = EXCLUDED.title,
+  title_en = EXCLUDED.title_en,
+  description = EXCLUDED.description,
+  description_en = EXCLUDED.description_en,
+  badge = EXCLUDED.badge,
+  badge_en = EXCLUDED.badge_en,
+  variants = EXCLUDED.variants,
+  main_image = EXCLUDED.main_image,
+  category_id = EXCLUDED.category_id,
+  meta_title = EXCLUDED.meta_title,
+  meta_title_en = EXCLUDED.meta_title_en,
+  meta_description = EXCLUDED.meta_description,
+  meta_description_en = EXCLUDED.meta_description_en,
+  image_alt = EXCLUDED.image_alt,
+  image_title = EXCLUDED.image_title;
+
+
+-- ------------------------------------------------------------------------------
+-- 3. EXCLUSIVE OFFERS & PACKAGES (6 Packages - 100% Bilingual)
+-- ------------------------------------------------------------------------------
+INSERT INTO public.offers (
+  title, title_en, slug, description, description_en,
+  discount_label, discount_label_en, badge, badge_en,
+  cover_image, valid_until, status, variants,
+  meta_title, meta_title_en, meta_description, meta_description_en
+) VALUES
+  (
+    'باقة الصالون الملكي المتكامل (Royal Majlis Suite)',
+    'Royal Majlis Complete Living Suite',
+    'royal-majlis-complete-suite',
+    'تأثيث كامل لمجلس الضيافة الرئيسي: أريكة منحوتة 4 أمتار، 4 كراسي لاونج إمبريال، طاولة قهوة سولاريس المزدوجة، مع كونسول البهو نيبولا.',
+    'Full luxury furnishing for palace grand reception: 4m curved sofa, 4 imperial lounge chairs, nested solaris tables, and nebula entrance console.',
+    'وفر 22,000 ريال',
+    'Save 22,000 SAR',
+    'باقة العروس والقصور',
+    'Grand Villa Package',
+    'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80',
+    '2026-12-31',
+    'published',
+    '[
+      {"id":"o1","name":"الباقة القياسية (صالون + 2 كرسي + طاولات)","name_en":"Standard Suite (Sofa + 2 Chairs + Tables)","price":85000,"original_price":102000,"image":"https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80"},
+      {"id":"o2","name":"الباقة الملكية الكبرى (مع كونسول نيبولا والمكتبة)","name_en":"Grand Royal Suite (Includes Nebula Console & Library)","price":125000,"original_price":147000,"image":"https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80"}
+    ]'::jsonb,
+    'عرض باقة الصالون الملكي المتكامل | S&I Atelier',
+    'Royal Majlis Living Suite Offer | S&I Atelier',
+    'تأثيث مجالس الضيافة الكبرى والقصور بخصم حصري وضمان شامل مدى الحياة.',
+    'Exclusive curated suite for royal living rooms and grand majlis spaces.'
+  ),
+  (
+    'باقة الضيافة الملكية لطاولات الطعام (Grand Dining Curated Set)',
+    'Grand Dining Banquet Collection',
+    'grand-dining-banquet-collection',
+    'طاولة طعام بالاتزو من رخام كلكتا فاجلي 3.60م برفقة 12 كرسي فينتشنزو مخملي مع خزانة بوفيه فيرونا المخددة.',
+    'A complete banquet ensemble: 3.60m Calacatta marble dining table, 12 tailored velvet chairs, and Verona floating credenza.',
+    'خصم 18%',
+    '18% Exclusive Privilege',
+    'موسم الضيافة',
+    'Banquet Season',
+    'https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=1200&q=80',
+    '2026-11-30',
+    'published',
+    '[
+      {"id":"o1","name":"طاولة 10 مقاعد + 10 كراسي + بوفيه","name_en":"10-Seater Table + 10 Chairs + Credenza","price":98000,"original_price":119000,"image":"https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=1200&q=80"},
+      {"id":"o2","name":"طاولة 12 مقعداً كلكتا فاخر + 12 كرسياً وبوفيه ملكي","name_en":"12-Seater Calacatta Table + 12 Chairs & Credenza","price":118000,"original_price":142500,"image":"https://images.unsplash.com/photo-1530018607912-eff2daa1bac4?auto=format&fit=crop&w=1200&q=80"}
+    ]'::jsonb,
+    'عرض باقة مائدة الطعام الملكية | S&I Atelier',
+    'Grand Dining Banquet Collection Offer | S&I Atelier',
+    'باقة متكاملة لغرف الطعام الفاخرة تشمل الطاولة والكراسي والبوفيه.',
+    'Full luxury dining room set crafted in Italian marble and French walnut.'
+  ),
+  (
+    'جناح النوم الماستر الرئاسي (Presidential Suite Package)',
+    'Presidential Master Bedroom Package',
+    'presidential-master-bedroom-package',
+    'سرير كينغستون بظهر جلدي ممتد، زوج كمودينو رخامي، تسريحة أريا مع المقعد العثماني، وأريكة استرخاء مخملية عند نهاية السرير.',
+    'Kingston master bed with wall-size leather headboard, twin nightstands, Aria vanity suite, and end-of-bed chaise lounge.',
+    'وفر 25,000 ريال',
+    'Save 25,000 SAR',
+    'إصدار محدود',
+    'Limited Edition',
+    'https://images.unsplash.com/photo-1540518614846-7ede433c4550?auto=format&fit=crop&w=1200&q=80',
+    '2026-12-15',
+    'published',
+    '[
+      {"id":"o1","name":"الجناح الكامل بجلد النابا والمخمل الإيطالي","name_en":"Complete Suite in Nappa Leather & Velvet","price":92000,"original_price":117000,"image":"https://images.unsplash.com/photo-1540518614846-7ede433c4550?auto=format&fit=crop&w=1200&q=80"}
+    ]'::jsonb,
+    'عرض جناح النوم الماستر الرئاسي | S&I Atelier',
+    'Presidential Master Bedroom Package Offer | S&I Atelier',
+    'تأثيث كامل لأجنحة النوم الرئيسية في القصور والفلل الراقية.',
+    'Complete presidential master bedroom luxury collection.'
+  ),
+  (
+    'باقة المكتب التنفيذي للقيادات (Executive C-Suite Set)',
+    'Executive Leadership Office Set',
+    'executive-leadership-office-set',
+    'مكتب سيناتور الرئاسي 3 أمتار، كرسي المدير التنفيذي الدوار، مكتبة فيلوكس المعمارية، وطقم جلوس اجتماعات خاص يتسع لـ 4 أشخاص.',
+    'Senator 3-meter desk, executive swivel chair, Velox modular library, and private 4-guest discussion lounge suite.',
+    'خصم 15%',
+    '15% Privilege Discount',
+    'لرجال الأعمال',
+    'C-Suite Exclusive',
+    'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=80',
+    '2026-10-31',
+    'published',
+    '[
+      {"id":"o1","name":"المكتب + المكتبة + كرسي القيادة وطقم الضيافة","name_en":"Desk + Library + Executive Chair & Guest Lounge","price":110000,"original_price":129000,"image":"https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=80"}
+    ]'::jsonb,
+    'عرض باقة المكتب التنفيذي | S&I Atelier',
+    'Executive Leadership Office Set Offer | S&I Atelier',
+    'أثاث المكاتب الخاصة والقصور التنفيذية بتصاميم استثنائية.',
+    'Complete luxury executive office suite for leadership workspaces.'
+  ),
+  (
+    'باقة كونسول المداخل والبهو VIP (Grand Foyer Welcome Set)',
+    'Grand Foyer Welcome Statement Set',
+    'grand-foyer-welcome-set',
+    'كونسول نيبولا الرخامي بطول 2.20م مع مرآة برونزية منحوتة وزوج مقاعد عثمانية مكسوة بجلد السادل الإيطالي.',
+    '2.20m Nebula marble console with custom bronze statement mirror and dual saddle leather ottomans.',
+    'وفر 8,000 ريال',
+    'Save 8,000 SAR',
+    'ترحيب فاخر',
+    'Grand Foyer VIP',
+    'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1200&q=80',
+    '2026-11-15',
+    'published',
+    '[
+      {"id":"o1","name":"طقم البهو كامل (كونسول + مرآة + 2 مقعد)","name_en":"Complete Foyer Suite (Console + Mirror + 2 Ottomans)","price":39000,"original_price":47000,"image":"https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1200&q=80"}
+    ]'::jsonb,
+    'عرض باقة بهو الاستقبال الفاخر | S&I Atelier',
+    'Grand Foyer Statement Set Offer | S&I Atelier',
+    'أناقة الترحيب الأولى للقصور والفيلات المعمارية.',
+    'Sculptural entrance foyer suite with marble console and mirror.'
+  ),
+  (
+    'باقة التخصيص الكامل للفيلا (Full Villa Bespoke Package)',
+    'Full Villa Bespoke Architecture Package',
+    'full-villa-bespoke-architecture-package',
+    'استشارة وتصميم وتصنيع متكامل لكافة فراغات الفيلا أو القصر مع إشراف مباشر من كبار مهندسي الدار وشهادة توثيق فنية.',
+    'Comprehensive end-to-end bespoke furnishing and architectural joinery for all villa spaces with senior architect supervision.',
+    'خدمة VIP استثنائية',
+    'VIP Bespoke Privilege',
+    'تنفيذ مخصص شامل',
+    'Turnkey Bespoke',
+    'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80',
+    '2026-12-31',
+    'published',
+    '[
+      {"id":"o1","name":"تأثيث كامل لفيلا 800 - 1200 متر مربع","name_en":"Full Furnishing for 800-1200 sqm Villa","price":280000,"original_price":340000,"image":"https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80"}
+    ]'::jsonb,
+    'باقة التخصيص المعماري الشامل للفيلا | S&I Atelier',
+    'Full Villa Bespoke Package Offer | S&I Atelier',
+    'تأثيث وتفصيل متكامل للقصور والفلل بمواصفات خاصة غير متكررة.',
+    'Turnkey bespoke architecture and furniture package for luxury private residences.'
+  ),
+  (
+    'باقة جناح المكتب الرئاسي والدراسة الخاصة',
+    'Presidential Study Suite Executive Package',
+    'presidential-study-package',
+    'مكتب رئاسي تنفيذي ضخم مكسو بالجلد الطبيعي مع كرسي مريح دوار، وطقم مكتبة جدارية متكاملة وطاولة اجتماعات ثنائية.',
+    'Commanding presidential executive desk in saddle leather, ergonomic executive chair, modular library wall, and meeting table.',
+    'وفر 20%',
+    'Save 20%',
+    'عرض حصري للقيادات',
+    'Executive Privilege',
+    'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=80',
+    '2026-12-31',
+    'published',
+    '[
+      {"id":"o1","name":"طقم المكتب الكامل (مكتب 2.6م + كرسي + مكتبة جدارية)","name_en":"Complete Executive Study (2.6m Desk + Chair + Wall Library)","price":68000,"original_price":85000,"image":"https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=80"}
+    ]'::jsonb,
+    'عرض جناح المكتب الرئاسي الفاخر | S&I Atelier',
+    'Presidential Study Suite Executive Package | S&I Atelier',
+    'أثاث مكتبي رئاسي خاص للقصور والمقرات التنفيذية الفاخرة.',
+    'High-ranking executive study suite handcrafted in walnut and patinated brass.'
+  ),
+  (
+    'عرض قاعة السينما المنزلية VIP ومقاعد الاسترخاء',
+    'Private VIP Cinema & Entertainment Lounge Suite',
+    'private-cinema-package',
+    'مقاعد سينمائية كهربائية مكسوة بجلود النابا الطبيعية مع مساند قابلة للتعديل وحوامل أكواب رخامية مدمجة مع نظام تدفئة.',
+    'Motorized VIP cinema recliners tailored in Italian Nappa leather with integrated marble consoles and ambient lighting.',
+    'وفر 18%',
+    'Save 18%',
+    'سينما القصور',
+    'Palace Cinema',
+    'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&w=1200&q=80',
+    '2026-11-30',
+    'published',
+    '[
+      {"id":"o1","name":"صف 4 مقاعد سينمائية VIP متصلة","name_en":"4-Seater Connected VIP Cinema Row","price":52000,"original_price":63500,"image":"https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&w=1200&q=80"},
+      {"id":"o2","name":"صف 6 مقاعد سينمائية VIP منحنية","name_en":"6-Seater Curved VIP Cinema Suite","price":74000,"original_price":90000,"image":"https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&w=1200&q=80"}
+    ]'::jsonb,
+    'عرض قاعة السينما المنزلية VIP | S&I Atelier',
+    'Private VIP Cinema Lounge Offer | S&I Atelier',
+    'مقاعد سينمائية كهربائية فخمة لقاعات السينما الخاصة بالقصور.',
+    'Motorized Italian leather cinema recliners designed for private screening sanctuaries.'
+  ),
+  (
+    'باقة التراس الصيفي والحدائق الملكية المقاومة للعوامل الخارجية',
+    'Royal Summer Terrace & Outdoor Architectural Set',
+    'royal-summer-terrace',
+    'أطقم جلوس خارجية مقاومة للشمس والرطوبة مصنوعة من خشب الساج البورمي المعالج وأقمشة صن بريلا الإيطالية الفاخرة.',
+    'All-weather luxury terrace suite constructed in seasoned Burmese teak and weather-resistant Italian Sunbrella weaves.',
+    'مقاومة 100%',
+    '10-Year Weatherproof',
+    'أثاث التراس الخارجي',
+    'Royal Outdoors',
+    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
+    '2026-10-31',
+    'published',
+    '[
+      {"id":"o1","name":"طقم لاونج التراس (أريكة 3 مقاعد + 2 فوتيه + طاولة قهوة)","name_en":"Terrace Lounge Suite (3-Seater Sofa + 2 Armchairs + Coffee Table)","price":48000,"original_price":59000,"image":"https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80"}
+    ]'::jsonb,
+    'عرض باقة التراس الصيفي الملكي | S&I Atelier',
+    'Royal Summer Terrace Suite | S&I Atelier',
+    'أثاث خارجي فاخر مقاوم للمناخ الصحراوي للحدائق والمسابح الخاصة.',
+    'Architectural outdoor patio and poolside furniture in Burmese teak.'
+  ),
+  (
+    'طقم بهو الاستقبال والمصعد الخاص النحتي',
+    'Grand Reception & Private Elevator Foyer Suite',
+    'grand-foyer-suite',
+    'كونسول رخامي معلق بنحت ثلاثي الأبعاد مع مرآة جدارية برونزية عملاقة وشمعدانات ضيافة حجرية.',
+    'Floating marble 3D fluted console paired with a floor-to-ceiling patinated bronze mirror and stone torchères.',
+    'وفر 22%',
+    'Save 22%',
+    'بهو القصر الرئيسي',
+    'Grand Foyer',
+    'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1200&q=80',
+    '2026-12-31',
+    'published',
+    '[
+      {"id":"o1","name":"الكونسول الرخامي المعلق مع المرآة العملاقة","name_en":"Floating Marble Console with Statement Mirror","price":34000,"original_price":43500,"image":"https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1200&q=80"}
+    ]'::jsonb,
+    'عرض بهو الاستقبال والمصعد الفاخر | S&I Atelier',
+    'Grand Reception & Elevator Foyer Suite | S&I Atelier',
+    'كونسول ومرايا مداخل القصور بتصاميم نحتية لا تتكرر.',
+    'Sculptural entrance console and statement mirror set for private residences.'
+  ),
+  (
+    'باقة تجهيز القصر الملكي الشاملة VIP (Full Palace Masterplan)',
+    'Royal Palace Turnkey Architectural Masterplan',
+    'full-palace-masterplan',
+    'تجهيز شامل لكافة أجنحة القصر (المجلس، صالة الطعام، جناح النوم، المكاتب، والبهو) مع فريق إشراف هندسي خاص وضمان مدى الحياة.',
+    'Turnkey furnishing masterplan spanning Majlis, Banquet Dining, Master Suites, Executive Study, and Foyers with dedicated engineering team and lifetime warranty.',
+    'باقة كبار الشخصيات VIP',
+    'Royal Concierge Tier',
+    'تأثيث شامل حصري',
+    'Full Palace Scope',
+    'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80',
+    '2027-06-30',
+    'published',
+    '[
+      {"id":"o1","name":"مخطط تأثيث قصر ملكي متكامل (حتى 2,500 متر مربع)","name_en":"Royal Palace Master Furnishing (Up to 2,500 sqm)","price":580000,"original_price":720000,"image":"https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80"}
+    ]'::jsonb,
+    'باقة تأثيث القصر الملكي الشاملة VIP | S&I Atelier',
+    'Royal Palace Turnkey Masterplan | S&I Atelier',
+    'تجهيز القصور الكبرى بأعلى معايير الحرفية والتفصيل العالمي.',
+    'The ultimate royal residential turnkey architecture and furnishing commission.'
+  )
+ON CONFLICT (slug) DO UPDATE SET
+  title = EXCLUDED.title,
+  title_en = EXCLUDED.title_en,
+  description = EXCLUDED.description,
+  description_en = EXCLUDED.description_en,
+  discount_label = EXCLUDED.discount_label,
+  discount_label_en = EXCLUDED.discount_label_en,
+  badge = EXCLUDED.badge,
+  badge_en = EXCLUDED.badge_en,
+  cover_image = EXCLUDED.cover_image,
+  variants = EXCLUDED.variants,
+  meta_title = EXCLUDED.meta_title,
+  meta_title_en = EXCLUDED.meta_title_en,
+  meta_description = EXCLUDED.meta_description,
+  meta_description_en = EXCLUDED.meta_description_en;
+
+
+-- ------------------------------------------------------------------------------
+-- 4. PORTFOLIO (12 Projects - 100% Bilingual with fixed UUIDs)
+-- ------------------------------------------------------------------------------
+INSERT INTO public.portfolio (
+  id, title, title_en, description, description_en,
+  category, category_en, image_url, display_order, is_visible
+) VALUES
+  (
+    'd1111111-1111-1111-1111-111111111101',
+    'قصر حطين الملكي - الرياض',
+    'Hittin Royal Palace - Riyadh',
+    'تنفيذ مخصص متكامل لمجلس الضيافة وصالة الطعام الكبرى برخام كلكتا فاجلي وأخشاب الجوز الفرنسية.',
+    'Bespoke interior and furniture execution for royal banquet halls featuring Calacatta Vagli marble and French walnut.',
+    'قصور خاصة',
+    'Private Palaces',
+    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
+    1,
+    true
+  ),
+  (
+    'd1111111-1111-1111-1111-111111111102',
+    'فيلا النخيل المعمارية - دبي',
+    'Palm Jumeirah Architectural Villa - Dubai',
+    'صياغة قطع أثاث منحوتة انسيابية مطلة على الخليج العربي بأقمشة الكتان والبوكليه الإيطالي المقاوم للعوامل الجوية.',
+    'Sculptural curved seating and bespoke dining centerpieces facing the Arabian Gulf.',
+    'فيلات عصرية',
+    'Modern Villas',
+    'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=80',
+    2,
+    true
+  ),
+  (
+    'd1111111-1111-1111-1111-111111111103',
+    'بنتهاوس برج المملكة - الرياض',
+    'Kingdom Tower Penthouse Suite',
+    'تأثيث بنتهاوس شاهق على ارتفاع 280 متراً بقطع محدودة الإصدار وتفاصيل البرونز المعتق والرخام الأسود.',
+    'High-altitude bespoke penthouse furnishing detailed in patinated bronze and Nero Marquina marble.',
+    'بنتهاوس فاخر',
+    'Luxury Penthouses',
+    'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80',
+    3,
+    true
+  ),
+  (
+    'd1111111-1111-1111-1111-111111111104',
+    'قصر الدرعية التراثي المعاصر',
+    'Contemporary Diriyah Heritage Palace',
+    'مزج متناغم بين أخشاب الأثل والطين المعماري والرخام الإيطالي الحديث مع لمسات فنية محلية راقية.',
+    'Harmonious dialogue between local heritage textures and modern Italian marble craftsmanship.',
+    'قصور تراثية حديثة',
+    'Heritage Modern',
+    'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80',
+    4,
+    true
+  ),
+  (
+    'd1111111-1111-1111-1111-111111111105',
+    'مقر شركة استثمارية سيادية - مركز الملك عبدالله المالي',
+    'Sovereign Investment HQ - KAFD',
+    'تجهيز قاعات كبار الشخصيات وغرف مجالس الإدارة بأثاث تنفيذي من أخشاب الورد وجلد السادل اليدوي.',
+    'C-Suite boardroom suites and VIP executive lounges in rosewood and hand-stitched saddle leather.',
+    'مشاريع تجارية كبرى',
+    'Commercial & C-Suite',
+    'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=80',
+    5,
+    true
+  ),
+  (
+    'd1111111-1111-1111-1111-111111111106',
+    'فيلا شاطئية خاصة - البحر الأحمر',
+    'Red Sea Private Beachfront Residence',
+    'قطع أثاث خشبية عضوية وتجهيزات خارجية بتشطيبات برونزية وأقمشة مقاومة للرطوبة وأشعة الشمس.',
+    'Organic teakwood outdoor furniture and weather-resistant Italian upholstery for beachfront living.',
+    'منتجعات خاصة',
+    'Private Retreats',
+    'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80',
+    6,
+    true
+  ),
+  (
+    'd1111111-1111-1111-1111-111111111107',
+    'قصر الحمراء السكني - جدة',
+    'Al-Hamra Private Residence - Jeddah',
+    'صالونات استقبال بطراز نيو-كلاسيكي راقٍ تدمج التطريزات الحريرية مع الأخشاب النادرة والرخام البيج.',
+    'Neo-classical grand reception halls adorned with raw silk embroidery and warm Botticino marble.',
+    'قصور خاصة',
+    'Private Palaces',
+    'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80',
+    7,
+    true
+  ),
+  (
+    'd1111111-1111-1111-1111-111111111108',
+    'جناح رئاسي خاص - فندق ريتز كارلتون',
+    'Presidential Suite - The Ritz-Carlton',
+    'إعادة تصميم وتأثيث الجناح الملكي بقطع فريدة تعكس الأصالة المعمارية بروح معاصرة.',
+    'Curated bespoke furniture redesign for the signature royal presidential suite.',
+    'ضيافة عالمية',
+    'Luxury Hospitality',
+    'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80',
+    8,
+    true
+  ),
+  (
+    'd1111111-1111-1111-1111-111111111109',
+    'فيلا الربيع المعاصرة - الرياض',
+    'Al-Rabi Contemporary Villa - Riyadh',
+    'تصميم وتنفيذ غرف الطعام والمكتبات الجدارية الممتدة بكفاءة صوتية وجمالية مبهرة.',
+    'Full acoustic joinery, modular library systems, and banquet dining suites in natural ash wood.',
+    'فيلات عصرية',
+    'Modern Villas',
+    'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80',
+    9,
+    true
+  ),
+  (
+    'd1111111-1111-1111-1111-111111111110',
+    'مجلس ضيافة دبلوماسي - الحي الدبلوماسي',
+    'Diplomatic Quarter Reception Hall',
+    'صياغة مجلس استثنائي يتسع لـ 50 ضيفاً بتناغم لوني من درجات الصحراء الذهبية وخشب الزيتون.',
+    '50-guest diplomatic majlis framed in desert hues, olive wood joinery, and patinated bronze fixtures.',
+    'قصور خاصة',
+    'Private Palaces',
+    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
+    10,
+    true
+  ),
+  (
+    'd1111111-1111-1111-1111-111111111111',
+    'قصر الياسمين الخاص - الرياض',
+    'Al-Yasmin Private Palace',
+    'تجهيز أجنحة النوم الملكية وغرف الملابس والخزائن المكسوة بجلود الألكانتارا والإضاءات المخفية.',
+    'Master dressing suites and walk-in wardrobes tailored in Alcantara suede and integrated fiber-optics.',
+    'قصور خاصة',
+    'Private Palaces',
+    'https://images.unsplash.com/photo-1540518614846-7ede433c4550?auto=format&fit=crop&w=1200&q=80',
+    11,
+    true
+  ),
+  (
+    'd1111111-1111-1111-1111-111111111112',
+    'مكتبة ونادي خاص للنخبة - الخبر',
+    'Private Collectors Club & Library - Khobar',
+    'تنفيذ دواليب عرض المقتنيات النادرة من الزجاج المضاد للانعكاس وخشب الأبنوس المعتق.',
+    'Display cabinetry for rare collector editions crafted in anti-reflective museum glass and aged ebony.',
+    'مشاريع تجارية كبرى',
+    'Commercial & C-Suite',
+    'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80',
+    12,
+    true
+  )
+ON CONFLICT (id) DO UPDATE SET
+  title = EXCLUDED.title,
+  title_en = EXCLUDED.title_en,
+  description = EXCLUDED.description,
+  description_en = EXCLUDED.description_en,
+  category = EXCLUDED.category,
+  category_en = EXCLUDED.category_en,
+  image_url = EXCLUDED.image_url,
+  display_order = EXCLUDED.display_order,
+  is_visible = EXCLUDED.is_visible;
+
+
+-- ------------------------------------------------------------------------------
+-- 5. BLOG ARTICLES (10 In-depth Articles - 100% Bilingual)
+-- ------------------------------------------------------------------------------
+INSERT INTO public.articles (
+  title, title_en, slug, excerpt, excerpt_en, content, content_en,
+  cover_image, author, author_en, tags, status, published_at,
+  reading_time, word_count, seo_score,
+  meta_title, meta_title_en, meta_description, meta_description_en
+) VALUES
+  (
+    'فلسفة النحت المعماري في صياغة الأثاث الفاخر 2026',
+    'The Philosophy of Sculptural Architecture in Luxury Furniture',
+    'philosophy-sculptural-architecture-furniture',
+    'كيف تحول الأثاث من مجرد أدوات وظيفية داخل الغرفة إلى منحوتات معمارية قائمة بذاتها تحدد مسارات الحركة وهوية الفراغ.',
+    'How furniture evolved from utilitarian room objects into standalone architectural sculptures defining human circulation and spatial grandeur.',
+    '<p>في دار <strong>S&I Atelier</strong>، نؤمن بأن الأثاث لا يوضع في الفراغ، بل ينبثق منه كعنصر نحتي عضوي يكمل خطوط العمارة الخارجية ويترجم هيبة القصر إلى تفاصيل يلمسها الجالس.</p><h3>الانتقال من الوظيفة إلى المنحوتة</h3><p>شهدت السنوات الأخيرة تحولاً جذرياً في فلسفة التصميم الداخلي للقصور؛ حيث تراجعت الخطوط الحادة المستقيمة لصالح التموجات العضوية التي تحاكي حركة الطبيعة وهدوء الكثبان الرملية. إن اختيار أريكة بانحناءة مدروسة بزاوية 35 درجة لا يمنح راحة استثنائية فحسب، بل يكسر جمود الجدران الحجرية ويخلق مركز جذب بصري مهيب.</p><blockquote>"الأثاث العظيم ليس ما يلفت انتباهك للوهلة الأولى فقط، بل ما يمنحك شعوراً بالسكينة والخلود كلما تأملته."</blockquote><p>عندما نمزج خشب الجوز الفرنسي مع رخام كلكتا والبرونز المعتق، فإننا لا نجمع خامات متباينة، بل نخلق حواراً فنياً خالداً يدوم عبر الأجيال.</p>',
+    '<p>At <strong>S&I Atelier</strong>, we believe furniture does not merely occupy a space; it emanates from it as an organic architectural sculpture that honors exterior proportions and translates palace grandeur into tactile human experiences.</p><h3>The Evolution from Utility to Monumental Sculpture</h3><p>Recent years have witnessed a paradigm shift in palace interior philosophy. Rigid linear silhouettes have gracefully yielded to sweeping organic curves echoing sand dunes and natural topographies. A curved sofa angled precisely at 35 degrees does not merely provide comfort; it anchors the room and breaks tectonic monotony.</p><blockquote>"Great bespoke furniture does not merely demand attention; it quietly radiates permanence, serenity, and timeless lineage."</blockquote><p>By uniting French walnut with rare Italian Calacatta marble and hand-patinated bronze, we curate a generational heirloom designed to outlive trends.</p>',
+    'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80',
+    'فريق التحرير المعماري - S&I Atelier',
+    'S&I Atelier Architectural Editorial',
+    ARRAY['تصميم داخلي', 'أثاث نحتي', 'عمارة القصور', 'فلسفة التصميم'],
+    'published',
+    NOW(),
+    6,
+    980,
+    95,
+    'فلسفة النحت المعماري في الأثاث الفاخر | S&I Atelier',
+    'Sculptural Architecture in Luxury Furniture | S&I Atelier',
+    'مقال معماري يناقش تحول الأثاث الفاخر إلى منحوتات معمارية في القصور.',
+    'An in-depth essay exploring how luxury furniture serves as functional architectural sculpture.'
+  ),
+  (
+    'دليل المقتني لاختيار أندر أنواع الرخام الطبيعي لطاولات القصور',
+    'The Connoisseur Guide to Rare Italian Marbles in Palace Tables',
+    'connoisseurs-guide-rare-italian-marbles',
+    'رحلة استكشافية متعمقة في محاجر كرارا وألتيسمو: الفوارق الدقيقة بين كلكتا فاجلي، ستاتواريو، وباتاغونيا الشبه شفاف.',
+    'An expedition into the legendary quarries of Carrara and Altissimo: dissecting Calacatta Vagli, Statuario, and crystalline Patagonia.',
+    '<p>يعد الرخام الطبيعي النادر شهادة جيولوجية فريدة صاغتها الأرض عبر ملايين السنين تحت درجات حرارة وضغوط هائلة، لتبلغ ذروتها في ألواح حجرية لا تتكرر عروقها ولا ظلالها أبداً.</p><h3>كلكتا فاجلي (Calacatta Vagli): درة مقالع توسكانا</h3><p>يتميز هذا الحجر الإيطالي النادر بخلفية بيضاء نقية تتخللها عروق ذهبية وعنبرية ورمادية داكنة بنمط هندسي بيضاوي فريد، مما يجعله الخيار الأول لطاولات الطعام الملكية التي تتسع لـ 12 شخصاً فأكثر.</p><h3>الكوارتزايت الشبه شفاف (Patagonia Quartzite)</h3><p>من مقالع أمريكا الجنوبية، يمتلك هذا الحجر خاصية نفاذية الضوء المذهلة؛ حيث يمكن دمج إضاءات خلفية خفية تجعل طاولة القهوة تشع وهجاً ساحراً في الأمسيات الفاخرة.</p>',
+    '<p>Rare natural marble is Earth’s enduring geological signature, forged across eons under monumental heat and tectonic pressure to produce natural patterns that can never be duplicated.</p><h3>Calacatta Vagli: The Crown Jewel of Tuscany</h3><p>Renowned for its luminous porcelain-white base interwoven with amber, gold, and deep charcoal breccia veining, Calacatta Vagli remains the premier selection for banqueting tables seating 12 guests and beyond.</p><h3>Patagonia Translucent Quartzite</h3><p>Quarried in volcanic terrains, Patagonia boasts natural translucency. When backlit with warm LEDs, it transforms coffee tables and consoles into mesmerizing illuminated constellations.</p>',
+    'https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=1200&q=80',
+    'م. باولو روسي - استشاري الخامات الإيطالية',
+    'Eng. Paolo Rossi - Italian Materials Consultant',
+    ARRAY['رخام كلكتا', 'خامات نادرة', 'طاولات طعام', 'حجر طبيعي'],
+    'published',
+    NOW(),
+    8,
+    1250,
+    98,
+    'دليل المقتني لاختيار الرخام الطبيعي | S&I Atelier',
+    'The Connoisseur Guide to Rare Marbles | S&I Atelier',
+    'تعرف على أندر أنواع الرخام الإيطالي وكيفية اختياره لطاولات القصور.',
+    'A definitive guide to selecting rare natural marble slabs for palace dining centerpieces.'
+  ),
+  (
+    'أسرار هندسة المجالس السعودية المعاصرة: الهيبة والترحاب',
+    'The Architecture of Contemporary Saudi Majlis: Grandeur & Hospitality',
+    'architecture-contemporary-saudi-majlis',
+    'كيف تترجم الأبعاد والارتفاعات في المجالس المفتوحة مشاعر الأصالة والاحتفاء بالضيف وفق مقاييس العمارة العالمية.',
+    'Translating timeless hospitality and spatial proportion into contemporary Saudi majlis design.',
+    '<p>المجلس ليس مجرد غرفة ضيافة في الثقافة السعودية؛ بل هو القلب النابض للقصر ومقر الاجتماعات العائلية والرسمية الرفيعة.</p><h3>النسب الذهبية والارتفاعات المزدوجة</h3><p>عند تأثيث مجلس بارتفاع سقفي يتجاوز 6 أمتار، تفشل قطع الأثاث التقليدية في ملء الفراغ بصرياً. هنا تبرز الحاجة إلى أطقم جلوس ذات ظهور مرتفعة مكسوة بجلد النابا وجداريات خشبية ضخمة تدمج الإضاءة الخفية والمعدن البرونزي لتحقيق التوازن بين الحجم والراحة الإنسانية.</p>',
+    '<p>In Saudi culture, the majlis is more than a salon; it is the civic and emotional nucleus of the residence, hosting grand family gatherings and state receptions.</p><h3>Golden Ratios & Double-Height Ceilings</h3><p>When furnishing a 6-meter ceiling reception hall, standard furniture drowns in volume. Architectural seating with elevated backrests, leather wall cladding, and vertical walnut paneling restore human scale while celebrating majestic volume.</p>',
+    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
+    'د. طارق العبدالله - باحث في العمارة النجدية والمعاصرة',
+    'Dr. Tariq Al-Abdullah - Contemporary Architecture Fellow',
+    ARRAY['مجلس سعودي', 'تصميم مجالس', 'الرياض', 'عمارة القصور'],
+    'published',
+    NOW(),
+    5,
+    890,
+    94,
+    'أسرار هندسة المجالس السعودية المعاصرة | S&I Atelier',
+    'Architecture of Contemporary Saudi Majlis | S&I Atelier',
+    'دراسة معمارية في توزيع وتأثيث المجالس الملكية الفاخرة.',
+    'Architectural guidelines for planning and furnishing contemporary luxury majlis spaces.'
+  ),
+  (
+    'أخشاب الجوز الفرنسية والأمريكية: لماذا تعد الخيار الأسمى للأثاث الخالد؟',
+    'French vs American Walnut: Why It Remains the Crown of Fine Joinery',
+    'french-vs-american-walnut-fine-joinery',
+    'مقارنة تقنية بين كثافة أخشاب الجوز ومقاومتها للتقلبات المناخية، وكيفية معالجتها بالزيوت النباتية الطبيعية.',
+    'A technical comparison of grain density, climate stability, and natural wax finishing in walnut species.',
+    '<p>خشب الجوز (Walnut) ظل عبر العصور خشب الملوك والنبلاء بلا منازع بفضل حبيباته العميقة وتدرجاته الدافئة التي تتراوح بين العسلي الغامق والقهوة المحروقة.</p><h3>المعالجة بالزيوت الطبيعية دون طلاء كيميائي</h3><p>في ورش S&I Atelier، نرفض استخدام طبقات الورنيش البلاستيكية اللامعة التي تخنق الخشب؛ بل نعتمد زيوتاً نباتية طبيعية وشمع العسل لتغذية الألياف والسماح للخشب بالتنفس واكتساب تعتيق أعمق مع مرور السنوات.</p>',
+    '<p>Walnut has reigned for centuries as the aristocratic wood of choice, prized for its dark mocha heartwood, rich figuration, and exceptional dimensional stability.</p><h3>Natural Botanical Oils vs Synthetic Lacquers</h3><p>At S&I Atelier workshops, we forbid thick polyurethane varnishes that suffocate wood pores. We hand-rub natural organic oils and microcrystalline wax into the grain, ensuring the timber develops an intoxicating heirloom patina across decades.</p>',
+    'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80',
+    'فريق الحرفية والنجارة اليدوية - S&I Atelier',
+    'S&I Atelier Master Joinery Guild',
+    ARRAY['خشب الجوز', 'صناعة يدوية', 'جودة الأثاث', 'خامات فاخرة'],
+    'published',
+    NOW(),
+    6,
+    920,
+    92,
+    'أخشاب الجوز الفرنسية والأمريكية | S&I Atelier',
+    'French vs American Walnut in Fine Joinery | S&I Atelier',
+    'أسباب تفضيل خشب الجوز في تصنيع الأثاث الفاخر للقصور.',
+    'Technical insights into walnut grain selection and artisanal natural oil finishes.'
+  ),
+  (
+    'إضاءة الأثاث النحتي: كيف تحول الظلال والأضواء الفراغ إلى مشهد سينمائي',
+    'Sculptural Furniture Illumination: Orchestrating Shadow and Light',
+    'sculptural-furniture-illumination-shadow-light',
+    'دراسة في توزيع درجات حرارة الإضاءة (2400K - 2700K) لإبراز ملامح الحجر الطبيعي والمنحنيات القماشية.',
+    'How warm kelvin temperatures (2400K-2700K) dramatize natural stone textures and organic furniture folds.',
+    '<p>لا يمكن لقطعة أثاث فاخرة أن تؤدي دورها الجمالي الكامل بمعزل عن الإضاءة المدروسة؛ فالإضاءة هي الروح الخفية التي تنحت الظلال وتكشف عمق الأنسجة والتجاويف الرخامية.</p><h3>الإضاءة الخفية المحيطية (Indirect Grazing)</h3><p>بتوجيه ضوء غير مباشر بزاوية مائلة عبر جدار مكسو بخشب مخدد أو قاعدة أريكة طافية، يتحول الفراغ ليلاً إلى مشهد سينمائي فائق الفخامة والهدوء.</p>',
+    '<p>No matter how breathtaking a bespoke piece is, it cannot achieve poetic presence without nuanced illumination. Light is the invisible chisel shaping shadows and highlighting marble crystallization.</p><h3>Indirect Grazing & Recessed Footprint Illumination</h3><p>By grazing soft 2400K-2700K illumination across fluted credenza panels and under floating plinths, daytime elegance morphs into nighttime cinematic serenity.</p>',
+    'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80',
+    'م. سامي رضوان - مصمم إضاءة معمارية',
+    'Sami Radwan - Architectural Lighting Designer',
+    ARRAY['إضاءة معمارية', 'تصميم سينمائي', 'ديكور فاخر', 'إضاءة خفية'],
+    'published',
+    NOW(),
+    5,
+    780,
+    91,
+    'إضاءة الأثاث النحتي | S&I Atelier',
+    'Sculptural Furniture Illumination | S&I Atelier',
+    'كيف تبرز الإضاءة المعمارية جمال الأثاث والرخام في القصور.',
+    'Expert tips on warm lighting techniques for luxury interiors and custom furniture.'
+  ),
+  (
+    'سحر البرونز المعتق في التفاصيل المعدنية الفاخرة',
+    'The Allure of Hand-Patinated Bronze in Haute Interior Architecture',
+    'hand-patinated-bronze-haute-interior',
+    'لماذا يستبدل كبار المصممين طلاءات الكروم والذهب اللامع بسبائك البرونز المعتّق يدوياً بالأكسدة الطبيعية.',
+    'Why global tastemakers are abandoning reflective chrome in favor of living, breathing hand-patinated bronze alloys.',
+    '<p>البرونز ليس مجرد معدن، بل هو سبيكة تاريخية خالدة تتنفس وتتفاعل مع الهواء واللمس البشري لتكتسب هالة لا يمكن تزييفها أو تقليدها بالطرق الصناعية الحديثة.</p><h3>تقنية التعتيق بالأكسدة اليدوية (Living Patina)</h3><p>نستخدم في S&I Atelier وصفات أكسدة حرارية تقليدية تُكسب المقابض والقواعد المعدنية تدرجات بنية مائلة إلى الشوكولاتة والذهب المطفي، مما يمنح كل قطعة هوية مستقلة تنبض بالحياة.</p>',
+    '<p>Bronze is not merely an alloy; it is a historical living medium that oxidizes and reacts gracefully with human touch, acquiring an irreplaceable aura of antiquity and power.</p><h3>Living Patina Techniques</h3><p>We employ artisanal thermal oxidation baths that yield nuanced shades of espresso, smoked tobacco, and brushed gold, giving every console handle and table leg an individual heartbeat.</p>',
+    'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1200&q=80',
+    'فريق الحرفية المعدنية - S&I Atelier',
+    'S&I Atelier Metal Arts Atelier',
+    ARRAY['برونز معتق', 'معادن فاخرة', 'حرف يدوية', 'تفاصيل نحاسية'],
+    'published',
+    NOW(),
+    6,
+    860,
+    93,
+    'سحر البرونز المعتق في الديكور | S&I Atelier',
+    'Hand-Patinated Bronze in Interior Architecture | S&I Atelier',
+    'استخدامات البرونز الطبيعي المعتق في أرقى تصاميم الأثاث المعماري.',
+    'Exploring the timeless elegance of hand-oxidized bronze in luxury architectural furniture.'
+  ),
+  (
+    'أقمشة البوكليه والمخمل الحريري: التناغم الحسي في الصالونات الفاخرة',
+    'Boucle & Silk Velvet: Tactile Harmony in Palace Living Rooms',
+    'boucle-silk-velvet-tactile-harmony',
+    'معايير اختيار الأقمشة الإيطالية والبلجيكية المنسوجة من خيوط الصوف العضوي والحرير الطبيعي لاختبارات الاحتكاك العالية.',
+    'Selection criteria for Italian and Belgian upholstery loomed with organic wool and natural silk fibers.',
+    '<p>عند الجلوس على أريكة فاخرة، تبدأ التجربة بحاسة اللمس قبل أي شيء آخر؛ ولذلك نولي اختيار نسيج القماش نفس العناية التي نوليها لنحت الهيكل الخشبي الداخلي.</p><h3>قماش البوكليه الإيطالي الأصلي</h3><p>يتميز نسيج البوكليه بحبيباته المجعدة الناعمة التي تعكس الضوء بطريقة ناعمة تضفي دفئاً حسياً فورياً على الصالونات الحديثة ذات الأسقف العالية والمساحات المفتوحة.</p>',
+    '<p>When sinking into an ultra-luxury sofa, the emotional journey commences through touch long before the eye perceives the silhouette.</p><h3>Authentic Italian Boucle & Natural Silk Velvets</h3><p>Genuine boucle, with its softly looped wool curls, diffuses glare and imparts instantaneous auditory dampening and tactile indulgence to soaring open-concept palace lounges.</p>',
+    'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80',
+    'مستشارو الأقمشة والجلود - S&I Atelier',
+    'S&I Atelier Textile & Leather Guild',
+    ARRAY['أقمشة إيطالية', 'بوكليه', 'مخمل حريري', 'تأثيث صالونات'],
+    'published',
+    NOW(),
+    5,
+    810,
+    90,
+    'أقمشة البوكليه والمخمل الحريري | S&I Atelier',
+    'Boucle & Silk Velvet in Palace Lounges | S&I Atelier',
+    'دليل اختيار أفخر الأنسجة والأقمشة العالمية للصالونات الملكية.',
+    'How world-class Italian textiles and boucle elevate tactile comfort in luxury residences.'
+  ),
+  (
+    'الهندسة الصوتية في القصور: كيف يمتص الأثاث الفاخر صدى المساحات الشاهقة؟',
+    'Acoustic Architecture: How Bespoke Furniture Dampens High-Ceiling Echoes',
+    'acoustic-architecture-bespoke-furniture-echo',
+    'استراتيجيات تصميم الأثاث والمجالس للتحكم في زمن الترديد الصوتي (Reverberation Time) دون تشويه الهوية البصرية.',
+    'Strategies to control reverberation time and acoustic flutter through concealed textile and joinery design.',
+    '<p>تعد المساحات الشاهقة والأسقف ذات الارتفاع المزدوج (Double-Height) من أروع ملامح القصور، لكنها تشكل تحدياً صوتياً كبيراً بسبب ارتداد الأصوات والصدى المزعج.</p><h3>الحلول الصوتية المدمجة في الأثاث</h3><p>من خلال تكسيات الجدران المبطنة بالجلد والمخمل، واستخدام حشوات الرغوة الصوتية متعددة الكثافات في الأرائك والسجاد اليدوي الحريري، نحقق عزلاً صوتياً فندقياً يضمن وضوح الهمس وحميمية الحوار في أوسع القاعات.</p>',
+    '<p>Cathedral ceilings and double-height grand salons are majestic architectural statements, but they frequently present acoustic resonance issues and echo bounce.</p><h3>Concealed Acoustic Absorption in Furniture</h3><p>Through acoustic leather wall panels, multi-density acoustic seating cores, and dense hand-knotted silk rugs, we achieve an intimate sanctuary where intimate conversation flows effortlessly across expansive salons.</p>',
+    'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80',
+    'م. كريم فهد - استشاري العزل والصوتيات المعمارية',
+    'Karim Fahd - Senior Architectural Acoustics Consultant',
+    ARRAY['هندسة صوتية', 'عزل صوتي', 'عمارة داخلية', 'راحة القصور'],
+    'published',
+    NOW(),
+    6,
+    890,
+    94,
+    'الهندسة الصوتية في القصور | S&I Atelier',
+    'Acoustic Architecture in Luxury Furniture | S&I Atelier',
+    'طرق معالجة الصدى في القصور والفيلات عبر الأثاث المخصص.',
+    'Advanced acoustic strategies using custom furniture and luxury textiles in tall halls.'
+  ),
+  (
+    'الأجنحة الفندقية الرئاسية في المنازل: معايير تصميم جناح النوم الماستر',
+    'The Residential Presidential Suite: Master Bedroom Architecture',
+    'residential-presidential-suite-master-bedroom',
+    'كيف تصمم جناح نوم ملكي متكامل يجمع بين منطقة النوم، جلسة الشاي الخاصة، غرفة الملابس وغرفة الاستجمام.',
+    'How to design a self-contained royal master sanctuary combining restful sleep, private tea lounge, and walk-in dressing salon.',
+    '<p>لم يعد جناح النوم الرئيسي مجرد غرفة مخصصة للسرير؛ بل تطور ليصبح جناحاً رئاسياً متكاملاً يوفر ملاذاً خاصاً وهادئاً لأصحاب القصر بعيداً عن صخب الحياة اليومية.</p><h3>توزيع الفضاءات وسلاسة الحركة</h3><p>نبدأ بتحديد محور الرؤية للسرير نحو النوافذ أو الحديقة الخاصة، متبوعاً بجلسة لاونج مريحة لقراءة الصباح، مع غرفة ملابس مكسوة بالخشب الفاخر ومقاعد عثمانية مريحة لتجربة ارتداء ملابس استثنائية.</p>',
+    '<p>The master bedroom has evolved beyond a bed enclosure into an autonomous sanctuary providing private peace away from palace operations.</p><h3>Spatial Circulation and Material Layering</h3><p>Orienting the bed towards private garden courtyards, positioning a private morning reading lounge, and transitioning into a walk-in boutique wardrobe framed in dark oak and ambient LEDs creates an unrivaled residential suite.</p>',
+    'https://images.unsplash.com/photo-1540518614846-7ede433c4550?auto=format&fit=crop&w=1200&q=80',
+    'فريق التصميم المعماري الداخلي - S&I Atelier',
+    'S&I Atelier Interior Architecture Studio',
+    ARRAY['أجنحة نوم', 'غرف ماستر', 'قصور فاخرة', 'تصميم فنادق'],
+    'published',
+    NOW(),
+    7,
+    1020,
+    96,
+    'تصميم الأجنحة الفندقية الرئاسية في المنازل | S&I Atelier',
+    'The Residential Presidential Suite | S&I Atelier',
+    'دليل هندسي لتأثيث وتوزيع أجنحة النوم الملكية الفاخرة.',
+    'Architectural guidelines for designing self-contained residential master bedroom suites.'
+  ),
+  (
+    'شهادة التوثيق الفني للأثاث الحصري: الحفاظ على القيمة الاستثمارية عبر الأجيال',
+    'The Certificate of Provenance: Preserving Furniture Investment Value',
+    'certificate-provenance-preserving-furniture-value',
+    'لماذا تشكل قطع الأثاث ذات الإصدار المحدود أصولاً استثمارية ملموسة تزداد قيمتها المادية والمعنوية بمرور الزمن.',
+    'Why limited-edition bespoke pieces represent tangible appreciating assets backed by documented provenance and serial authentication.',
+    '<p>تماماً كما يعامل هواة جمع الفنون اللوحات الفنية والمقتنيات النادرة، أصبح الأثاث المعماري المصنوع يدوياً بإصدارات محدودة يحظى بمكانة استثمارية فريدة لدى العائلات العريقة.</p><h3>الرقم التسلسلي وشهادة الأصالة الفنية</h3><p>في S&I Atelier، تأتي كل قطعة ذات إصدار محدود مختومة بقرص معدني برونزي يحمل رقم الإصدار الخاص بها، مصحوبة بوثيقة فنية معتمدة تتضمن بصمة الحرفي وتاريخ الإنتاج ومخططات التصميم، لتكون إرثاً تتوارثه الأجيال بثقة وفخر.</p>',
+    '<p>Much like rare horology and fine art canvases, limited-edition architectural furniture has established itself as an appreciating investment asset sought by generational collectors.</p><h3>Serial Engravings & Documented Provenance</h3><p>Every S&I Atelier limited edition arrives with an inset laser-engraved bronze seal registering its individual edition number (e.g., 03/12), backed by a master archival passport documenting the craftsmen and stone provenance for future generations.</p>',
+    'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80',
+    'إدارة المقتنيات والتراث الفني - S&I Atelier',
+    'S&I Atelier Heritage & Collections Division',
+    ARRAY['استثمار الأثاث', 'قطع نادرة', 'شهادة أصالة', 'إصدار محدود'],
+    'published',
+    NOW(),
+    6,
+    880,
+    95,
+    'شهادة التوثيق الفني للأثاث الحصري | S&I Atelier',
+    'Certificate of Provenance in Fine Furniture | S&I Atelier',
+    'كيف يحافظ الأثاث الحصري على قيمته المادية والمعنوية كإرث عائلي.',
+    'How certified provenance and limited editions safeguard the generational value of bespoke furniture.'
+  ),
+  (
+    'تناغم الإضاءة المعمارية مع الرخام النصف شفاف والبرونز',
+    'Architectural Lighting Harmony with Translucent Marble & Bronze',
+    'lighting-translucent-marble',
+    'كيف تخلق الإضاءة الخفية المدمجة في طاولات الرخام والكونسول أجواءً شاعرية تعزز الفخامة في القصور الحديثة.',
+    'How concealed LED integration within translucent marble consoles creates poetic warmth and depth in contemporary estates.',
+    '<p>ليست الإضاءة مجرد وسيلة لكشف معالم المكان، بل هي المادة الخام التي تمنح الرخام الطبيعي روحه وتكشف عن عروقه الجيولوجية الدفينة في ساعات المساء الهادئة.</p><h3>تقنية الإضاءة الباردة المدمجة</h3><p>عندما ندمج أشرطة الإضاءة غير الحرارية خلف ألواح الكوارتزايت الشبه شفاف، يتحول الحجر الصلب إلى سطح مضيء يشع نوراً ذهبياً دافئاً يغني عن الإضاءات السقفية المباشرة المزعجة.</p>',
+    '<p>Architectural illumination is not merely illumination; it is the intangible medium unlocking the hidden crystalline depth of rare stones.</p><h3>Integrated Non-Thermal Backlighting</h3><p>By recessing cold-temperature LED ribbons beneath translucent quartzite slabs, dense stone transforms into an ethereal luminous lantern replacing harsh overhead spotlights with intimate warmth.</p>',
+    'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80',
+    'م. ياسمين الشريف - استشارية الإضاءة المعمارية',
+    'Yasmine Al-Sharif - Architectural Lighting Specialist',
+    ARRAY['إضاءة معمارية', 'رخام مضيء', 'تصميم قصور', 'أجواء ليلية'],
+    'published',
+    NOW(),
+    5,
+    750,
+    93,
+    'تناغم الإضاءة المعمارية مع الرخام | S&I Atelier',
+    'Architectural Lighting & Translucent Stone | S&I Atelier',
+    'كيف تبرز الإضاءة المعمارية جمال الرخام الطبيعي في القصور.',
+    'Revealing crystalline beauty through bespoke integrated lighting and stone joinery.'
+  ),
+  (
+    'دليل العناية بالجلود الطبيعية والأخشاب الصلبة المعمرة',
+    'The Connoisseur Guide to Natural Timber & Leather Longevity',
+    'connoisseur-leather-timber-care',
+    'بروتوكولات دورية متخصصة للحفاظ على رونق جلود النابا وطبقات الشمع العضوي على أخشاب الجوز السويسري لعقود.',
+    'Specialized maintenance protocols to nurture full-grain Italian leather and organic beeswax finishes on Swiss walnut for decades.',
+    '<p>الخامات الطبيعية الحقيقية مثل خشب الجوز وجلود النابا تتنفس وتتفاعل مع البيئة المحيطة، وتزداد جمالاً وعمقاً مع مرور السنين إذا ما حظيت بالعناية الصحيحة.</p><h3>تغذية الجلود بالشمع الطبيعي</h3><p>نوصي بتغذية الجلود مرتين سنوياً بمرطبات عضوية خالية من السيليكون للحفاظ على مرونة الألياف وحمايتها من جفاف التكييف، مع استخدام شمع العسل النقي للأخشاب غير المدهونة بالبوليستر.</p>',
+    '<p>Authentic natural noble materials such as full-grain leather and solid walnut breathe and develop an illustrious patina with passing years when properly nurtured.</p><h3>Seasonal Conditioning with Organic Beeswax</h3><p>We advocate applying organic silicone-free conditioners biannually to maintain supple leather fibers against dry climates, complemented by pure beeswax buffing for open-pore timber.</p>',
+    'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80',
+    'ورش الصيانة والترميم الفني - S&I Atelier',
+    'S&I Atelier Conservation & Restoration Guild',
+    ARRAY['عناية بالأثاث', 'جلود طبيعية', 'خشب جوز', 'حرفية يدوية'],
+    'published',
+    NOW(),
+    7,
+    860,
+    91,
+    'دليل العناية بالأثاث الفاخر والجلود | S&I Atelier',
+    'Bespoke Furniture Care & Leather Longevity | S&I Atelier',
+    'نصائح الخبراء للحفاظ على الأثاث الخشبي والجلدي مدى الحياة.',
+    'Expert preservation techniques for maintaining luxury leather and architectural walnut.'
+  ),
+  (
+    'العمارة الحيوية وتأثير الطبيعة داخل بهو القصور الحديثة',
+    'Biophilic Luxury: Nature Integration inside Modern Palatial Atriums',
+    'biophilic-luxury-villa-atriums',
+    'دمج النباتات الاستوائية وأحواض المياه الرخامية مع الأثاث الانسيابي لخلق واحات استرخاء داخلية مستدامة.',
+    'Synergizing indoor tropical flora and sculptural marble water features with organic curved lounges for private restorative sanctuaries.',
+    '<p>أصبحت القصور المعاصرة تبحث عن إعادة ربط قاطنيها بالطبيعة الأم عبر الأفنية الداخلية المفتوحة (Atriums) التي تغمرها أشعة الشمس وتتعالى فيها أصوات المياه العذبة.</p><h3>أثاث يحاكي تموجات التضاريس</h3><p>تصميم مقاعد الجلوس المنحنية المحيطة بالأشجار المعمرة الداخلية برخام معالج يقاوم الرطوبة يخلق تناغماً حسياً يهدئ الحواس ويعزز الصحة النفسية والرفاهية العائلية.</p>',
+    '<p>Contemporary grand residences increasingly reconnect occupants with organic natural rhythms through soaring sunlit atriums and architectural reflecting pools.</p><h3>Furniture Contoured to Topography</h3><p>Curving custom lounge seating wrapping around mature indoor olive trees in moisture-sealed travertine creates a holistic indoor oasis that calms the senses and restores vitality.</p>',
+    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
+    'د. سارة المنصور - باحثة التصميم البيئي والقصور',
+    'Dr. Sara Al-Mansoor - Biophilic Design Researcher',
+    ARRAY['عمارة بيئية', 'بهو داخلي', 'أثاث عضوي', 'استرخاء فاخر'],
+    'published',
+    NOW(),
+    6,
+    910,
+    94,
+    'العمارة الحيوية في بهو القصور | S&I Atelier',
+    'Biophilic Luxury in Palatial Atriums | S&I Atelier',
+    'كيف تدمج الطبيعة الخضراء والماء مع الأثاث الفاخر في القصور.',
+    'Integrating biophilic wellness and organic furniture within luxury palace atriums.'
+  ),
+  (
+    'النسبة الذهبية في تصميم وتوزيع مجالس الضيافة الكبرى',
+    'The Golden Ratio in Grand Majlis Architecture & Proportions',
+    'golden-ratio-majlis-furniture',
+    'تطبيق المتتالية الرياضية المقدسة (1:1.618) في تحديد أطوال الأرائك وارتفاعات الطاولات لضمان الهيبة البصرية والراحة القصوى.',
+    'Applying the divine proportion (1:1.618) to calculate sofa lengths and table elevations for visual majesty and effortless posture.',
+    '<p>منذ عصر النهضة وحتى أحدث تصاميم القصور، تظل النسبة الذهبية السر الهندسي الخفي الذي يمنح الفراغات هيبتها ويجعل العين ترتاح تلقائياً للنسب المعمارية.</p><h3>توزيع المسافات وارتفاعات المجالس</h3><p>عندما تكون المسافة بين الأريكة وطاولة الطعام أو طاولة القهوة متوافقة بدقة مع النسبة الذهبية، يتدفق الحوار بسلاسة دون شعور بالضيق أو التباعد المفرط، مما يعكس كرم الضيافة وأصالتها في أبهى صورها.</p>',
+    '<p>From the Renaissance masters to cutting-edge contemporary palaces, the Golden Ratio remains the clandestine mathematical constant yielding subconscious spatial harmony.</p><h3>Acoustic Distances & Majlis Clearances</h3><p>When the spatial clearance between custom seating and monolithic marble centerpieces strictly observes golden geometry, human conversation resonates effortlessly, expressing hospitality at its apex.</p>',
+    'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80',
+    'م. فراس العمران - استشاري التناسب المعماري',
+    'Firas Al-Omran - Architectural Proportion Consultant',
+    ARRAY['نسبة ذهبية', 'مجالس ملكية', 'هندسة فراغ', 'تصميم معماري'],
+    'published',
+    NOW(),
+    7,
+    940,
+    97,
+    'النسبة الذهبية في مجالس الضيافة | S&I Atelier',
+    'The Golden Ratio in Grand Majlis Architecture | S&I Atelier',
+    'كيف تطبق النسبة الذهبية في تصميم أثاث المجالس والصالونات.',
+    'Harnessing sacred divine proportions in royal majlis layout and furniture sculpting.'
+  )
+ON CONFLICT (slug) DO UPDATE SET
+  title = EXCLUDED.title,
+  title_en = EXCLUDED.title_en,
+  excerpt = EXCLUDED.excerpt,
+  excerpt_en = EXCLUDED.excerpt_en,
+  content = EXCLUDED.content,
+  content_en = EXCLUDED.content_en,
+  cover_image = EXCLUDED.cover_image,
+  author = EXCLUDED.author,
+  author_en = EXCLUDED.author_en,
+  tags = EXCLUDED.tags,
+  meta_title = EXCLUDED.meta_title,
+  meta_title_en = EXCLUDED.meta_title_en,
+  meta_description = EXCLUDED.meta_description,
+  meta_description_en = EXCLUDED.meta_description_en;
+
+
+-- ------------------------------------------------------------------------------
+-- 6. BESPOKE SERVICE (خدمة التنفيذ حسب الطلب - 100% Bilingual)
+-- ------------------------------------------------------------------------------
+INSERT INTO public.bespoke_service (
+  id,
+  hero_title, hero_title_en,
+  hero_subtitle, hero_subtitle_en,
+  service_description, service_description_en,
+  cta_text, cta_text_en,
+  steps, steps_en,
+  updated_at
+) VALUES (
+  1,
+  'تنفيذ التصاميم المعمارية حسب الطلب',
+  'Bespoke Architectural Creation & Execution',
+  'صياغة أثاث راقٍ ومساحات معمارية حصرية مصممة خصيصاً لأدق تفاصيل قصرك أو فيلتك العصرية.',
+  'Sculpting high-end tailored furniture and exclusive spaces tailored to the exact proportions of your palace or luxury villa.',
+  'في S&I Atelier، لا نؤمن بالإنتاج النمطي المتكرر؛ بل نعتبر كل مساحة فراغاً معمارياً يستحق هويته النحتية الخاصة. نقوم بتطويع أفخر الأخشاب الأوروبية ورخام الطبيعة النادر لنحول المخططات الهندسية ورؤيتك إلى تحف واقعية تدوم عبر الأجيال.',
+  'At S&I Atelier, we reject mass replication; we view every space as an architectural void deserving its own sculpted identity. We tame rare European woods and exotic marbles to translate your floorplans and vision into timeless heirlooms.',
+  'طلب استشارة تصميم وتنفيذ مخصص',
+  'Request a Bespoke Private Consultation',
+  '[
+    {"step":"01","title":"الاستشارة والمخطط الهندسي","description":"دراسة المخطط الهندسي والمساحات وتحديد النسب والارتفاعات المثالية بالتنسيق مع مهندسي القصر."},
+    {"step":"02","title":"انتقاء الخامات والرخام النادر","description":"معاينة عينات الرخام الطبيعي الإيطالي وأخشاب الجوز وكتالوجات الأقمشة والجلود من أرقى مدابغ ميلانو."},
+    {"step":"03","title":"الصياغة اليدوية والنحت بالورش","description":"تنفيذ القطع في ورشنا المتخصصة بأيدي نخبة من الحرفيين مع مطابقة أدق المقاسات ومتابعة دورية للعميل."},
+    {"step":"04","title":"التوصيل والتركيب VIP مع الضمان","description":"نقل وتركيب متخصص بفريق هندسي متكامل مع تسليم شهادة الضمان والتوثيق الفني المعتمدة للأثاث."}
+  ]'::jsonb,
+  '[
+    {"step":"01","title":"Consultation & Architectural Schematics","description":"Detailed review of architectural floorplans, clearances, and golden ratios in synergy with client designers."},
+    {"step":"02","title":"Procurement of Rare Marbles & Woods","description":"Private curation of Italian marble slabs, solid French walnut, and custom upholstery swatches from premier European tanneries."},
+    {"step":"03","title":"Artisanal Handcrafting & Sculpture","description":"Precision joinery and stone sculpting executed inside dedicated ateliers with milestone updates provided to the client."},
+    {"step":"04","title":"White-Glove VIP Delivery & Provenance","description":"Specialized delivery, precision white-glove installation, and handover of the lifetime warranty and Certificate of Provenance."}
+  ]'::jsonb,
+  NOW()
+)
+ON CONFLICT (id) DO UPDATE SET
+  hero_title = EXCLUDED.hero_title,
+  hero_title_en = EXCLUDED.hero_title_en,
+  hero_subtitle = EXCLUDED.hero_subtitle,
+  hero_subtitle_en = EXCLUDED.hero_subtitle_en,
+  service_description = EXCLUDED.service_description,
+  service_description_en = EXCLUDED.service_description_en,
+  cta_text = EXCLUDED.cta_text,
+  cta_text_en = EXCLUDED.cta_text_en,
+  steps = EXCLUDED.steps,
+  steps_en = EXCLUDED.steps_en,
+  updated_at = NOW();
+
+
+-- ------------------------------------------------------------------------------
+-- 7. SITE SETTINGS (إعدادات الموقع العامة - 100% Bilingual)
+-- ------------------------------------------------------------------------------
+INSERT INTO public.site_settings (
+  id,
+  site_name, site_name_en,
+  site_description, site_description_en,
+  default_meta_title, default_meta_title_en,
+  default_meta_description, default_meta_description_en,
+  logo_url, favicon_url, default_robots, default_og_image,
+  updated_at
+) VALUES (
+  1,
+  'S&I Atelier | دار الأثاث الفاخر والتصميم المعماري',
+  'S&I Atelier | Haute Architecture & Bespoke Furniture',
+  'دار أثاث فاخر متخصصة في ابتكار وتصنيع القطع الحصرية ذات الإصدار المحدود وتنفيذ التصاميم المعمارية حسب الطلب للقصور والفيلات العصرية.',
+  'A premier haute-living atelier specializing in limited-edition sculptural furniture and bespoke architectural joinery for contemporary palaces and royal villas.',
+  'S&I Atelier | قطع حصرية وتنفيذ حسب الطلب للقصور والفيلات',
+  'S&I Atelier | Bespoke Architectural Creation & Limited Editions',
+  'استكشف قطع الأثاث الفاخر ذات الإصدار المحدود وخدمة التنفيذ حسب الطلب لأرقى القصور والفيلات العصرية بالمملكة.',
+  'Explore limited-edition sculptural furniture and bespoke architectural joinery tailored for modern palaces and luxury private estates.',
+  '/newlogo.png',
+  '/newlogo.png',
+  'index, follow',
+  '/assets/hero-banner.jpg',
+  NOW()
+)
+ON CONFLICT (id) DO UPDATE SET
+  site_name = EXCLUDED.site_name,
+  site_name_en = EXCLUDED.site_name_en,
+  site_description = EXCLUDED.site_description,
+  site_description_en = EXCLUDED.site_description_en,
+  default_meta_title = EXCLUDED.default_meta_title,
+  default_meta_title_en = EXCLUDED.default_meta_title_en,
+  default_meta_description = EXCLUDED.default_meta_description,
+  default_meta_description_en = EXCLUDED.default_meta_description_en,
+  updated_at = NOW();
+
+-- ==============================================================================
+-- Complete Bilingual Seed Execution Finished Successfully!
+-- ==============================================================================

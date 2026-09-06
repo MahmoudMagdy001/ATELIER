@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+﻿import { useState, useEffect } from 'react'
 import { FaCircleCheck, FaCircleXmark, FaCircleExclamation, FaCalculator } from 'react-icons/fa6'
 
 export interface SEOCheckItem {
@@ -165,11 +165,11 @@ export default function SEOAnalyzer({
       {/* Header */}
       <div className="p-4 bg-[#FAF8F5] border-b border-[#E6E1DC] flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-[#C5A880]/15 text-[#C5A880]">
+          <div className="p-2.5 rounded-xl bg-[#C4A070]/15 text-[#C4A070]">
             <FaCalculator className="w-4 h-4" />
           </div>
           <div>
-            <h4 className="font-bold text-sm text-[#14110F]">تحليل جودة الـ SEO الحي (Rank Math Score)</h4>
+            <h4 className="font-bold text-sm text-[#141110]">تحليل جودة الـ SEO الحي (Rank Math Score)</h4>
             <p className="text-xs text-[#8C7F75] mt-0.5">فحص لحظي ومباشر لتوافق المقال مع معايير محركات البحث</p>
           </div>
         </div>
@@ -188,7 +188,7 @@ export default function SEOAnalyzer({
             {check.status === 'success' && <FaCircleCheck className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />}
             {check.status === 'warning' && <FaCircleExclamation className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />}
             {check.status === 'danger' && <FaCircleXmark className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />}
-            <span className={check.status === 'success' ? 'text-[#14110F]' : check.status === 'warning' ? 'text-[#5C544E]' : 'text-rose-700 font-medium'}>
+            <span className={check.status === 'success' ? 'text-[#141110]' : check.status === 'warning' ? 'text-[#5C544E]' : 'text-rose-700 font-medium'}>
               {check.text}
             </span>
           </div>

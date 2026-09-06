@@ -6,6 +6,7 @@ import AdminLayout from './features/admin/pages/AdminLayout'
 import { PageLoading } from './components/ui/Loading'
 import ScriptInjector from './components/layout/ScriptInjector'
 import RedirectGuard from './components/layout/RedirectGuard'
+import ScrollRestoration from './components/layout/ScrollRestoration'
 
 // Public Pages
 const Home = lazy(() => import('./features/home/pages/Home'))
@@ -21,7 +22,6 @@ const BlogDetail = lazy(() => import('./features/blog/pages/BlogDetail'))
 const Login = lazy(() => import('./features/admin/pages/Login'))
 const AdminProducts = lazy(() => import('./features/products/pages/AdminProducts'))
 const AdminPortfolio = lazy(() => import('./features/portfolio/pages/AdminPortfolio'))
-const AdminBespoke = lazy(() => import('./features/bespoke/pages/AdminBespoke'))
 const AdminPosts = lazy(() => import('./features/blog/pages/AdminPosts'))
 const AdminPostPreview = lazy(() => import('./features/blog/pages/AdminPostPreview'))
 const AdminOffers = lazy(() => import('./features/offers/pages/AdminOffers'))
@@ -33,6 +33,7 @@ const AdminSettings = lazy(() => import('./features/admin/pages/AdminSettings'))
 export default function App() {
   return (
     <RedirectGuard>
+      <ScrollRestoration />
       <ScriptInjector />
       <Suspense fallback={<PageLoading />}>
         <Routes>
@@ -47,9 +48,9 @@ export default function App() {
             {/* 2. Bespoke Service Page */}
             <Route path="bespoke" element={<BespokeService />} />
 
-            {/* Legacy & Clean Redirects */}
+            {/* Legacy & Clean Routes */}
             <Route path="products" element={<Navigate to="/limited-edition" replace />} />
-            <Route path="products/:slug" element={<Navigate to="/limited-edition" replace />} />
+            <Route path="products/:slug" element={<ProductDetail />} />
             <Route path="services" element={<Navigate to="/bespoke" replace />} />
             <Route path="services/:slug" element={<Navigate to="/bespoke" replace />} />
             <Route path="about" element={<Navigate to="/" replace />} />
@@ -70,7 +71,6 @@ export default function App() {
               <Route index element={<Navigate to="products" replace />} />
               <Route path="products" element={<AdminProducts />} />
               <Route path="portfolio" element={<AdminPortfolio />} />
-              <Route path="bespoke" element={<AdminBespoke />} />
               <Route path="media" element={<AdminMedia />} />
               <Route path="categories" element={<AdminCategories />} />
               <Route path="redirects" element={<AdminRedirects />} />

@@ -12,8 +12,7 @@ import {
   FaArrowRightArrowLeft, 
   FaGear, 
   FaRightFromBracket,
-  FaArrowUpRightFromSquare,
-  FaGem
+  FaArrowUpRightFromSquare
 } from 'react-icons/fa6'
 
 interface AdminNavLinkItem {
@@ -26,7 +25,6 @@ const MAIN_ADMIN_LINKS: AdminNavLinkItem[] = [
   { to: '/admin/products', label: 'قطع الإصدار المحدود (Limited)', Icon: FaCouch },
   { to: '/admin/offers', label: 'العروض الترويجية (Offers)', Icon: FaTag },
   { to: '/admin/portfolio', label: 'معرض الأعمال (Portfolio)', Icon: FaImages },
-  { to: '/admin/bespoke', label: 'التنفيذ حسب الطلب (Bespoke)', Icon: FaGem },
   { to: '/admin/posts', label: 'المقالات والمدونة (Blog)', Icon: FaPenToSquare },
   { to: '/admin/categories', label: 'التصنيفات (Categories)', Icon: FaFolderOpen },
   { to: '/admin/media', label: 'مكتبة الوسائط (Media)', Icon: FaImages },
@@ -50,19 +48,19 @@ export default function AdminLayout() {
       await supabase.auth.signOut()
     } catch (_e) {}
     localStorage.removeItem('atelier_user')
-    navigate('/admin/login')
+    navigate('/admin/login', { replace: true })
   }
 
   return (
-    <div className="admin-scope h-screen bg-[#FAF8F5] text-[#14110F] flex flex-col md:flex-row overflow-hidden font-sans" dir="rtl">
+    <div className="admin-scope h-screen bg-[#FAF8F5] text-[#141110] flex flex-col md:flex-row overflow-hidden font-sans" dir="rtl">
       {/* Sidebar */}
-      <aside className="w-full md:w-64 bg-[#14110F] text-white shrink-0 shadow-2xl flex flex-col border-l border-white/5">
+      <aside className="w-full md:w-64 bg-[#141110] text-white shrink-0 shadow-2xl flex flex-col border-l border-white/5">
         {/* Brand Header */}
         <div className="p-6 border-b border-white/10 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <AtelierMonogram className="w-9 h-9" />
             <div className="flex flex-col">
-              <span className="font-bold text-sm tracking-wide text-white font-['Cinzel']">S&I ATELIER</span>
+              <span className="font-bold text-sm tracking-wide text-white font-serif">S&I ATELIER</span>
               <span className="text-[9px] text-[#C4A070] tracking-widest uppercase font-semibold">CONTROL PANEL</span>
             </div>
           </div>
@@ -86,7 +84,7 @@ export default function AdminLayout() {
               className={({ isActive }) =>
                 `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
                   isActive
-                    ? 'bg-[#C4A070] text-[#14110F] font-bold shadow-lg shadow-[#C4A070]/25'
+                    ? 'bg-[#C4A070] text-[#141110] font-bold shadow-lg shadow-[#C4A070]/25'
                     : 'text-[#D6CDC4] hover:bg-white/5 hover:text-white'
                 }`
               }
@@ -110,7 +108,7 @@ export default function AdminLayout() {
       </aside>
 
       {/* Main Content Area */}
-      <main ref={mainRef} className="flex-1 p-6 md:p-10 overflow-y-auto overflow-x-hidden bg-[#FAF8F5] text-[#14110F]">
+      <main ref={mainRef} className="flex-1 p-6 md:p-10 overflow-y-auto overflow-x-hidden bg-[#FAF8F5] text-[#141110]">
         <Outlet />
       </main>
     </div>

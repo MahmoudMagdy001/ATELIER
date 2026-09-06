@@ -106,7 +106,7 @@ export default function BrandLogo({
         className={`${imgSizes[size] || 'h-12 md:h-14 w-auto'} object-contain shrink-0 transition-transform duration-300 group-hover:scale-105 drop-shadow-[0_2px_10px_rgba(196,160,112,0.18)]`} 
       />
       
-      <div className="flex flex-col text-right justify-center">
+      <div className="flex flex-col text-start justify-center">
         <span 
           className={`font-['Cinzel'] font-bold leading-none uppercase whitespace-nowrap ${titleSizes[size]} ${
             isLight ? 'text-[#1C1816]' : 'text-[#F2EFE8]'

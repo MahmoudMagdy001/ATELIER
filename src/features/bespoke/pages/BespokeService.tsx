@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { motion } from 'framer-motion'
-import { bespokeService } from '../services/bespokeService'
+import { useTranslation } from 'react-i18next'
 import SEO from '../../../components/ui/SEO'
 import { CONTACT_INFO } from '../../../constants/contactInfo'
 import { 
@@ -19,59 +19,75 @@ import {
   FaWhatsapp, 
   FaCheck, 
   FaCompass, 
-  FaLayerGroup,
   FaShieldHalved,
-  FaTruckFast
+  FaTruckFast,
+  FaCouch,
+  FaCrown,
+  FaBed,
+  FaLayerGroup,
+  FaCertificate,
+  FaLock,
+  FaHandshake
 } from 'react-icons/fa6'
-import heroBannerImg from '../../../assets/hero-banner.jpg'
 
-import type { BespokeServiceConfig, BespokeStep } from '../../../types/database'
+interface BespokeStepItem {
+  step: string
+  title: string
+  description: string
+}
+
+interface CapabilityItem {
+  id: string
+  title: string
+  desc: string
+}
+
+interface StandardItem {
+  title: string
+  desc: string
+}
 
 export default function BespokeService() {
-  const [data, setData] = useState<BespokeServiceConfig | null>(null)
-  const [loading, setLoading] = useState<boolean>(true)
-
-  useEffect(() => {
-    async function loadData() {
-      try {
-        const content = await bespokeService.fetchBespokeContent()
-        setData(content)
-      } catch (err: unknown) {
-        console.warn('Failed to load bespoke content:', (err as Error)?.message || err)
-      } finally {
-        setLoading(false)
-      }
-    }
-    loadData()
-  }, [])
+  const { t, i18n } = useTranslation('bespoke')
+  const isEn = i18n.language?.startsWith('en')
 
   const whatsappNum = CONTACT_INFO.whatsappRaw
   const primaryPhone = CONTACT_INFO.phone
 
-  const heroTitle = data?.hero_title || 'تنفيذ التصاميم حسب الطلب'
-  const heroSubtitle = data?.hero_subtitle || 'صياغة أثاث راقٍ ومساحات معمارية حصرية مصممة خصيصاً لأدق تفاصيل قصرك أو فيلتك.'
-  const serviceDesc = data?.service_description || 'في S&I Atelier، لا نؤمن بالإنتاج النمطي المتكرر؛ بل نعتبر كل مساحة فراغاً معمارياً يستحق هويته النحتية الخاصة. نقوم بتطويع أفخر الأخشاب الأوروبية ورخام الطبيعة النادر لنحول المخططات الهندسية ورؤيتك إلى تحف واقعية تدوم عبر الأجيال.'
-  const steps = Array.isArray(data?.steps) && data.steps.length > 0 ? data.steps : [
-    { step: '01', title: 'الاستشارة والمخطط الهندسي', description: 'دراسة المخطط الهندسي والمساحات وتحديد النسب والارتفاعات المثالية.' },
-    { step: '02', title: 'انتقاء الخامات الفاخرة', description: 'معاينة عينات الرخام الطبيعي وأخشاب الجوز وكتالوجات الأقمشة والجلود الإيطالية.' },
-    { step: '03', title: 'الصياغة اليدوية والتنفيذ', description: 'تنفيذ القطع في ورشنا المتخصصة بأيدي نخبة من الحرفيين مع مطابقة أدق المقاسات.' },
-    { step: '04', title: 'التوصيل والتركيب VIP', description: 'نقل وتركيب متخصص وتنسيق متكامل مع شهادة ضمان معتمدة للأثاث.' }
+  const rawSteps = t('steps', { returnObjects: true })
+  const steps: BespokeStepItem[] = Array.isArray(rawSteps) ? (rawSteps as BespokeStepItem[]) : []
+
+  const rawCapabilities = t('capabilities', { returnObjects: true })
+  const capabilities: CapabilityItem[] = Array.isArray(rawCapabilities) ? (rawCapabilities as CapabilityItem[]) : []
+
+  const rawStandards = t('standards', { returnObjects: true })
+  const standards: StandardItem[] = Array.isArray(rawStandards) ? (rawStandards as StandardItem[]) : []
+
+  const capabilityIcons: Record<string, React.ReactNode> = {
+    majlis: <FaCouch className="w-5 h-5 text-[#C4A070]" />,
+    dining: <FaCrown className="w-5 h-5 text-[#C4A070]" />,
+    suites: <FaBed className="w-5 h-5 text-[#C4A070]" />,
+    paneling: <FaLayerGroup className="w-5 h-5 text-[#C4A070]" />
+  }
+
+  const standardIcons = [
+    <FaShieldHalved className="w-5 h-5 text-[#C4A070]" key="warranty" />,
+    <FaCertificate className="w-5 h-5 text-[#C4A070]" key="cert" />,
+    <FaLock className="w-5 h-5 text-[#C4A070]" key="privacy" />
   ]
-  const ctaText = data?.cta_text || 'طلب استشارة تصميم وتنفيذ مخصص'
-  const heroImage = data?.hero_image || heroBannerImg
 
   return (
-    <div className="bg-transparent text-[#F2EFE8] min-h-screen font-sans" dir="rtl">
+    <div className="bg-transparent text-[#F2EFE8] min-h-screen font-sans">
       <SEO
-        title="خدمة التنفيذ حسب الطلب (Bespoke) | S&I Atelier"
-        description="صياغة أثاث راقٍ وتصاميم معمارية مخصصة لأرقى القصور والفيلات بأيدي كبار الحرفيين."
+        title={t('meta_title')}
+        description={t('meta_description')}
         slug="bespoke"
       />
 
-      {/* 1. Hero Header (Matching Limited Edition Page Style) */}
-      <div className="relative pt-32 pb-16 md:pt-36 md:pb-20 px-6 border-b border-[#C4A070]/20 bg-[#141110] overflow-hidden">
+      {/* 1. Hero Header */}
+      <section className="relative pt-32 pb-16 md:pt-40 md:pb-24 px-6 border-b border-[#C4A070]/20 bg-[#141110] overflow-hidden">
         {/* Ambient Brand Identity Glow */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(196,160,112,0.15),rgba(20,17,16,0))] pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_50%_0%,rgba(196,160,112,0.18),rgba(20,17,16,0))] pointer-events-none" />
 
         <motion.div 
           variants={heroStagger}
@@ -79,18 +95,20 @@ export default function BespokeService() {
           animate="visible"
           className="relative max-w-4xl mx-auto text-center space-y-6"
         >
-          <motion.h1 variants={fadeUp} className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-[#F2EFE8] leading-tight tracking-normal">
-            تنفيذ التصاميم <span className="gold-gradient-text">حسب الطلب</span>
+          <motion.h1 variants={fadeUp} className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold leading-tight tracking-normal">
+            <span className="gold-gradient-text inline-block">
+              {t('hero_title_pre')} {t('hero_title_highlight')}
+            </span>
           </motion.h1>
 
           <motion.p variants={fadeUp} className="text-sm sm:text-base md:text-lg text-[#DEDAD6] max-w-2xl mx-auto leading-relaxed md:leading-8 font-light">
-            {heroSubtitle}
+            {t('hero_subtitle')}
           </motion.p>
         </motion.div>
-      </div>
+      </section>
 
-      {/* 2. SERVICE DEFINITION & PHILOSOPHY */}
-      <section className="max-w-5xl mx-auto px-6 py-20">
+      {/* 2. THE ATELIER PHILOSOPHY */}
+      <section className="max-w-6xl mx-auto px-6 py-20 text-start">
         <motion.div 
           initial="hidden"
           whileInView="visible"
@@ -100,53 +118,104 @@ export default function BespokeService() {
         >
           <div className="space-y-4">
             <span className="text-xs text-[#C4A070] tracking-widest uppercase font-bold flex items-center gap-2">
-              <FaCompass className="w-3.5 h-3.5" /> فلسفة الصياغة الخاصة
+              <FaCompass className="w-3.5 h-3.5" /> {t('philosophy_badge')}
             </span>
-            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-[#F2EFE8]">
-              تحويل رؤيتك المعمارية إلى واقع ملموس
+            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-[#F2EFE8] leading-snug">
+              {t('philosophy_title')}
             </h2>
           </div>
 
           <p className="text-sm sm:text-base text-[#DEDAD6] leading-loose font-light">
-            {serviceDesc}
+            {t('philosophy_desc')}
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-white/10">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[#C4A070]/15 flex items-center justify-center text-[#C4A070] shrink-0">
-                <FaGem />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-white/10">
+            <div className="flex items-start gap-4 p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+              <div className="w-12 h-12 rounded-xl bg-[#C4A070]/15 flex items-center justify-center text-[#C4A070] shrink-0">
+                <FaGem className="w-5 h-5" />
               </div>
-              <div>
-                <h4 className="text-xs font-bold text-[#F2EFE8]">تطويع أدق المقاسات</h4>
-                <p className="text-[11px] text-[#827771]">مطابقة 100% لمخطط المساحة</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[#C4A070]/15 flex items-center justify-center text-[#C4A070] shrink-0">
-                <FaShieldHalved />
-              </div>
-              <div>
-                <h4 className="text-xs font-bold text-[#F2EFE8]">خامات نادرة معتمدة</h4>
-                <p className="text-[11px] text-[#827771]">رخام وأخشاب وجلود أوروبية</p>
+              <div className="space-y-1">
+                <h4 className="text-sm font-bold text-[#F2EFE8]">{t('feature1_title')}</h4>
+                <p className="text-xs text-[#A19A91] leading-relaxed">{t('feature1_desc')}</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[#C4A070]/15 flex items-center justify-center text-[#C4A070] shrink-0">
-                <FaTruckFast />
+            <div className="flex items-start gap-4 p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+              <div className="w-12 h-12 rounded-xl bg-[#C4A070]/15 flex items-center justify-center text-[#C4A070] shrink-0">
+                <FaShieldHalved className="w-5 h-5" />
               </div>
-              <div>
-                <h4 className="text-xs font-bold text-[#F2EFE8]">تسليم وتركيب VIP</h4>
-                <p className="text-[11px] text-[#827771]">فريق هندسي متخصص للموقع</p>
+              <div className="space-y-1">
+                <h4 className="text-sm font-bold text-[#F2EFE8]">{t('feature2_title')}</h4>
+                <p className="text-xs text-[#A19A91] leading-relaxed">{t('feature2_desc')}</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4 p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+              <div className="w-12 h-12 rounded-xl bg-[#C4A070]/15 flex items-center justify-center text-[#C4A070] shrink-0">
+                <FaTruckFast className="w-5 h-5" />
+              </div>
+              <div className="space-y-1">
+                <h4 className="text-sm font-bold text-[#F2EFE8]">{t('feature3_title')}</h4>
+                <p className="text-xs text-[#A19A91] leading-relaxed">{t('feature3_desc')}</p>
               </div>
             </div>
           </div>
         </motion.div>
       </section>
 
-      {/* 3. PROCESS STEPS (مراحل التنفيذ) */}
-      <section className="max-w-7xl mx-auto px-6 pb-20 space-y-12">
+      {/* 3. BESPOKE CAPABILITIES & SOLUTIONS */}
+      {capabilities.length > 0 && (
+        <section className="max-w-7xl mx-auto px-6 py-12 space-y-12">
+          <motion.div 
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportOnce}
+            variants={fadeUp}
+            className="text-center max-w-2xl mx-auto space-y-4"
+          >
+            <span className="text-xs text-[#C4A070] tracking-widest uppercase font-bold flex items-center justify-center gap-2">
+              <FaHandshake className="w-3.5 h-3.5" /> {t('capabilities_badge')}
+            </span>
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#F2EFE8]">
+              {t('capabilities_title')}
+            </h2>
+            <p className="text-xs sm:text-sm text-[#A19A91] leading-relaxed">
+              {t('capabilities_desc')}
+            </p>
+          </motion.div>
+
+          <motion.div 
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportOnce}
+            variants={staggerContainer}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-start"
+          >
+            {capabilities.map((item) => (
+              <motion.div
+                key={item.id}
+                variants={fadeUp}
+                className="p-6 rounded-3xl bg-[#181413] border border-[#C4A070]/20 space-y-4 relative shadow-xl hover:border-[#C4A070]/50 transition-all duration-300 group flex flex-col justify-between"
+              >
+                <div className="space-y-4">
+                  <div className="w-12 h-12 rounded-2xl bg-[#C4A070]/10 flex items-center justify-center border border-[#C4A070]/20 group-hover:scale-110 transition-transform">
+                    {capabilityIcons[item.id] || <FaGem className="w-5 h-5 text-[#C4A070]" />}
+                  </div>
+                  <h3 className="font-serif text-base font-bold text-[#F2EFE8] leading-snug">
+                    {item.title}
+                  </h3>
+                  <p className="text-xs text-[#A19A91] leading-relaxed font-light">
+                    {item.desc}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </section>
+      )}
+
+      {/* 4. THE BESPOKE PROCESS JOURNEY */}
+      <section className="max-w-7xl mx-auto px-6 py-16 space-y-12">
         <motion.div 
           initial="hidden"
           whileInView="visible"
@@ -155,13 +224,13 @@ export default function BespokeService() {
           className="text-center max-w-2xl mx-auto space-y-4"
         >
           <span className="text-xs text-[#C4A070] tracking-widest uppercase font-bold flex items-center justify-center gap-2">
-            <FaAward className="w-3.5 h-3.5" /> مسار العمل
+            <FaAward className="w-3.5 h-3.5" /> {t('process_badge')}
           </span>
           <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#F2EFE8]">
-            مراحل ابتكار قطعتك الحصرية
+            {t('process_title')}
           </h2>
-          <p className="text-xs sm:text-sm text-[#827771] leading-relaxed">
-            من أول استشارة هندسية وحتى استقرار القطعة في قصرك، نرافقك بخطوات دقيقة تضمن أعلى مستويات الدقة.
+          <p className="text-xs sm:text-sm text-[#A19A91] leading-relaxed">
+            {t('process_desc')}
           </p>
         </motion.div>
 
@@ -170,13 +239,13 @@ export default function BespokeService() {
           whileInView="visible"
           viewport={viewportOnce}
           variants={staggerContainer}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-start"
         >
-          {steps.map((st: BespokeStep, idx: number) => (
+          {steps.map((st: BespokeStepItem, idx: number) => (
             <motion.div
               key={idx}
               variants={fadeUp}
-              className="p-6 rounded-3xl bg-[#141110] border border-[#C4A070]/20 space-y-4 relative shadow-xl flex flex-col justify-between"
+              className="p-6 rounded-3xl bg-[#141110] border border-[#C4A070]/20 space-y-4 relative shadow-xl flex flex-col justify-between hover:border-[#C4A070]/40 transition-colors"
             >
               <div className="space-y-3">
                 <span className="text-2xl font-serif font-extrabold text-[#C4A070] block" dir="ltr">
@@ -185,21 +254,67 @@ export default function BespokeService() {
                 <h3 className="font-serif text-base font-bold text-[#F2EFE8] leading-snug">
                   {st.title}
                 </h3>
-                <p className="text-xs text-[#827771] leading-relaxed">
+                <p className="text-xs text-[#A19A91] leading-relaxed font-light">
                   {st.description}
                 </p>
               </div>
               <div className="pt-4 border-t border-white/5 flex items-center gap-2 text-[11px] text-[#C4A070] font-bold">
                 <FaCheck className="w-3 h-3 text-emerald-400" />
-                <span>مرحلة معتمدة</span>
+                <span>{t('step_certified')}</span>
               </div>
             </motion.div>
           ))}
         </motion.div>
       </section>
 
-      {/* 4. DIRECT CALL-TO-ACTION & DIRECT PHONE (تحويل مباشر لرقم الشركة) */}
-      <section className="max-w-5xl mx-auto px-6 pb-24">
+      {/* 5. EXCLUSIVITY & TRUST STANDARDS */}
+      {standards.length > 0 && (
+        <section className="max-w-6xl mx-auto px-6 py-12 space-y-8">
+          <motion.div 
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportOnce}
+            variants={fadeUp}
+            className="text-center max-w-xl mx-auto space-y-3"
+          >
+            <span className="text-xs text-[#C4A070] tracking-widest uppercase font-bold flex items-center justify-center gap-2">
+              <FaShieldHalved className="w-3.5 h-3.5" /> {t('standards_badge')}
+            </span>
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#F2EFE8]">
+              {t('standards_title')}
+            </h2>
+          </motion.div>
+
+          <motion.div 
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportOnce}
+            variants={staggerContainer}
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 text-start"
+          >
+            {standards.map((std, idx) => (
+              <motion.div
+                key={idx}
+                variants={fadeUp}
+                className="p-6 rounded-3xl bg-white/[0.02] border border-white/10 space-y-3 shadow-lg hover:border-[#C4A070]/30 transition-colors"
+              >
+                <div className="w-10 h-10 rounded-xl bg-[#C4A070]/10 flex items-center justify-center mb-2">
+                  {standardIcons[idx] || <FaShieldHalved className="w-5 h-5 text-[#C4A070]" />}
+                </div>
+                <h3 className="font-serif text-sm sm:text-base font-bold text-[#F2EFE8]">
+                  {std.title}
+                </h3>
+                <p className="text-xs text-[#A19A91] leading-relaxed font-light">
+                  {std.desc}
+                </p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </section>
+      )}
+
+      {/* 6. DIRECT CONCIERGE CALL-TO-ACTION */}
+      <section className="max-w-5xl mx-auto px-6 pt-12 pb-24">
         <motion.div 
           initial="hidden"
           whileInView="visible"
@@ -208,14 +323,14 @@ export default function BespokeService() {
           className="rounded-3xl bg-gradient-to-r from-[#7A5D2B] via-[#C4A070] to-[#E5C9A3] p-8 sm:p-12 text-[#1C1816] shadow-2xl space-y-8 text-center relative overflow-hidden"
         >
           <div className="space-y-3 max-w-xl mx-auto">
-            <span className="text-xs tracking-widest font-extrabold uppercase bg-black/10 px-4 py-1.5 rounded-full inline-block">
-              DIRECT CONCIERGE ACCESS
+            <span className="text-xs tracking-widest font-extrabold uppercase bg-black/10 px-4 py-1.5 rounded-full inline-block" dir="ltr">
+              {t('cta_badge')}
             </span>
             <h3 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold leading-tight">
-              جاهز لبدء تنفيذ تصميمك الحصري؟
+              {t('cta_title')}
             </h3>
-            <p className="text-xs sm:text-sm font-medium text-[#2B2623] leading-relaxed">
-              تواصل مباشرة مع فريق كبار المصممين المعماريين بشركة S&I Atelier لحجز موعد استشارة ومعاينة الخامات.
+            <p className="text-xs sm:text-sm font-medium text-[#26211F] leading-relaxed">
+              {t('cta_desc')}
             </p>
           </div>
 
@@ -227,11 +342,11 @@ export default function BespokeService() {
               whileTap={tapScale}
               transition={springHover}
               href={`tel:${primaryPhone.replace(/\s+/g, '')}`}
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-[#1C1816] text-[#F2EFE8] font-bold text-sm flex items-center justify-center gap-3 shadow-2xl hover:bg-black transition-all cursor-pointer"
+              className="w-full sm:w-auto px-8 py-4 rounded-full bg-[#1C1816] text-[#F2EFE8] font-bold text-sm flex items-center justify-center gap-3 shadow-2xl hover:bg-black transition-all cursor-pointer"
             >
               <FaPhone className="w-4 h-4 text-[#C4A070]" />
-              <div className="text-right">
-                <span className="text-[10px] text-[#827771] block leading-tight">اتصال مباشر برقم الشركة</span>
+              <div className="text-start">
+                <span className="text-[10px] text-[#A19A91] block leading-tight">{t('phone_label')}</span>
                 <span className="font-mono text-sm" dir="ltr">{primaryPhone}</span>
               </div>
             </motion.a>
@@ -241,13 +356,13 @@ export default function BespokeService() {
               whileHover={hoverScale}
               whileTap={tapScale}
               transition={springHover}
-              href={`https://wa.me/${whatsappNum}?text=${encodeURIComponent('مرحباً S&I Atelier، أود الاستفسار عن خدمة التنفيذ حسب الطلب وتفصيل أثاث خاص')}`}
+              href={`https://wa.me/${whatsappNum}?text=${encodeURIComponent(t('whatsapp_message'))}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-emerald-700 text-white font-bold text-sm flex items-center justify-center gap-3 shadow-2xl hover:bg-emerald-800 transition-all cursor-pointer"
+              className="w-full sm:w-auto px-8 py-4 rounded-full bg-emerald-700 text-white font-bold text-sm flex items-center justify-center gap-3 shadow-2xl hover:bg-emerald-800 transition-all cursor-pointer"
             >
               <FaWhatsapp className="w-5 h-5" />
-              <span>محادثة واتساب فورية</span>
+              <span>{t('whatsapp_btn')}</span>
             </motion.a>
           </div>
         </motion.div>

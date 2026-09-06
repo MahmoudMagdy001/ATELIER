@@ -8,6 +8,7 @@ import type { LimitedEdition, Category, ProductVariant } from '../../../types/da
 export interface AdminProductVariant extends ProductVariant {
   id: string
   name: string
+  name_en?: string
   price: number | string
   image: string
   sku?: string
@@ -23,9 +24,12 @@ export function useAdminProducts() {
 
   // Basic Form States
   const [title, setTitle] = useState<string>('')
+  const [titleEn, setTitleEn] = useState<string>('')
   const [slug, setSlug] = useState<string>('')
   const [description, setDescription] = useState<string>('')
+  const [descriptionEn, setDescriptionEn] = useState<string>('')
   const [badge, setBadge] = useState<string>('')
+  const [badgeEn, setBadgeEn] = useState<string>('')
   const [categoryId, setCategoryId] = useState<string>('')
   const [displayOrder, setDisplayOrder] = useState<number>(0)
   const [status, setStatus] = useState<string>('published')
@@ -38,7 +42,9 @@ export function useAdminProducts() {
 
   // SEO States
   const [metaTitle, setMetaTitle] = useState<string>('')
+  const [metaTitleEn, setMetaTitleEn] = useState<string>('')
   const [metaDescription, setMetaDescription] = useState<string>('')
+  const [metaDescriptionEn, setMetaDescriptionEn] = useState<string>('')
   const [keywords, setKeywords] = useState<string>('')
   const [canonicalUrl, setCanonicalUrl] = useState<string>('')
   const [robotsIndex, setRobotsIndex] = useState<boolean>(true)
@@ -114,9 +120,12 @@ export function useAdminProducts() {
   const handleEdit = (product: LimitedEdition) => {
     setCurrentProduct(product)
     setTitle(product.title || '')
+    setTitleEn(product.title_en || '')
     setSlug(product.slug || '')
     setDescription(product.description || '')
+    setDescriptionEn(product.description_en || '')
     setBadge(product.badge || '')
+    setBadgeEn(product.badge_en || '')
     setCategoryId(product.category_id || '')
     setDisplayOrder(product.display_order || 0)
     setStatus(product.status || 'published')
@@ -141,7 +150,9 @@ export function useAdminProducts() {
 
     // Populate SEO states
     setMetaTitle(product.meta_title || '')
+    setMetaTitleEn(product.meta_title_en || '')
     setMetaDescription(product.meta_description || '')
+    setMetaDescriptionEn(product.meta_description_en || '')
     setKeywords(product.keywords || '')
     setCanonicalUrl(product.canonical_url || '')
     setRobotsIndex(product.robots_index ?? true)
@@ -161,9 +172,12 @@ export function useAdminProducts() {
   const handleCreateNew = () => {
     setCurrentProduct(null)
     setTitle('')
+    setTitleEn('')
     setSlug('')
     setDescription('')
+    setDescriptionEn('')
     setBadge('')
+    setBadgeEn('')
     setCategoryId('')
     setDisplayOrder(0)
     setStatus('published')
@@ -175,6 +189,7 @@ export function useAdminProducts() {
       {
         id: `var-${Date.now()}`,
         name: 'الخيار الأول (مثال: أزرق ملكي - مقاس 220 سم)',
+        name_en: '',
         price: '',
         image: '',
         sku: '',
@@ -184,7 +199,9 @@ export function useAdminProducts() {
 
     // Reset SEO states
     setMetaTitle('')
+    setMetaTitleEn('')
     setMetaDescription('')
+    setMetaDescriptionEn('')
     setKeywords('')
     setCanonicalUrl('')
     setRobotsIndex(true)
@@ -267,16 +284,21 @@ export function useAdminProducts() {
 
       const productData: Partial<LimitedEdition> = {
         title,
+        title_en: titleEn.trim() || null,
         slug: targetSlug,
         description,
+        description_en: descriptionEn.trim() || null,
         main_image: finalMainImage,
         badge,
+        badge_en: badgeEn.trim() || null,
         category_id: categoryId || null,
         display_order: Number(displayOrder),
         status,
         variants: cleanedVariants,
         meta_title: metaTitle,
+        meta_title_en: metaTitleEn.trim() || null,
         meta_description: metaDescription,
+        meta_description_en: metaDescriptionEn.trim() || null,
         keywords,
         canonical_url: canonicalUrl,
         robots_index: robotsIndex,
@@ -315,12 +337,18 @@ export function useAdminProducts() {
     currentProduct,
     title,
     setTitle,
+    titleEn,
+    setTitleEn,
     slug,
     setSlug,
     description,
     setDescription,
+    descriptionEn,
+    setDescriptionEn,
     badge,
     setBadge,
+    badgeEn,
+    setBadgeEn,
     categoryId,
     setCategoryId,
     displayOrder,
@@ -345,8 +373,12 @@ export function useAdminProducts() {
     setIsEditing,
     metaTitle,
     setMetaTitle,
+    metaTitleEn,
+    setMetaTitleEn,
     metaDescription,
     setMetaDescription,
+    metaDescriptionEn,
+    setMetaDescriptionEn,
     keywords,
     setKeywords,
     canonicalUrl,

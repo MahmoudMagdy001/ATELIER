@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import { fadeUp, staggerContainer, viewportOnce, hoverScale, tapScale, springHover } from '../../../constants/animations'
 import { CONTACT_INFO } from '../../../constants/contactInfo'
 import VipBespokeCta from '../../../components/ui/VipBespokeCta'
@@ -32,15 +33,27 @@ export interface ContactShowroomSectionProps {
 }
 
 export default function ContactShowroomSection({ settings }: ContactShowroomSectionProps) {
+  const { t, i18n } = useTranslation('contact')
+  const isEn = i18n.language?.startsWith('en')
+
   const [copiedPhone, setCopiedPhone] = useState(false)
   const [copiedAddress, setCopiedAddress] = useState(false)
+  const phoneTimeoutRef = useRef<number | null>(null)
+  const addressTimeoutRef = useRef<number | null>(null)
+
+  useEffect(() => {
+    return () => {
+      if (phoneTimeoutRef.current) window.clearTimeout(phoneTimeoutRef.current)
+      if (addressTimeoutRef.current) window.clearTimeout(addressTimeoutRef.current)
+    }
+  }, [])
 
   // Contact Form State
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
-    serviceType: 'استشارة تصميم وتأثيث لقصر أو فيلا',
-    preferredTime: 'صباحاً (10 ص - 2 م)',
+    serviceType: 'fullVilla',
+    preferredTime: 'morning',
     message: ''
   })
   const [formStatus, setFormStatus] = useState<{
@@ -56,7 +69,7 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
   const primaryPhone = CONTACT_INFO.phone
   const secondaryPhone = CONTACT_INFO.vipLine
   const whatsappNum = CONTACT_INFO.whatsappRaw
-  const address = CONTACT_INFO.address
+  const address = isEn ? 'Riyadh / Industrial District / Al-Shifa Area' : CONTACT_INFO.address
   const email = CONTACT_INFO.email
   const googleMapsUrl = CONTACT_INFO.googleMapsUrl
   const mapsEmbedSrc = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d115949.33649557673!2d46.6752959!3d24.7135517!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e2f03890d48939b%3A0x62953e5e40a04910!2sRiyadh%20Saudi%20Arabia!5e0!3m2!1sar!2ssa!4v1709300000000!5m2!1sar!2ssa'
@@ -65,14 +78,16 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
     if (!primaryPhone) return
     navigator.clipboard.writeText(primaryPhone)
     setCopiedPhone(true)
-    setTimeout(() => setCopiedPhone(false), 2000)
+    if (phoneTimeoutRef.current) window.clearTimeout(phoneTimeoutRef.current)
+    phoneTimeoutRef.current = window.setTimeout(() => setCopiedPhone(false), 2000)
   }
 
   const handleCopyAddress = () => {
     if (!address) return
     navigator.clipboard.writeText(address)
     setCopiedAddress(true)
-    setTimeout(() => setCopiedAddress(false), 2000)
+    if (addressTimeoutRef.current) window.clearTimeout(addressTimeoutRef.current)
+    addressTimeoutRef.current = window.setTimeout(() => setCopiedAddress(false), 2000)
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -83,7 +98,7 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!formData.name.trim() || !formData.phone.trim()) {
-      setFormStatus(prev => ({ ...prev, error: 'يرجى إدخال الاسم ورقم الجوال للتواصل' }))
+      setFormStatus(prev => ({ ...prev, error: t('form.errorRequired') }))
       return
     }
 
@@ -106,12 +121,20 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
 
       setFormStatus({ submitting: false, submitted: true, error: null })
     } catch (_err) {
-      setFormStatus({ submitting: false, submitted: false, error: 'حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى أو التواصل عبر واتساب' })
+      setFormStatus({ submitting: false, submitted: false, error: t('form.errorGeneral') })
     }
   }
 
   const handleDirectWhatsApp = () => {
-    const text = `مرحباً S&I Atelier، أود الاستفسار والتواصل بخصوص:\n- الاسم: ${formData.name || 'غير محدد'}\n- رقم الجوال: ${formData.phone || 'غير محدد'}\n- نوع الطلب: ${formData.serviceType}\n- الوقت المفضل: ${formData.preferredTime}${formData.message ? `\n- التفاصيل: ${formData.message}` : ''}`
+    const serviceLabel = t(`form.serviceOptions.${formData.serviceType}` as const, { defaultValue: formData.serviceType })
+    const timeLabel = t(`form.timeOptions.${formData.preferredTime}` as const, { defaultValue: formData.preferredTime })
+    const text = t('form.whatsappPayload', {
+      name: formData.name || (isEn ? 'Not specified' : 'غير محدد'),
+      phone: formData.phone || (isEn ? 'Not specified' : 'غير محدد'),
+      serviceType: serviceLabel,
+      preferredTime: timeLabel,
+      message: formData.message || (isEn ? 'None' : 'لا يوجد')
+    })
     window.open(`https://wa.me/${whatsappNum}?text=${encodeURIComponent(text)}`, '_blank')
   }
 
@@ -119,8 +142,8 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
     setFormData({
       name: '',
       phone: '',
-      serviceType: 'استشارة تصميم وتأثيث لقصر أو فيلا',
-      preferredTime: 'صباحاً (10 ص - 2 م)',
+      serviceType: 'fullVilla',
+      preferredTime: 'morning',
       message: ''
     })
     setFormStatus({ submitting: false, submitted: false, error: null })
@@ -145,12 +168,12 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
           variants={fadeUp} 
           className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#C4A070]/20 pb-6"
         >
-          <div className="space-y-2">
+          <div className="space-y-2 text-start">
             <span className="text-xs text-[#C4A070] tracking-widest uppercase font-bold flex items-center gap-2">
-              <FaMapLocationDot className="w-3.5 h-3.5" /> صالة العرض والتواصل
+              <FaMapLocationDot className="w-3.5 h-3.5" /> {t('section_badge')}
             </span>
             <h2 id="contact-showroom-heading" className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-[#F2EFE8]">
-              موقع المعرض واستقبال الزوار
+              {t('section_title')}
             </h2>
           </div>
           <a 
@@ -159,8 +182,8 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
             rel="noopener noreferrer"
             className="text-xs font-bold text-[#C4A070] hover:text-[#E5C9A3] flex items-center gap-1.5 transition-colors group self-start sm:self-auto"
           >
-            <span>عرض الاتجاهات في خرائط Google</span>
-            <FaArrowLeft className="w-3 h-3 group-hover:translate-x-[-4px] transition-transform" />
+            <span>{t('google_maps_directions')}</span>
+            <FaArrowLeft className="w-3 h-3 ltr:rotate-180 group-hover:ltr:translate-x-1 group-hover:rtl:translate-x-[-4px] transition-transform" />
           </a>
         </motion.div>
       </div>
@@ -175,8 +198,8 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
           className="flex flex-col lg:flex-row items-stretch gap-5 lg:gap-6 w-full"
         >
         
-          {/* RIGHT COLUMN: Compact Contact Cards */}
-          <div className="w-full lg:w-[380px] xl:w-[430px] shrink-0 flex flex-col justify-between gap-3">
+          {/* CONTACT CARDS COLUMN */}
+          <div className="w-full lg:w-[380px] xl:w-[430px] shrink-0 flex flex-col justify-between gap-3 text-start">
             
             {/* 1. Address Card */}
             {address && (
@@ -187,22 +210,22 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
                   </div>
                   <div className="space-y-1.5 flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-1.5">
-                      <span className="text-[10px] font-bold text-[#C4A070] uppercase tracking-wider">العنوان والموقع</span>
+                      <span className="text-[10px] font-bold text-[#C4A070] uppercase tracking-wider">{t('address_title')}</span>
                       <button 
                         onClick={handleCopyAddress}
                         type="button"
                         className="text-[10px] text-[#827771] hover:text-[#C4A070] flex items-center gap-1 transition-colors cursor-pointer px-1.5 py-0.5 rounded hover:bg-white/5"
-                        title="نسخ العنوان"
+                        title={t('copy')}
                       >
                         {copiedAddress ? (
                           <>
                             <FaCheck className="w-2.5 h-2.5 text-[#C4A070]" />
-                            <span className="text-[#C4A070]">تم النسخ</span>
+                            <span className="text-[#C4A070]">{t('copied')}</span>
                           </>
                         ) : (
                           <>
                             <FaCopy className="w-2.5 h-2.5" />
-                            <span>نسخ</span>
+                            <span>{t('copy')}</span>
                           </>
                         )}
                       </button>
@@ -211,7 +234,7 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
                       {address}
                     </h3>
                     <p className="text-[10.5px] text-[#827771] leading-tight">
-                      مواقف سيارات VIP مجانية وخدمة استقبال خاصة لعملاء S&I Atelier.
+                      {t('address_desc')}
                     </p>
                     <div className="pt-1">
                       <a
@@ -221,7 +244,7 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
                         className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#C4A070] hover:text-[#E5C9A3] transition-colors"
                       >
                         <FaRoute className="w-2.5 h-2.5" />
-                        <span>الاتجاهات في خرائط Google</span>
+                        <span>{t('google_maps_directions')}</span>
                         <FaArrowUpRightFromSquare className="w-2 h-2" />
                       </a>
                     </div>
@@ -239,23 +262,23 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
                   </div>
                   <div className="space-y-2.5 flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-1.5">
-                      <span className="text-[10px] font-bold text-[#C4A070] uppercase tracking-wider">التواصل والمبيعات</span>
+                      <span className="text-[10px] font-bold text-[#C4A070] uppercase tracking-wider">{t('contact_sales_title')}</span>
                       {primaryPhone && (
                         <button 
                           onClick={handleCopyPhone}
                           type="button"
                           className="text-[10px] text-[#827771] hover:text-[#C4A070] flex items-center gap-1 transition-colors cursor-pointer px-1.5 py-0.5 rounded hover:bg-white/5"
-                          title="نسخ الرقم الرئيسي"
+                          title={t('copy')}
                         >
                           {copiedPhone ? (
                             <>
                               <FaCheck className="w-2.5 h-2.5 text-[#C4A070]" />
-                              <span className="text-[#C4A070]">تم النسخ</span>
+                              <span className="text-[#C4A070]">{t('copied')}</span>
                             </>
                           ) : (
                             <>
                               <FaCopy className="w-2.5 h-2.5" />
-                              <span>نسخ</span>
+                              <span>{t('copy')}</span>
                             </>
                           )}
                         </button>
@@ -270,13 +293,13 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
                           className="p-2 px-3 rounded-xl bg-[#1C1816] border border-white/5 hover:border-[#C4A070]/40 transition-all flex items-center justify-between group/num"
                         >
                           <div className="min-w-0">
-                            <span className="text-[9.5px] text-[#827771] block leading-tight">الهاتف الرئيسي / المعرض</span>
+                            <span className="text-[9.5px] text-[#827771] block leading-tight">{t('main_phone_label')}</span>
                             <span className="text-xs font-bold font-mono text-[#F2EFE8] group-hover/num:text-[#C4A070] transition-colors truncate block" dir="ltr">
                               {primaryPhone}
                             </span>
                           </div>
                           <span className="text-[9.5px] px-2 py-0.5 rounded bg-[#C4A070]/10 text-[#C4A070] font-bold shrink-0">
-                            اتصال
+                            {t('call')}
                           </span>
                         </a>
                       )}
@@ -288,13 +311,13 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
                           className="p-2 px-3 rounded-xl bg-[#1C1816] border border-white/5 hover:border-[#C4A070]/40 transition-all flex items-center justify-between group/num"
                         >
                           <div className="min-w-0">
-                            <span className="text-[9.5px] text-[#827771] block leading-tight">مشاريع القصور والفيلات</span>
+                            <span className="text-[9.5px] text-[#827771] block leading-tight">{t('vip_phone_label')}</span>
                             <span className="text-xs font-bold font-mono text-[#F2EFE8] group-hover/num:text-[#C4A070] transition-colors truncate block" dir="ltr">
                               {secondaryPhone}
                             </span>
                           </div>
                           <span className="text-[9.5px] px-2 py-0.5 rounded bg-[#C4A070]/10 text-[#C4A070] font-bold shrink-0">
-                            مباشر
+                            {t('direct')}
                           </span>
                         </a>
                       )}
@@ -304,13 +327,13 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-2 pt-0.5">
                       {whatsappNum && (
                         <a
-                          href={`https://wa.me/${whatsappNum}?text=${encodeURIComponent('مرحباً أتيليه، أود الاستفسار عن التصاميم وزيارة المعرض')}`}
+                          href={`https://wa.me/${whatsappNum}?text=${encodeURIComponent(isEn ? 'Hello S&I Atelier, I would like to inquire about bespoke designs and showroom visit' : 'مرحباً أتيليه، أود الاستفسار عن التصاميم وزيارة المعرض')}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="py-2 px-3 rounded-xl bg-[#C4A070]/15 border border-[#C4A070]/30 text-[#E3CAA9] hover:bg-[#C4A070] hover:text-[#1C1816] text-[11px] font-bold flex items-center justify-center gap-1.5 transition-all shadow-sm"
                         >
                           <FaWhatsapp className="w-3.5 h-3.5" />
-                          <span>واتساب فوري</span>
+                          <span>{t('instant_whatsapp')}</span>
                         </a>
                       )}
 
@@ -336,31 +359,31 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
                   <FaClock />
                 </div>
                 <div className="space-y-2 flex-1 min-w-0">
-                  <span className="text-[10px] font-bold text-[#C4A070] uppercase tracking-wider">مواعيد العمل واستقبال الزوار</span>
+                  <span className="text-[10px] font-bold text-[#C4A070] uppercase tracking-wider">{t('hours_title')}</span>
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div className="p-2 rounded-xl bg-[#1C1816] border border-white/5 space-y-0.5">
                       <div className="flex items-center justify-between text-[#F2EFE8] font-bold text-[11px]">
-                        <span>السبت — الخميس</span>
+                        <span>{t('sat_thu')}</span>
                         <span className="w-1.5 h-1.5 rounded-full bg-[#C4A070] animate-pulse"></span>
                       </div>
                       <p className="text-[#827771] text-[10px]">
-                        10:00 ص — 10:00 م
+                        {t('sat_thu_hours')}
                       </p>
                     </div>
 
                     <div className="p-2 rounded-xl bg-[#1C1816] border border-white/5 space-y-0.5">
                       <div className="flex items-center justify-between text-[#F2EFE8] font-bold text-[11px]">
-                        <span>يوم الجمعة</span>
+                        <span>{t('fri')}</span>
                         <span className="w-1.5 h-1.5 rounded-full bg-[#C4A070]"></span>
                       </div>
                       <p className="text-[#827771] text-[10px]">
-                        4:00 م — 10:00 م
+                        {t('fri_hours')}
                       </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-1.5 text-[10px] text-[#C4A070] pt-0.5">
                     <FaHeadset className="w-2.5 h-2.5 shrink-0" />
-                    <span className="leading-tight">استشارات كبار الشخصيات متاحة بموعد مسبق</span>
+                    <span className="leading-tight">{t('vip_consultation_notice')}</span>
                   </div>
                 </div>
               </div>
@@ -368,7 +391,7 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
 
           </div>
 
-          {/* LEFT COLUMN: Large Interactive Map (Original Full Height) */}
+          {/* MAP COLUMN */}
           <div className="flex-1 w-full flex flex-col">
             <div className="relative flex-1 min-h-[460px] lg:min-h-[560px] rounded-2xl sm:rounded-3xl overflow-hidden border border-[#C4A070]/30 bg-[#141110] shadow-2xl flex flex-col group">
               
@@ -377,7 +400,7 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
                 <div className="flex items-center gap-2 min-w-0">
                   <span className="w-2 h-2 rounded-full bg-[#C4A070] animate-ping"></span>
                   <span className="text-xs font-bold font-serif text-[#F2EFE8] truncate">
-                    صالة عرض S&I Atelier الفاخرة — الرياض
+                    {t('showroom_bar_title')}
                   </span>
                 </div>
 
@@ -388,7 +411,7 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
                     rel="noopener noreferrer"
                     className="px-3.5 py-1.5 rounded-xl bg-[#C4A070] hover:bg-[#E5C9A3] text-[#1C1816] text-[11px] font-bold flex items-center gap-1.5 shadow-md transition-all hover:scale-105"
                   >
-                    <span>فتح في الخرائط</span>
+                    <span>{t('open_maps')}</span>
                     <FaArrowUpRightFromSquare className="w-2 h-2" />
                   </a>
                 </div>
@@ -397,7 +420,7 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
               {/* Google Map Embed Iframe */}
               <div className="relative flex-1 w-full h-full min-h-[380px]">
                 <iframe
-                  title="موقع معرض أتيليه للأثاث الفاخر"
+                  title={t('showroom_bar_title')}
                   src={mapsEmbedSrc}
                   className="absolute inset-0 w-full h-full border-0 transition-opacity duration-300 brightness-90 contrast-105 hover:brightness-100"
                   allowFullScreen
@@ -420,7 +443,7 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
                   rel="noopener noreferrer"
                   className="text-[11px] font-bold text-[#C4A070] hover:text-[#E5C9A3] shrink-0 flex items-center gap-1 transition-colors"
                 >
-                  <span>احصل على الاتجاهات</span>
+                  <span>{t('get_directions')}</span>
                   <FaRoute className="w-2.5 h-2.5" />
                 </a>
               </div>
@@ -431,7 +454,7 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
         </motion.div>
       </div>
 
-      {/* 4. LUXURY CONTACT FORM (Transparent / No Background Card) */}
+      {/* 4. LUXURY CONTACT FORM */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 w-full pt-4">
         <motion.div 
           initial="hidden"
@@ -443,16 +466,16 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
           <div className="relative z-10 space-y-6">
             {/* Form Header */}
             <div className="border-b border-[#C4A070]/20 pb-5">
-              <div className="space-y-2 text-right">
+              <div className="space-y-2 text-start">
                 <div className="flex items-center gap-2 text-xs font-bold text-[#C4A070]">
                   <FaPaperPlane className="w-3.5 h-3.5" />
-                  <span className="tracking-wider uppercase">تواصل معنا واحجز استشارتك الخاصة</span>
+                  <span className="tracking-wider uppercase">{t('form_badge')}</span>
                 </div>
                 <h3 className="text-xl sm:text-2xl font-serif font-bold text-[#F2EFE8]">
-                  ابدأ بتصميم وتأثيث مساحتك الاستثنائية
+                  {t('form_title')}
                 </h3>
                 <p className="text-xs sm:text-sm text-[#DEDAD6] leading-relaxed">
-                  يسعدنا استقبال استفساراتكم وترتيب موعد لمعاينة الخامات في المعرض أو استشارة هندسية لمشروعكم.
+                  {t('form_desc')}
                 </p>
               </div>
             </div>
@@ -471,10 +494,10 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
                   </div>
                   <div className="space-y-1.5">
                     <h4 className="font-serif text-xl font-bold text-[#F2EFE8]">
-                      تم استلام طلبكم بنجاح!
+                      {t('success_title')}
                     </h4>
                     <p className="text-xs sm:text-sm text-[#DEDAD6] max-w-lg mx-auto leading-relaxed">
-                      شكراً لاهتمامكم بـ S&I Atelier. سيتواصل معكم مستشار التصميم المعماري عبر الهاتف أو واتساب لمناقشة كافة التفاصيل والمواعيد.
+                      {t('success_desc')}
                     </p>
                   </div>
                   <div className="flex flex-wrap items-center justify-center gap-3 pt-3">
@@ -483,13 +506,13 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
                       className="px-6 py-3 rounded-xl gold-btn-primary font-bold text-xs flex items-center gap-2 shadow-lg transition-all cursor-pointer"
                     >
                       <FaWhatsapp className="w-4 h-4" />
-                      <span>فتح المحادثة في واتساب مباشرة</span>
+                      <span>{t('open_whatsapp_direct')}</span>
                     </button>
                     <button
                       onClick={handleResetForm}
-                      className="px-5 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-[#DEDAD6] text-xs font-medium border border-white/10 transition-all cursor-pointer"
+                      className="px-6 py-3 rounded-full bg-white/5 hover:bg-white/10 text-[#DEDAD6] text-xs font-medium border border-white/10 transition-all cursor-pointer"
                     >
-                      <span>إرسال استفسار آخر</span>
+                      <span>{t('send_another')}</span>
                     </button>
                   </div>
                 </motion.div>
@@ -503,18 +526,18 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
                   className="space-y-5"
                 >
                   {/* Inputs Grid: 2 columns */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-start">
                     {/* Name */}
                     <div className="space-y-2">
                       <label className="text-xs font-bold text-[#F2EFE8] flex items-center gap-2">
                         <FaUser className="w-3 h-3 text-[#C4A070]" />
-                        <span>الاسم الكريم *</span>
+                        <span>{t('name_label')}</span>
                       </label>
                       <input
                         type="text"
                         name="name"
                         required
-                        placeholder="مثال: م. فهد السليمان"
+                        placeholder={t('name_placeholder')}
                         value={formData.name}
                         onChange={handleInputChange}
                         className="w-full px-4 py-3 rounded-xl bg-[#141110] border border-[#C4A070]/35 focus:border-[#C4A070] text-[#F2EFE8] placeholder-[#A69B95] text-xs sm:text-sm outline-none transition-all shadow-sm focus:ring-1 focus:ring-[#C4A070]/40"
@@ -525,17 +548,17 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
                     <div className="space-y-2">
                       <label className="text-xs font-bold text-[#F2EFE8] flex items-center gap-2">
                         <FaPhone className="w-3 h-3 text-[#C4A070]" />
-                        <span>رقم الجوال / واتساب *</span>
+                        <span>{t('phone_label')}</span>
                       </label>
                       <input
                         type="tel"
                         name="phone"
                         required
-                        placeholder="05XXXXXXXX أو +966"
+                        placeholder={t('phone_placeholder')}
                         value={formData.phone}
                         onChange={handleInputChange}
                         dir="ltr"
-                        className="w-full px-4 py-3 rounded-xl bg-[#141110] border border-[#C4A070]/35 focus:border-[#C4A070] text-[#F2EFE8] placeholder-[#A69B95] text-xs sm:text-sm outline-none transition-all text-right font-mono shadow-sm focus:ring-1 focus:ring-[#C4A070]/40"
+                        className="w-full px-4 py-3 rounded-xl bg-[#141110] border border-[#C4A070]/35 focus:border-[#C4A070] text-[#F2EFE8] placeholder-[#A69B95] text-xs sm:text-sm outline-none transition-all text-start font-mono shadow-sm focus:ring-1 focus:ring-[#C4A070]/40"
                       />
                     </div>
 
@@ -543,7 +566,7 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
                     <div className="space-y-2">
                       <label className="text-xs font-bold text-[#F2EFE8] flex items-center gap-2">
                         <FaPen className="w-3 h-3 text-[#C4A070]" />
-                        <span>نوع المشروع أو الاستفسار</span>
+                        <span>{t('service_label')}</span>
                       </label>
                       <select
                         name="serviceType"
@@ -552,11 +575,11 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
                         style={{ color: '#F2EFE8', backgroundColor: '#141110' }}
                         className="w-full px-4 py-3 rounded-xl bg-[#141110] border border-[#C4A070]/35 focus:border-[#C4A070] text-[#F2EFE8] text-xs sm:text-sm outline-none transition-all cursor-pointer font-medium shadow-sm focus:ring-1 focus:ring-[#C4A070]/40"
                       >
-                        <option value="استشارة تصميم وتأثيث لقصر أو فيلا" style={{ backgroundColor: '#141110', color: '#F2EFE8' }}>تأثيث قصر أو فيلا كاملة</option>
-                        <option value="تنفيذ وتفصيل قطع أثاث خاصة (Bespoke)" style={{ backgroundColor: '#141110', color: '#F2EFE8' }}>تنفيذ وتفصيل قطع خاصة (Bespoke)</option>
-                        <option value="زيارة خاصة لصالة العرض ومعاينة الخامات" style={{ backgroundColor: '#141110', color: '#F2EFE8' }}>حجز زيارة صالة العرض</option>
-                        <option value="استفسار عن أسعار وتوافر قطع الإصدار المحدود" style={{ backgroundColor: '#141110', color: '#F2EFE8' }}>استفسار عن قطع الإصدار المحدود</option>
-                        <option value="تعاون هندسي ومشاريع معمارية" style={{ backgroundColor: '#141110', color: '#F2EFE8' }}>تعاون هندسي ومعماري</option>
+                        <option value="fullVilla" style={{ backgroundColor: '#141110', color: '#F2EFE8' }}>{t('service_options.villa')}</option>
+                        <option value="bespoke" style={{ backgroundColor: '#141110', color: '#F2EFE8' }}>{t('service_options.bespoke')}</option>
+                        <option value="visit" style={{ backgroundColor: '#141110', color: '#F2EFE8' }}>{t('service_options.visit')}</option>
+                        <option value="limited" style={{ backgroundColor: '#141110', color: '#F2EFE8' }}>{t('service_options.limited')}</option>
+                        <option value="collab" style={{ backgroundColor: '#141110', color: '#F2EFE8' }}>{t('service_options.collab')}</option>
                       </select>
                     </div>
 
@@ -564,7 +587,7 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
                     <div className="space-y-2">
                       <label className="text-xs font-bold text-[#F2EFE8] flex items-center gap-2">
                         <FaCalendarDays className="w-3 h-3 text-[#C4A070]" />
-                        <span>الوقت المفضل للتواصل</span>
+                        <span>{t('time_label')}</span>
                       </label>
                       <select
                         name="preferredTime"
@@ -573,23 +596,23 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
                         style={{ color: '#F2EFE8', backgroundColor: '#141110' }}
                         className="w-full px-4 py-3 rounded-xl bg-[#141110] border border-[#C4A070]/35 focus:border-[#C4A070] text-[#F2EFE8] text-xs sm:text-sm outline-none transition-all cursor-pointer font-medium shadow-sm focus:ring-1 focus:ring-[#C4A070]/40"
                       >
-                        <option value="صباحاً (10 ص - 2 م)" style={{ backgroundColor: '#141110', color: '#F2EFE8' }}>صباحاً (10:00 ص — 2:00 م)</option>
-                        <option value="مساءً (4 م - 10 م)" style={{ backgroundColor: '#141110', color: '#F2EFE8' }}>مساءً (4:00 م — 10:00 م)</option>
-                        <option value="في أي وقت مناسب" style={{ backgroundColor: '#141110', color: '#F2EFE8' }}>في أي وقت يناسبكم</option>
-                        <option value="عبر واتساب فقط" style={{ backgroundColor: '#141110', color: '#F2EFE8' }}>تواصل عبر واتساب فقط</option>
+                        <option value="morning" style={{ backgroundColor: '#141110', color: '#F2EFE8' }}>{t('time_options.morning')}</option>
+                        <option value="evening" style={{ backgroundColor: '#141110', color: '#F2EFE8' }}>{t('time_options.evening')}</option>
+                        <option value="anytime" style={{ backgroundColor: '#141110', color: '#F2EFE8' }}>{t('time_options.anytime')}</option>
+                        <option value="whatsapp_only" style={{ backgroundColor: '#141110', color: '#F2EFE8' }}>{t('time_options.whatsapp_only')}</option>
                       </select>
                     </div>
                   </div>
 
                   {/* Message Textarea */}
-                  <div className="space-y-2">
+                  <div className="space-y-2 text-start">
                     <label className="text-xs font-bold text-[#F2EFE8] flex items-center gap-2">
-                      <span>تفاصيل الطلب أو الملاحظات (المساحة، القطع المطلوبة، الخامات المفضلة كالرخام أو الجوز...)</span>
+                      <span>{t('message_label')}</span>
                     </label>
                     <textarea
                       name="message"
                       rows={3}
-                      placeholder="اكتب نبذة مختصرة عن المساحة أو التصميم الذي ترغب في تنفيذه..."
+                      placeholder={t('message_placeholder')}
                       value={formData.message}
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 rounded-xl bg-[#141110] border border-[#C4A070]/35 focus:border-[#C4A070] text-[#F2EFE8] placeholder-[#A69B95] text-xs sm:text-sm outline-none transition-all resize-none shadow-sm focus:ring-1 focus:ring-[#C4A070]/40"
@@ -610,10 +633,10 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
                       transition={springHover}
                       type="button"
                       onClick={handleDirectWhatsApp}
-                      className="w-full sm:w-auto py-3 px-6 rounded-xl bg-[#C4A070]/15 hover:bg-[#C4A070] hover:text-[#1C1816] border border-[#C4A070]/40 text-[#E3CAA9] font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
+                      className="w-full sm:w-auto py-3.5 px-7 rounded-full bg-[#C4A070]/15 hover:bg-[#C4A070] hover:text-[#1C1816] border border-[#C4A070]/40 text-[#E3CAA9] font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
                     >
                       <FaWhatsapp className="w-4 h-4" />
-                      <span>إرسال فوري عبر واتساب</span>
+                      <span>{t('instant_whatsapp_btn')}</span>
                     </motion.button>
 
                     <motion.button
@@ -622,17 +645,17 @@ export default function ContactShowroomSection({ settings }: ContactShowroomSect
                       transition={springHover}
                       type="submit"
                       disabled={formStatus.submitting}
-                      className="w-full sm:w-auto py-3 px-8 rounded-xl gold-btn-primary font-bold text-xs flex items-center justify-center gap-2 shadow-lg transition-all cursor-pointer disabled:opacity-50"
+                      className="w-full sm:w-auto py-3.5 px-8 rounded-full gold-btn-primary font-bold text-xs flex items-center justify-center gap-2 shadow-lg transition-all cursor-pointer disabled:opacity-50"
                     >
                       {formStatus.submitting ? (
                         <>
                           <FaSpinner className="w-3.5 h-3.5 animate-spin" />
-                          <span>جاري إرسال طلبكم...</span>
+                          <span>{t('submitting')}</span>
                         </>
                       ) : (
                         <>
                           <FaPaperPlane className="w-3 h-3" />
-                          <span>إرسال طلب الاستشارة</span>
+                          <span>{t('submit_btn')}</span>
                         </>
                       )}
                     </motion.button>

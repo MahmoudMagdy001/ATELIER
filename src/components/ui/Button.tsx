@@ -7,21 +7,25 @@ const MotionLink = motion.create(Link)
 
 const variants = {
   primary:
-    'bg-[#C5A880] text-white hover:bg-[#B59362] font-semibold shadow-md shadow-[#C5A880]/20',
+    'gold-btn-primary font-bold shadow-lg shadow-[#C4A070]/25 rounded-full',
   secondary:
-    'border-2 border-[#C5A880] text-[#C5A880] hover:bg-[#C5A880] hover:text-white font-semibold',
+    'gold-btn-secondary font-semibold rounded-full',
   outline:
-    'border border-[#E6E1DC] text-[#5C544E] hover:border-[#C5A880] hover:text-[#14110F] font-medium bg-white',
+    'border border-[#C4A070]/40 text-[#C4A070] hover:bg-[#C4A070]/15 hover:border-[#C4A070] hover:text-white font-semibold rounded-full',
   ghost:
-    'text-[#5C544E] hover:bg-[#FAF8F5] font-medium',
+    'text-[#C4A070] hover:bg-white/5 hover:text-[#F2EFE8] font-medium rounded-full',
   luxury:
-    'bg-[#2B2623] text-[#FAF8F5] hover:bg-[#14110F] font-medium shadow-md',
+    'bg-[#1C1816] text-[#F2EFE8] border border-[#C4A070]/30 hover:border-[#C4A070] hover:bg-[#26211F] font-medium rounded-full shadow-md',
+  admin:
+    'bg-[#141110] text-white hover:bg-[#26211F] font-bold rounded-xl border border-white/10 shadow-sm',
+  'admin-outline':
+    'border border-[#E6E1DC] text-[#5C544E] hover:border-[#C4A070] hover:text-[#141110] font-medium bg-white rounded-xl',
 }
 
 const sizes = {
-  sm: 'px-3.5 py-1.5 text-xs rounded-xl gap-1.5',
-  md: 'px-5 py-2.5 text-sm rounded-xl gap-2',
-  lg: 'px-7 py-3 text-base rounded-2xl gap-2.5',
+  sm: 'px-4 py-1.5 text-xs gap-1.5',
+  md: 'px-6 py-2.5 text-xs sm:text-sm gap-2',
+  lg: 'px-8 py-3.5 text-sm sm:text-base gap-2.5',
 }
 
 export type ButtonVariant = keyof typeof variants
@@ -52,9 +56,10 @@ const Button = memo(function Button({
   href,
   to,
   className = '',
+  disabled,
   ...props
 }: ButtonProps) {
-  const classes = `inline-flex items-center justify-center transition-all duration-200 cursor-pointer ${variants[variant] || variants.primary} ${sizes[size] || sizes.md} ${className}`
+  const classes = `inline-flex items-center justify-center transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed ${variants[variant] || variants.primary} ${sizes[size] || sizes.md} ${className}`
 
   const content = (
     <>
@@ -64,7 +69,7 @@ const Button = memo(function Button({
     </>
   )
 
-  if (to) {
+  if (to && !disabled) {
     return (
       <MotionLink
         to={to}
@@ -78,7 +83,7 @@ const Button = memo(function Button({
     )
   }
 
-  if (href) {
+  if (href && !disabled) {
     return (
       <motion.a
         href={href}
@@ -97,8 +102,9 @@ const Button = memo(function Button({
   return (
     <motion.button
       className={classes}
-      whileHover={hoverScale}
-      whileTap={tapScale}
+      whileHover={disabled ? undefined : hoverScale}
+      whileTap={disabled ? undefined : tapScale}
+      disabled={disabled}
       {...props}
     >
       {content}

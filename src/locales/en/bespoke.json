@@ -1,0 +1,89 @@
+{
+  "meta_title": "Bespoke Architectural Commissions | S&I Atelier",
+  "meta_description": "Crafting refined furnishings and exclusive architectural spaces tailored to blueprints for palaces and private villas.",
+  "hero_title_pre": "Bespoke Architectural",
+  "hero_title_highlight": "Commissions",
+  "hero_subtitle": "Crafting refined furnishings and sculptured spaces tailored to the exact millimeter of your palace or private villa blueprints.",
+  "philosophy_badge": "THE ATELIER PHILOSOPHY",
+  "philosophy_title": "Translating Blueprint Visions into Legacy Masterpieces",
+  "philosophy_desc": "At S&I Atelier, we reject commercial uniformity; every architectural space possesses its own distinctive sculptural soul. We harmonize imported Italian bookmatched marbles, aged European walnut, and haute couture leathers to sculpt singular works designed specifically for your estate's proportions, lighting vectors, and sightlines.",
+  "feature1_title": "100% Architectural Precision",
+  "feature1_desc": "Precise execution matching CAD blueprints and spatial floorplans with zero tolerance for error.",
+  "feature2_title": "Certified Rare Natural Materials",
+  "feature2_desc": "Curated selection of bookmatched marbles, aged solid hardwoods, and hand-finished bronze.",
+  "feature3_title": "VIP White-Glove Installation",
+  "feature3_desc": "Specialist engineering team supervising seamless site installation and handover of certified warranty.",
+  "capabilities_badge": "BESPOKE CAPABILITIES",
+  "capabilities_title": "Architectural Craftsmanship Across Every Chamber",
+  "capabilities_desc": "Comprehensive custom solutions brought to life by master artisans according to your interior schemes.",
+  "capabilities": [
+    {
+      "id": "majlis",
+      "title": "Palatial Majlis & Grand Salons",
+      "desc": "Exclusive seating ensembles sculpted to bespoke dimensional footprints with luxury European couture textiles."
+    },
+    {
+      "id": "dining",
+      "title": "Monolithic Marble Dining Tables",
+      "desc": "Expansive dining centerpieces carved from continuous marble slabs, paired with solid hand-burnished metal frameworks."
+    },
+    {
+      "id": "suites",
+      "title": "Master Suites & Bespoke Dressing Rooms",
+      "desc": "Integrated architectural bedheads and custom joinery dressing suites with precision soft-close engineering."
+    },
+    {
+      "id": "paneling",
+      "title": "Architectural Wall Paneling & Library Joinery",
+      "desc": "Fluted European walnut wall claddings and monumental built-in libraries with integrated concealed ambient illumination."
+    }
+  ],
+  "process_badge": "THE BESPOKE JOURNEY",
+  "process_title": "The Path from Blueprint to Heirloom",
+  "process_desc": "From our initial structural review to final placement in your residence, our disciplined milestones guarantee unparalleled distinction.",
+  "step_certified": "Certified & Documented Milestone",
+  "steps": [
+    {
+      "step": "01",
+      "title": "Blueprint & Spatial Consultation",
+      "description": "Private consultation analyzing architectural plans, lighting vectors, spatial clearances, and optimal elevation balance."
+    },
+    {
+      "step": "02",
+      "title": "Rare Material Curation",
+      "description": "Tactile review of imported natural stone slabs, burled walnut timbers, and Italian couture textile swatches."
+    },
+    {
+      "step": "03",
+      "title": "Artisanal Atelier Crafting",
+      "description": "Millimeter-precision handcrafting within our private workshops by master joiners, carvers, and gilders."
+    },
+    {
+      "step": "04",
+      "title": "White-Glove VIP Placement & Warranty",
+      "description": "Discreet white-glove transport, structural installation by senior engineers, and official handover of the 10-Year Warranty."
+    }
+  ],
+  "standards_badge": "EXCLUSIVITY & TRUST STANDARDS",
+  "standards_title": "S&I Atelier Pillars of Distinction",
+  "standards": [
+    {
+      "title": "Certified 10-Year Comprehensive Warranty",
+      "desc": "Complete documented guarantee covering internal frameworks, structural joinery, and natural stone stability."
+    },
+    {
+      "title": "Certificate of Authenticity & Provenance",
+      "desc": "Every bespoke piece is accompanied by an authenticated certificate with a unique serial registry recording material origins and crafting date."
+    },
+    {
+      "title": "Absolute VIP Privacy & Discretion",
+      "desc": "Strict contractual confidentiality regarding architectural floorplans, project locations, and client identities."
+    }
+  ],
+  "cta_badge": "DIRECT CONCIERGE ACCESS",
+  "cta_title": "Ready to Sculpt Your Bespoke Masterpiece?",
+  "cta_desc": "Connect directly with S&I Atelier senior design principals to reserve a private consultation and tactile material preview.",
+  "phone_label": "Direct Concierge Line",
+  "whatsapp_btn": "Instant WhatsApp Advisory",
+  "whatsapp_message": "Hello S&I Atelier, I would like to reserve a consultation regarding bespoke furnishings for a private villa/estate."
+}

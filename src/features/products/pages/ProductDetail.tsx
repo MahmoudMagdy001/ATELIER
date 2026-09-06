@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import { productService } from '../services/productService'
 import { adminService } from '../../admin/services/adminService'
 import SEO from '../../../components/ui/SEO'
@@ -27,6 +28,9 @@ export interface GalleryImageItem {
 }
 
 export default function ProductDetail() {
+  const { t, i18n } = useTranslation('products')
+  const isEn = i18n.language?.startsWith('en')
+
   const { slug } = useParams<{ slug: string }>()
   const [product, setProduct] = useState<LimitedEdition | null>(null)
   const [settings, setSettings] = useState<SiteSettings | null>(null)
@@ -78,9 +82,10 @@ export default function ProductDetail() {
     if (product.main_image && !seen.has(product.main_image)) {
       seen.add(product.main_image)
       const matchedVariant = findVariantForImage(product.main_image)
+      const variantName = matchedVariant ? (isEn ? (matchedVariant.name_en || matchedVariant.name) : matchedVariant.name) : null
       list.push({
         url: product.main_image,
-        label: matchedVariant?.name || product.title || 'الصورة الرئيسية',
+        label: variantName || (isEn ? (product.title_en || product.title) : product.title) || t('main_image_label'),
         variant: matchedVariant
       })
     }
@@ -89,9 +94,10 @@ export default function ProductDetail() {
       product.variants.forEach((v) => {
         if (v.image && !seen.has(v.image)) {
           seen.add(v.image)
+          const vName = isEn ? (v.name_en || v.name) : v.name
           list.push({
             url: v.image,
-            label: v.name || 'خيار المنتج',
+            label: vName || t('variant_option_label'),
             variant: v
           })
         }
@@ -99,7 +105,7 @@ export default function ProductDetail() {
     }
 
     return list
-  }, [product])
+  }, [product, t, isEn])
 
   const handleSelectVariant = (variant: ProductVariant) => {
     setSelectedVariant(variant)
@@ -122,37 +128,48 @@ export default function ProductDetail() {
     }
   }
 
-  if (loading) return <PageLoading text="جار تحميل مواصفات القطعة..." />
+  if (loading) return <PageLoading text={t('loading_product')} />
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-[#1C1816] text-[#F2EFE8] flex items-center justify-center p-6 text-center pt-20" dir="rtl">
+      <div className="min-h-screen bg-[#1C1816] text-[#F2EFE8] flex items-center justify-center p-6 text-center pt-20">
         <div className="space-y-4">
-          <h2 className="text-xl font-bold font-serif text-[#C4A070]">المنتج غير متوفر</h2>
-          <p className="text-xs text-[#827771]">قد يكون تم نقل القطعة أو تعديل رابطها.</p>
-          <Link to="/products" className="inline-block px-5 py-2 rounded-xl bg-[#C4A070] text-[#1C1816] text-xs font-bold">
-            العودة لكتالوج المنتجات
+          <h2 className="text-xl font-bold font-serif text-[#C4A070]">{t('product_not_found')}</h2>
+          <p className="text-xs text-[#827771]">{t('product_not_found_desc')}</p>
+          <Link to="/limited-edition" className="inline-block px-5 py-2 rounded-xl bg-[#C4A070] text-[#1C1816] text-xs font-bold">
+            {t('back_to_catalog')}
           </Link>
         </div>
       </div>
     )
   }
 
+  const productTitle = isEn ? (product.title_en || product.title) : product.title
+  const productDesc = isEn ? (product.description_en || product.description) : product.description
+  const productBadge = isEn ? (product.badge_en || product.badge) : product.badge
+  const productMetaTitle = isEn ? (product.meta_title_en || product.meta_title || `${productTitle} | S&I Atelier`) : (product.meta_title || `${product.title} | S&I Atelier`)
+  const productMetaDesc = isEn ? (product.meta_description_en || product.meta_description || productDesc) : (product.meta_description || product.description)
+
   const currentPrice = Number(selectedVariant?.price) || 0
+  const selectedVariantName = selectedVariant ? (isEn ? (selectedVariant.name_en || selectedVariant.name) : selectedVariant.name) : ''
   const rawWhatsapp = CONTACT_INFO.whatsappRaw
   const whatsappMessage = encodeURIComponent(
-    `مرحباً أتيليه، أود الاستفسار وحجز القطعة الفاخرة: "${product.title}"` +
-    (selectedVariant ? `\nالخيار المحدد: ${selectedVariant.name}\nالسعر: ${Number(currentPrice).toLocaleString()} ر.س` : '') +
-    `\nالرابط: ${typeof window !== 'undefined' ? window.location.href : ''}`
+    (isEn 
+      ? `Hello S&I Atelier, I would like to inquire about and reserve the luxury piece: "${productTitle}"`
+      : `مرحباً أتيليه، أود الاستفسار وحجز القطعة الفاخرة: "${productTitle}"`) +
+    (selectedVariant 
+      ? `\n${isEn ? 'Selected option:' : 'الخيار المحدد:'} ${selectedVariantName}\n${isEn ? 'Price:' : 'السعر:'} ${Number(currentPrice).toLocaleString(isEn ? 'en-US' : 'ar-SA')} ${t('sar')}` 
+      : '') +
+    `\n${isEn ? 'Link:' : 'الرابط:'} ${typeof window !== 'undefined' ? window.location.href : ''}`
   )
   const whatsappUrl = `https://wa.me/${rawWhatsapp}?text=${whatsappMessage}`
   const contactPhone = CONTACT_INFO.phone
 
   return (
-    <div className="bg-transparent text-[#F2EFE8] min-h-screen font-sans pt-28 md:pt-32" dir="rtl">
+    <div className="bg-transparent text-[#F2EFE8] min-h-screen font-sans pt-28 md:pt-32">
       <SEO
-        title={product.meta_title || `${product.title} | ATELIER`}
-        description={product.meta_description || product.description}
+        title={productMetaTitle}
+        description={productMetaDesc}
         image={activeImage || product.main_image}
         slug={`products/${product.slug}`}
         keywords={product.keywords}
@@ -168,11 +185,11 @@ export default function ProductDetail() {
       <div className="max-w-7xl mx-auto px-6 py-10 space-y-10">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-xs text-[#827771] mb-8 overflow-x-auto whitespace-nowrap">
-          <Link to="/" className="hover:text-[#C4A070] transition-colors">الرئيسية</Link>
+          <Link to="/" className="hover:text-[#C4A070] transition-colors">{t('breadcrumb_home')}</Link>
           <span>/</span>
-          <Link to="/limited-edition" className="hover:text-[#C4A070] transition-colors">قطع ذات إصدار محدود</Link>
+          <Link to="/limited-edition" className="hover:text-[#C4A070] transition-colors">{t('breadcrumb_limited')}</Link>
           <span>/</span>
-          <span className="text-[#C4A070]">{product.title}</span>
+          <span className="text-[#C4A070]">{productTitle}</span>
         </div>
 
         {/* Main Product Section */}
@@ -192,12 +209,12 @@ export default function ProductDetail() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.35 }}
                 src={activeImage || product.main_image || ''}
-                alt={product.title}
+                alt={productTitle}
                 className="w-full h-full object-cover"
               />
-              {product.badge && (
-                <span className="absolute top-5 right-5 px-4 py-1.5 rounded-full text-xs font-bold bg-[#C4A070] text-[#1C1816] shadow-lg">
-                  {product.badge}
+              {productBadge && (
+                <span className="absolute top-5 end-5 px-4 py-1.5 rounded-full text-xs font-bold bg-[#C4A070] text-[#1C1816] shadow-lg">
+                  {productBadge}
                 </span>
               )}
             </div>
@@ -231,40 +248,40 @@ export default function ProductDetail() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
-            className="lg:col-span-5 space-y-6 bg-[#141110] p-8 rounded-3xl border border-[#C4A070]/20 shadow-xl"
+            className="lg:col-span-5 space-y-6 bg-[#141110] p-8 rounded-3xl border border-[#C4A070]/20 shadow-xl text-start"
           >
             
             <div>
               <span className="text-[11px] font-bold tracking-widest text-[#C4A070] uppercase">
-                ATELIER BESPOKE CREATION
+                {t('badge_bespoke_creation')}
               </span>
               <h1 className="text-2xl md:text-3xl font-serif font-bold text-[#F2EFE8] mt-1 leading-snug">
-                {product.title}
+                {productTitle}
               </h1>
             </div>
 
             {/* Dynamic Active Price */}
             <div className="p-4 rounded-2xl bg-[#1C1816] border border-[#C4A070]/30 flex items-center justify-between">
               <div>
-                <span className="text-[10px] text-[#827771] block font-medium">السعر للخيارات المحددة</span>
+                <span className="text-[10px] text-[#827771] block font-medium">{t('price_selected_label')}</span>
                 <div className="text-2xl font-serif font-black text-[#E3CAA9] tracking-wide">
                   {currentPrice > 0 ? (
                     <>
-                      {Number(currentPrice).toLocaleString()} <span className="text-sm text-[#C4A070] font-sans font-normal">ر.س</span>
+                      {Number(currentPrice).toLocaleString(isEn ? 'en-US' : 'ar-SA')} <span className="text-sm text-[#C4A070] font-sans font-normal">{t('sar')}</span>
                     </>
                   ) : (
-                    <span className="text-base text-[#B3A9A3]">حسب التخصيص والمقاس</span>
+                    <span className="text-base text-[#B3A9A3]">{t('custom_size_price')}</span>
                   )}
                 </div>
               </div>
               <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-[#C4A070]/15 text-[#E3CAA9] border border-[#C4A070]/30">
-                شامل التصنيع والضمان
+                {t('warranty_included')}
               </span>
             </div>
 
             {/* Product Description */}
             <p className="text-xs md:text-sm text-[#B3A9A3] leading-relaxed">
-              {product.description}
+              {productDesc}
             </p>
 
             {/* Interactive Variants Selector */}
@@ -272,18 +289,19 @@ export default function ProductDetail() {
               <div className="space-y-3 pt-2">
                 <label className="text-xs font-bold text-[#F2EFE8] flex items-center gap-2">
                   <FaLayerGroup className="text-[#C4A070] w-3.5 h-3.5" />
-                  <span>اختر المقاس / اللون / الخامة:</span>
+                  <span>{t('select_variant_label')}</span>
                 </label>
 
                 <div className="grid gap-2.5">
                   {product.variants.map((variant) => {
                     const isSelected = selectedVariant?.id === variant.id
+                    const vName = isEn ? (variant.name_en || variant.name) : variant.name
                     return (
                       <button
                         key={variant.id}
                         type="button"
                         onClick={() => handleSelectVariant(variant)}
-                        className={`w-full p-3.5 rounded-2xl border text-right transition-all flex items-center justify-between cursor-pointer ${
+                        className={`w-full p-3.5 rounded-2xl border text-start transition-all flex items-center justify-between cursor-pointer ${
                           isSelected
                             ? 'bg-[#C4A070]/15 border-[#C4A070] text-[#F2EFE8] shadow-lg shadow-[#C4A070]/10 ring-1 ring-[#C4A070]'
                             : 'bg-[#1C1816]/60 border-white/5 text-[#B3A9A3] hover:border-[#C4A070]/40'
@@ -296,14 +314,14 @@ export default function ProductDetail() {
                             {isSelected && <FaCheck className="w-2.5 h-2.5 text-[#1C1816]" />}
                           </div>
                           <div>
-                            <span className="text-xs font-bold block text-[#F2EFE8]">{variant.name}</span>
+                            <span className="text-xs font-bold block text-[#F2EFE8]">{vName}</span>
                             {variant.sku && <span className="text-[10px] text-[#827771] font-mono">SKU: {variant.sku}</span>}
                           </div>
                         </div>
 
-                        <div className="text-left">
+                        <div className="text-end">
                           <span className="text-sm font-black font-serif text-[#E3CAA9] block">
-                            {Number(variant.price).toLocaleString()} <span className="text-[10px] text-[#C4A070] font-sans font-normal">ر.س</span>
+                            {Number(variant.price).toLocaleString(isEn ? 'en-US' : 'ar-SA')} <span className="text-[10px] text-[#C4A070] font-sans font-normal">{t('sar')}</span>
                           </span>
                         </div>
                       </button>
@@ -317,10 +335,10 @@ export default function ProductDetail() {
             <div className="p-4 rounded-2xl bg-[#1C1816]/90 border border-[#C4A070]/25 space-y-1">
               <span className="text-[11px] font-bold text-[#C4A070] flex items-center gap-1.5 uppercase tracking-wider">
                 <FaGem className="w-3 h-3" />
-                <span>خدمة التفصيل الخاص • BESPOKE ADAPTATION</span>
+                <span>{t('bespoke_notice_title')}</span>
               </span>
               <p className="text-[11px] text-[#B3A9A3] leading-relaxed">
-                هل تحتاج أبعاداً أو خامات رخام أو أقمشة خاصة؟ نوفر تعديلاً هندسياً كاملاً للقطعة لتطابق مخطط مساحتك تماماً.
+                {t('bespoke_notice_desc')}
               </p>
             </div>
 
@@ -330,18 +348,18 @@ export default function ProductDetail() {
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-4 rounded-2xl gold-btn-primary text-[#1C1816] font-bold text-xs flex items-center justify-center gap-2.5 shadow-xl transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+                className="w-full py-4 rounded-full gold-btn-primary text-[#1C1816] font-bold text-xs flex items-center justify-center gap-2.5 shadow-xl transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
               >
                 <FaWhatsapp className="w-4 h-4" />
-                <span>طلب القطعة والتفصيل عبر واتساب</span>
+                <span>{t('order_whatsapp')}</span>
               </a>
 
               <a
                 href={`tel:${contactPhone.replace(/\s+/g, '')}`}
-                className="w-full py-3.5 rounded-2xl gold-btn-secondary text-[#F2EFE8] font-semibold text-xs flex items-center justify-center gap-2 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="w-full py-3.5 rounded-full gold-btn-secondary text-[#F2EFE8] font-semibold text-xs flex items-center justify-center gap-2 transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
                 <FaPhone className="w-3.5 h-3.5 text-[#C4A070]" />
-                <span>استشارة معمارية مع كبير المصممين</span>
+                <span>{t('architect_consult')}</span>
               </a>
             </div>
 
@@ -349,15 +367,15 @@ export default function ProductDetail() {
             <div className="grid grid-cols-3 gap-2 pt-4 text-center border-t border-white/5 text-[10px] text-[#B3A9A3]">
               <div className="space-y-1">
                 <FaGem className="w-4 h-4 mx-auto text-[#C4A070]" />
-                <p>خامات إيطالية طبيعية</p>
+                <p>{t('guarantee_materials')}</p>
               </div>
               <div className="space-y-1">
                 <FaShieldHalved className="w-4 h-4 mx-auto text-[#C4A070]" />
-                <p>ضمان شامل 10 سنوات</p>
+                <p>{t('guarantee_warranty')}</p>
               </div>
               <div className="space-y-1">
                 <FaTruckFast className="w-4 h-4 mx-auto text-[#C4A070]" />
-                <p>توصيل وتركيب VIP</p>
+                <p>{t('guarantee_delivery')}</p>
               </div>
             </div>
 

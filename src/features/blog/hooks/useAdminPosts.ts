@@ -15,10 +15,14 @@ export function useAdminPosts() {
 
   // Basic Form fields
   const [title, setTitle] = useState<string>('')
+  const [titleEn, setTitleEn] = useState<string>('')
   const [slug, setSlug] = useState<string>('')
   const [excerpt, setExcerpt] = useState<string>('')
+  const [excerptEn, setExcerptEn] = useState<string>('')
   const [content, setContent] = useState<string>('')
+  const [contentEn, setContentEn] = useState<string>('')
   const [author, setAuthor] = useState<string>('')
+  const [authorEn, setAuthorEn] = useState<string>('')
   const [tags, setTags] = useState<string>('')
   const [status, setStatus] = useState<string>('draft')
   const [imageUrl, setImageUrl] = useState<string>('')
@@ -27,7 +31,9 @@ export function useAdminPosts() {
 
   // Advanced SEO fields
   const [metaTitle, setMetaTitle] = useState<string>('')
+  const [metaTitleEn, setMetaTitleEn] = useState<string>('')
   const [metaDescription, setMetaDescription] = useState<string>('')
+  const [metaDescriptionEn, setMetaDescriptionEn] = useState<string>('')
   const [keywords, setKeywords] = useState<string>('')
   const [canonicalUrl, setCanonicalUrl] = useState<string>('')
   const [robotsIndex, setRobotsIndex] = useState<boolean>(true)
@@ -71,10 +77,14 @@ export function useAdminPosts() {
   const handleEdit = (post: Article) => {
     setCurrentPost(post)
     setTitle(post.title || '')
+    setTitleEn(post.title_en || '')
     setSlug(post.slug || '')
     setExcerpt(post.excerpt || '')
+    setExcerptEn(post.excerpt_en || '')
     setContent(post.content || '')
+    setContentEn(post.content_en || '')
     setAuthor(post.author || '')
+    setAuthorEn(post.author_en || '')
     setTags(post.tags ? (Array.isArray(post.tags) ? post.tags.join(', ') : String(post.tags)) : '')
     setStatus(post.status || 'draft')
     setImageUrl(post.cover_image || '')
@@ -82,7 +92,9 @@ export function useAdminPosts() {
     setCategoryId(post.category_id || '')
 
     setMetaTitle(post.meta_title || '')
+    setMetaTitleEn(post.meta_title_en || '')
     setMetaDescription(post.meta_description || '')
+    setMetaDescriptionEn(post.meta_description_en || '')
     setKeywords(post.keywords || '')
     setCanonicalUrl(post.canonical_url || '')
     setRobotsIndex(post.robots_index ?? true)
@@ -103,10 +115,14 @@ export function useAdminPosts() {
   const handleCreateNew = () => {
     setCurrentPost(null)
     setTitle('')
+    setTitleEn('')
     setSlug('')
     setExcerpt('')
+    setExcerptEn('')
     setContent('')
+    setContentEn('')
     setAuthor('')
+    setAuthorEn('')
     setTags('')
     setStatus('draft')
     setImageUrl('')
@@ -114,7 +130,9 @@ export function useAdminPosts() {
     setCategoryId('')
 
     setMetaTitle('')
+    setMetaTitleEn('')
     setMetaDescription('')
+    setMetaDescriptionEn('')
     setKeywords('')
     setCanonicalUrl('')
     setRobotsIndex(true)
@@ -188,10 +206,14 @@ export function useAdminPosts() {
 
       const postData: Partial<Article> = {
         title,
+        title_en: titleEn || null,
         slug: targetSlug,
         excerpt,
+        excerpt_en: excerptEn || null,
         content,
+        content_en: contentEn || null,
         author,
+        author_en: authorEn || null,
         tags: postTags,
         status,
         cover_image: finalImageUrl,
@@ -200,7 +222,9 @@ export function useAdminPosts() {
         word_count: wordCount,
         reading_time: readingTime,
         meta_title: metaTitle,
+        meta_title_en: metaTitleEn || null,
         meta_description: metaDescription,
+        meta_description_en: metaDescriptionEn || null,
         keywords,
         canonical_url: canonicalUrl,
         robots_index: robotsIndex,
@@ -243,14 +267,22 @@ export function useAdminPosts() {
     currentPost,
     title,
     setTitle,
+    titleEn,
+    setTitleEn,
     slug,
     setSlug,
     excerpt,
     setExcerpt,
+    excerptEn,
+    setExcerptEn,
     content,
     setContent,
+    contentEn,
+    setContentEn,
     author,
     setAuthor,
+    authorEn,
+    setAuthorEn,
     tags,
     setTags,
     status,
@@ -270,8 +302,12 @@ export function useAdminPosts() {
     categories,
     metaTitle,
     setMetaTitle,
+    metaTitleEn,
+    setMetaTitleEn,
     metaDescription,
     setMetaDescription,
+    metaDescriptionEn,
+    setMetaDescriptionEn,
     keywords,
     setKeywords,
     canonicalUrl,

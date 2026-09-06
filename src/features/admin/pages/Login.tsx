@@ -15,11 +15,11 @@ export default function Login() {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
-        navigate('/admin/posts', { replace: true })
+        navigate('/admin/products', { replace: true })
       } else {
         const localUser = localStorage.getItem('atelier_user')
         if (localUser) {
-          navigate('/admin/posts', { replace: true })
+          navigate('/admin/products', { replace: true })
         }
       }
     })
@@ -40,7 +40,7 @@ export default function Login() {
         // Fallback for development if user enters admin credentials
         if (email.toLowerCase().includes('admin') && password.length >= 6) {
           localStorage.setItem('atelier_user', JSON.stringify({ email, name: 'Atelier Director' }))
-          navigate('/admin/posts', { replace: true })
+          navigate('/admin/products', { replace: true })
           return
         }
         setError(
@@ -50,12 +50,12 @@ export default function Login() {
         )
       } else if (data?.session) {
         localStorage.setItem('atelier_user', JSON.stringify({ email: data.session.user.email, name: 'Atelier Director' }))
-        navigate('/admin/posts', { replace: true })
+        navigate('/admin/products', { replace: true })
       }
     } catch (err: unknown) {
       if (email.toLowerCase().includes('admin') && password.length >= 6) {
         localStorage.setItem('atelier_user', JSON.stringify({ email, name: 'Atelier Director' }))
-        navigate('/admin/posts', { replace: true })
+        navigate('/admin/products', { replace: true })
       } else {
         setError('حدث خطأ أثناء تسجيل الدخول: ' + ((err as Error)?.message || String(err)))
       }
@@ -68,10 +68,10 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center bg-[#FAF8F5] py-12 px-4 sm:px-6 lg:px-8 font-sans" dir="rtl">
       <div className="max-w-md w-full space-y-8 bg-white p-8 sm:p-10 rounded-3xl border border-[#E6E1DC] shadow-xl">
         <div className="text-center">
-          <div className="mx-auto w-20 h-20 rounded-2xl bg-[#14110F] flex items-center justify-center p-3 shadow-lg shadow-[#C5A880]/20 mb-4 border border-[#C4A070]/30">
+          <div className="mx-auto w-20 h-20 rounded-2xl bg-[#141110] flex items-center justify-center p-3 shadow-lg shadow-[#C4A070]/20 mb-4 border border-[#C4A070]/30">
             <img src={logoImg} alt="ATELIER Logo" className="w-full h-full object-contain" />
           </div>
-          <h1 className="text-2xl font-serif font-bold text-[#14110F]">
+          <h1 className="text-2xl font-serif font-bold text-[#141110]">
             لوحة تحكم <span className="text-[#C4A070]">S&I Atelier</span>
           </h1>
           <p className="text-xs text-[#827771] mt-1">
@@ -95,7 +95,7 @@ export default function Login() {
                 <input
                   type="email"
                   required
-                  className="w-full rounded-2xl border border-[#E6E1DC] bg-white px-4 py-3 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+                  className="w-full rounded-2xl border border-[#E6E1DC] bg-white px-4 py-3 text-sm text-[#141110] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none"
                   placeholder="admin@atelier-luxury.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -111,7 +111,7 @@ export default function Login() {
                 <input
                   type="password"
                   required
-                  className="w-full rounded-2xl border border-[#E6E1DC] bg-white px-4 py-3 text-sm text-[#14110F] focus:border-[#C5A880] focus:outline-none"
+                  className="w-full rounded-2xl border border-[#E6E1DC] bg-white px-4 py-3 text-sm text-[#141110] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -122,7 +122,8 @@ export default function Login() {
 
           <Button
             type="submit"
-            className="w-full justify-center py-3 text-sm rounded-2xl"
+            variant="admin"
+            className="w-full justify-center py-3 text-sm rounded-xl"
             disabled={loading}
           >
             {loading ? 'جار التحقق والاتصال...' : 'دخول لوحة التحكم'}

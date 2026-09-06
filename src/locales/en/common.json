@@ -1,0 +1,63 @@
+{
+  "brandName": "S&I Atelier",
+  "brandSubtitle": "Bespoke Luxury Furniture & Interiors",
+  "nav": {
+    "home": "Home",
+    "limitedEdition": "Limited Edition",
+    "bespoke": "Bespoke Service",
+    "offers": "Exclusive Offers",
+    "blog": "Journal",
+    "consultationBtn": "Request Design Consultation",
+    "menuAria": "Main Navigation"
+  },
+  "footer": {
+    "bio": "Crafting exceptional architectural spaces and bespoke furniture that reflect the grand identity of modern palaces and luxury villas, executed by master artisans.",
+    "quickLinks": "Quick Links",
+    "showroomContact": "Showroom & Inquiries",
+    "followUs": "Follow Us",
+    "copyright": "© {{year}} {{siteName}}. All rights reserved."
+  },
+  "ribbon": {
+    "luxury": "LUXURY",
+    "minimal": "MINIMAL",
+    "timeless": "TIMELESS",
+    "bespoke": "BESPOKE"
+  },
+  "floating": {
+    "whatsappTooltip": "Instant WhatsApp Concierge",
+    "whatsappAria": "Chat with us on WhatsApp",
+    "whatsappDefaultMessage": "Hello S&I Atelier, I would like to inquire about bespoke furniture customization and private design consultation.",
+    "scrollToTopAria": "Scroll back to top"
+  },
+  "certificate": {
+    "title": "Commercial Reg.",
+    "verified": "Verified",
+    "founded": "Est. {{year}}",
+    "ariaLabel": "View official Commercial Registration certificate of S&I Atelier (Founded: {{date}})"
+  },
+  "loading": {
+    "spinnerAria": "Loading...",
+    "pageDefault": "Loading bespoke content..."
+  },
+  "actions": {
+    "viewAll": "View All",
+    "readMore": "Read More",
+    "details": "Details",
+    "back": "Back",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "submit": "Submit",
+    "close": "Close",
+    "call": "Call",
+    "direct": "Direct"
+  },
+  "guarantees": {
+    "materials": "Imported European Materials",
+    "warranty": "10-Year Comprehensive Warranty",
+    "delivery": "VIP White-Glove Installation"
+  },
+  "seo": {
+    "defaultTitle": "S&I Atelier | Bespoke Luxury Furniture & Interiors",
+    "defaultDescription": "A premier luxury furniture house specializing in handcrafted limited edition creations and bespoke architectural furnishings for royal palaces and modern villas."
+  }
+}

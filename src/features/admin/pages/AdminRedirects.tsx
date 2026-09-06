@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+﻿import { useState, useEffect } from 'react'
 import { adminService } from '../services/adminService'
 import { PageLoading } from '../../../components/ui/Loading'
 import Button from '../../../components/ui/Button'
@@ -109,7 +109,7 @@ export default function AdminRedirects() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E6E1DC] pb-6">
         <div>
-          <h1 className="text-2xl font-bold text-[#14110F]">إدارة التحويلات والروابط البديلة (301 / 302 Redirects)</h1>
+          <h1 className="text-2xl font-bold text-[#141110]">إدارة التحويلات والروابط البديلة (301 / 302 Redirects)</h1>
           <p className="text-xs text-[#8C7F75] mt-1">توجيه الروابط القديمة أو المحذوفة تلقائياً للحفاظ على قوة السيو وتفادي أخطاء 404</p>
         </div>
 
@@ -124,7 +124,7 @@ export default function AdminRedirects() {
         <input
           type="text"
           placeholder="ابحث بالرابط القديم أو المسار المستهدف..."
-          className="w-full text-xs text-[#14110F] focus:outline-none"
+          className="w-full text-xs text-[#141110] focus:outline-none"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -143,10 +143,10 @@ export default function AdminRedirects() {
               <div key={r.id} className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-[#FAF8F5]">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2 font-mono text-xs">
-                    <span className="font-bold text-[#14110F] bg-[#FAF8F5] px-2 py-0.5 rounded border border-[#E6E1DC]">
+                    <span className="font-bold text-[#141110] bg-[#FAF8F5] px-2 py-0.5 rounded border border-[#E6E1DC]">
                       {r.source_path}
                     </span>
-                    <span className="text-[#C5A880] font-bold">←</span>
+                    <span className="text-[#C4A070] font-bold">←</span>
                     <span className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
                       {r.target_path}
                     </span>
@@ -183,7 +183,7 @@ export default function AdminRedirects() {
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <form onSubmit={handleSubmit} className="bg-white rounded-2xl p-6 shadow-2xl max-w-lg w-full border border-[#E6E1DC] space-y-4" dir="rtl">
             <div className="flex items-center justify-between border-b border-[#E6E1DC] pb-3">
-              <h3 className="font-bold text-base text-[#14110F]">{currentId ? 'تعديل مسار التحويل' : 'إنشاء تحويل جديد'}</h3>
+              <h3 className="font-bold text-base text-[#141110]">{currentId ? 'تعديل مسار التحويل' : 'إنشاء تحويل جديد'}</h3>
               <button type="button" onClick={() => setIsEditing(false)} className="text-[#8C7F75]">
                 <FaXmark className="w-5 h-5" />
               </button>
@@ -194,7 +194,7 @@ export default function AdminRedirects() {
               <input
                 type="text"
                 required
-                className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs font-mono text-[#14110F] bg-white placeholder-[#8C7F75] focus:border-[#C5A880] focus:outline-none"
+                className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs font-mono text-[#141110] bg-white placeholder-[#8C7F75] focus:border-[#C4A070] focus:outline-none"
                 placeholder="/old-luxury-villa-offer"
                 value={sourcePath}
                 onChange={(e) => setSourcePath(e.target.value)}
@@ -206,7 +206,7 @@ export default function AdminRedirects() {
               <input
                 type="text"
                 required
-                className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs font-mono text-[#14110F] bg-white placeholder-[#8C7F75] focus:border-[#C5A880] focus:outline-none"
+                className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs font-mono text-[#141110] bg-white placeholder-[#8C7F75] focus:border-[#C4A070] focus:outline-none"
                 placeholder="/offers/exclusive-villa-design-consultation"
                 value={targetPath}
                 onChange={(e) => setTargetPath(e.target.value)}
@@ -216,7 +216,7 @@ export default function AdminRedirects() {
             <div>
               <label className="block text-xs font-semibold text-[#5C544E] mb-1">نوع كود التحويل (Status Code)</label>
               <select
-                className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs text-[#14110F] bg-white focus:border-[#C5A880] focus:outline-none"
+                className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs text-[#141110] bg-white focus:border-[#C4A070] focus:outline-none"
                 value={statusCode}
                 onChange={(e) => setStatusCode(Number(e.target.value))}
               >

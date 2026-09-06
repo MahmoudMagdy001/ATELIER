@@ -1,6 +1,7 @@
 export interface ProductVariant {
   id: string
   name: string
+  name_en?: string
   image: string
   price?: string | number
   sku?: string
@@ -12,10 +13,13 @@ export interface ProductVariant {
 export interface LimitedEdition {
   id: string
   title: string
+  title_en?: string | null
   slug: string
   description: string | null
+  description_en?: string | null
   main_image: string | null
   badge: string | null
+  badge_en?: string | null
   category_id: string | null
   status: 'published' | 'draft' | string
   display_order: number
@@ -24,7 +28,9 @@ export interface LimitedEdition {
   image_alt?: string | null
   image_title?: string | null
   meta_title?: string | null
+  meta_title_en?: string | null
   meta_description?: string | null
+  meta_description_en?: string | null
   seo_description?: string | null
   canonical_url?: string | null
   keywords?: string | null
@@ -42,6 +48,7 @@ export interface LimitedEdition {
 export interface OfferVariant {
   id?: string
   name: string
+  name_en?: string | null
   image?: string | null
   price?: string | number | null
   original_price?: string | number | null
@@ -54,15 +61,19 @@ export interface OfferVariant {
 export interface Offer {
   id: string
   title: string
+  title_en?: string | null
   slug: string
   description: string | null
+  description_en?: string | null
   discount_label: string | null
+  discount_label_en?: string | null
   discount_text?: string | null
   cover_image: string | null
   banner_image?: string | null
   valid_from: string | null
   valid_until: string | null
   badge: string | null
+  badge_en?: string | null
   status: 'published' | 'draft' | string
   product_id: string | null
   variants: OfferVariant[]
@@ -70,7 +81,9 @@ export interface Offer {
   image_alt?: string | null
   image_title?: string | null
   meta_title?: string | null
+  meta_title_en?: string | null
   meta_description?: string | null
+  meta_description_en?: string | null
   seo_description?: string | null
   canonical_url?: string | null
   keywords?: string | null
@@ -88,10 +101,14 @@ export interface Article {
   id: string
   slug: string
   title: string
+  title_en?: string | null
   excerpt: string | null
+  excerpt_en?: string | null
   content: string | null
+  content_en?: string | null
   cover_image: string | null
   author: string | null
+  author_en?: string | null
   tags: string[] | null
   status: 'published' | 'draft' | string
   published_at: string | null
@@ -99,7 +116,9 @@ export interface Article {
   category_id?: string | null
   category?: Category | null
   meta_title?: string | null
+  meta_title_en?: string | null
   meta_description?: string | null
+  meta_description_en?: string | null
   seo_description?: string | null
   canonical_url?: string | null
   keywords?: string | null
@@ -124,36 +143,24 @@ export interface Article {
 export interface PortfolioItem {
   id: string
   title: string
+  title_en?: string | null
   description: string | null
+  description_en?: string | null
   image_url: string
   category: string
+  category_en?: string | null
   display_order: number
   is_visible: boolean
   created_at: string
 }
 
-export interface BespokeStep {
-  step: string
-  title: string
-  description: string
-}
-
-export interface BespokeServiceConfig {
-  id?: string
-  hero_title?: string
-  hero_subtitle?: string
-  service_description?: string
-  steps?: BespokeStep[]
-  cta_text?: string
-  hero_image?: string
-  updated_at?: string
-}
-
 export interface Category {
   id: string
   name: string
+  name_en?: string | null
   slug: string
   description: string | null
+  description_en?: string | null
   image_url?: string | null
   type: 'products' | 'articles' | string
   display_order: number
@@ -173,11 +180,15 @@ export interface RedirectRule {
 export interface SiteSettings {
   id: number
   site_name: string
+  site_name_en?: string | null
   logo_url: string
   favicon_url: string
   site_description: string
+  site_description_en?: string | null
   default_meta_title: string
+  default_meta_title_en?: string | null
   default_meta_description: string
+  default_meta_description_en?: string | null
   default_canonical?: string | null
   default_robots: string
   default_og_image: string

@@ -1,0 +1,63 @@
+{
+  "brandName": "S&I Atelier",
+  "brandSubtitle": "أثاث فاخر وتصميم داخلي معمارى",
+  "nav": {
+    "home": "الرئيسية",
+    "limitedEdition": "قطع ذات إصدار محدود",
+    "bespoke": "تنفيذ حسب الطلب",
+    "offers": "العروض الحصرية",
+    "blog": "المدونة",
+    "consultationBtn": "طلب استشارة تصميم",
+    "menuAria": "القائمة الرئيسية"
+  },
+  "footer": {
+    "bio": "صياغة مساحات استثنائية وأثاث راقٍ مخصص يعكس الهوية الفاخرة للقصور والفيلات العصرية بأيدي كبار الحرفيين.",
+    "quickLinks": "روابط سريعة",
+    "showroomContact": "التواصل والمعرض",
+    "followUs": "تابعنا على وسائل التواصل",
+    "copyright": "© {{year}} {{siteName}}. جميع الحقوق محفوظة."
+  },
+  "ribbon": {
+    "luxury": "LUXURY",
+    "minimal": "MINIMAL",
+    "timeless": "TIMELESS",
+    "bespoke": "BESPOKE"
+  },
+  "floating": {
+    "whatsappTooltip": "استشارة فورية عبر واتساب",
+    "whatsappAria": "تواصل معنا عبر واتساب",
+    "whatsappDefaultMessage": "مرحباً S&I Atelier، أود الاستفسار عن تفصيل قطع أثاث واستشارة تصميم خاصة",
+    "scrollToTopAria": "الرجوع للأعلى"
+  },
+  "certificate": {
+    "title": "السجل التجاري",
+    "verified": "معتمد",
+    "founded": "تأسست {{year}}",
+    "ariaLabel": "استعراض شهادة السجل التجاري المعتمدة لشركة S&I Atelier (تاريخ التأسيس: {{date}})"
+  },
+  "loading": {
+    "spinnerAria": "جار التحميل...",
+    "pageDefault": "جار تحميل البيانات..."
+  },
+  "actions": {
+    "viewAll": "عرض الكل",
+    "readMore": "قراءة المزيد",
+    "details": "التفاصيل",
+    "back": "العودة",
+    "copy": "نسخ",
+    "copied": "تم النسخ!",
+    "submit": "إرسال",
+    "close": "إغلاق",
+    "call": "اتصال",
+    "direct": "مباشر"
+  },
+  "guarantees": {
+    "materials": "خامات إيطالية طبيعية",
+    "warranty": "ضمان شامل 10 سنوات",
+    "delivery": "توصيل وتركيب VIP"
+  },
+  "seo": {
+    "defaultTitle": "S&I Atelier | أثاث فاخر ومساحات معمارية مخصصة",
+    "defaultDescription": "دار أثاث فاخر متخصصة في ابتكار وتصنيع القطع الحصرية ذات الإصدار المحدود وتنفيذ التصاميم حسب الطلب لأرقى القصور والفيلات."
+  }
+}

@@ -1,4 +1,4 @@
-import { useEditor, EditorContent } from '@tiptap/react'
+﻿import { useEditor, EditorContent } from '@tiptap/react'
 import { StarterKit } from '@tiptap/starter-kit'
 import { Underline } from '@tiptap/extension-underline'
 import { Highlight } from '@tiptap/extension-highlight'
@@ -66,7 +66,7 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {
-          class: 'text-[#C5A880] underline cursor-pointer hover:text-[#D8B788]',
+          class: 'text-[#C4A070] underline cursor-pointer hover:text-[#D8B788]',
           rel: 'noopener noreferrer',
           target: '_blank'
         }
@@ -291,8 +291,8 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
   ]
 
   const colors = [
-    { name: 'الافتراضي الداكن', value: '#14110F' },
-    { name: 'الذهبي الأتيليه', value: '#C5A880' },
+    { name: 'الافتراضي الداكن', value: '#141110' },
+    { name: 'الذهبي الأتيليه', value: '#C4A070' },
     { name: 'برونزي فاخر', value: '#795E40' },
     { name: 'رمادي حجري', value: '#5C544E' },
     { name: 'أحمر تنبيه', value: '#EF4444' },
@@ -300,7 +300,7 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
   ]
 
   return (
-    <div className="border border-[#E6E1DC] rounded-2xl overflow-hidden bg-white shadow-sm transition-all focus-within:border-[#C5A880]">
+    <div className="border border-[#E6E1DC] rounded-2xl overflow-hidden bg-white shadow-sm transition-all focus-within:border-[#C4A070]">
       {/* Toolbar Header */}
       <div className="bg-[#FAF8F5] p-3 border-b border-[#E6E1DC] flex flex-wrap items-center gap-1.5 text-xs select-none">
         
@@ -331,21 +331,21 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
           <button
             type="button"
             onClick={() => editor.chain().focus().setParagraph().run()}
-            className={`px-2 py-1 rounded font-medium ${editor.isActive('paragraph') ? 'bg-[#C5A880] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
+            className={`px-2 py-1 rounded font-medium ${editor.isActive('paragraph') ? 'bg-[#C4A070] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
           >
             نص
           </button>
           <button
             type="button"
             onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-            className={`px-2 py-1 rounded font-bold ${editor.isActive('heading', { level: 2 }) ? 'bg-[#C5A880] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
+            className={`px-2 py-1 rounded font-bold ${editor.isActive('heading', { level: 2 }) ? 'bg-[#C4A070] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
           >
             H2
           </button>
           <button
             type="button"
             onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-            className={`px-2 py-1 rounded font-bold ${editor.isActive('heading', { level: 3 }) ? 'bg-[#C5A880] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
+            className={`px-2 py-1 rounded font-bold ${editor.isActive('heading', { level: 3 }) ? 'bg-[#C4A070] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
           >
             H3
           </button>
@@ -356,7 +356,7 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
           <button
             type="button"
             onClick={() => editor.chain().focus().toggleBold().run()}
-            className={`p-1.5 rounded ${editor.isActive('bold') ? 'bg-[#C5A880] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
+            className={`p-1.5 rounded ${editor.isActive('bold') ? 'bg-[#C4A070] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
             title="عريض (Ctrl+B)"
           >
             <FaBold className="w-3.5 h-3.5" />
@@ -364,7 +364,7 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
           <button
             type="button"
             onClick={() => editor.chain().focus().toggleItalic().run()}
-            className={`p-1.5 rounded ${editor.isActive('italic') ? 'bg-[#C5A880] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
+            className={`p-1.5 rounded ${editor.isActive('italic') ? 'bg-[#C4A070] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
             title="مائل (Ctrl+I)"
           >
             <FaItalic className="w-3.5 h-3.5" />
@@ -372,7 +372,7 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
           <button
             type="button"
             onClick={() => editor.chain().focus().toggleUnderline().run()}
-            className={`p-1.5 rounded ${editor.isActive('underline') ? 'bg-[#C5A880] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
+            className={`p-1.5 rounded ${editor.isActive('underline') ? 'bg-[#C4A070] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
             title="تسطير (Ctrl+U)"
           >
             <FaUnderline className="w-3.5 h-3.5" />
@@ -380,7 +380,7 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
           <button
             type="button"
             onClick={() => editor.chain().focus().toggleStrike().run()}
-            className={`p-1.5 rounded ${editor.isActive('strike') ? 'bg-[#C5A880] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
+            className={`p-1.5 rounded ${editor.isActive('strike') ? 'bg-[#C4A070] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
             title="يتوسطه خط"
           >
             <FaStrikethrough className="w-3.5 h-3.5" />
@@ -388,7 +388,7 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
           <button
             type="button"
             onClick={() => editor.chain().focus().toggleHighlight().run()}
-            className={`p-1.5 rounded ${editor.isActive('highlight') ? 'bg-[#C5A880] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
+            className={`p-1.5 rounded ${editor.isActive('highlight') ? 'bg-[#C4A070] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
             title="تمييز النص"
           >
             <FaHighlighter className="w-3.5 h-3.5" />
@@ -400,7 +400,7 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
           <button
             type="button"
             onClick={() => editor.chain().focus().setTextAlign('right').run()}
-            className={`p-1.5 rounded ${editor.isActive({ textAlign: 'right' }) ? 'bg-[#C5A880] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
+            className={`p-1.5 rounded ${editor.isActive({ textAlign: 'right' }) ? 'bg-[#C4A070] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
             title="محاذاة لليمين"
           >
             <FaAlignRight className="w-3.5 h-3.5" />
@@ -408,7 +408,7 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
           <button
             type="button"
             onClick={() => editor.chain().focus().setTextAlign('center').run()}
-            className={`p-1.5 rounded ${editor.isActive({ textAlign: 'center' }) ? 'bg-[#C5A880] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
+            className={`p-1.5 rounded ${editor.isActive({ textAlign: 'center' }) ? 'bg-[#C4A070] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
             title="توسيط"
           >
             <FaAlignCenter className="w-3.5 h-3.5" />
@@ -416,7 +416,7 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
           <button
             type="button"
             onClick={() => editor.chain().focus().setTextAlign('left').run()}
-            className={`p-1.5 rounded ${editor.isActive({ textAlign: 'left' }) ? 'bg-[#C5A880] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
+            className={`p-1.5 rounded ${editor.isActive({ textAlign: 'left' }) ? 'bg-[#C4A070] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
             title="محاذاة لليسار"
           >
             <FaAlignLeft className="w-3.5 h-3.5" />
@@ -424,7 +424,7 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
           <button
             type="button"
             onClick={() => editor.chain().focus().setTextAlign('justify').run()}
-            className={`p-1.5 rounded ${editor.isActive({ textAlign: 'justify' }) ? 'bg-[#C5A880] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
+            className={`p-1.5 rounded ${editor.isActive({ textAlign: 'justify' }) ? 'bg-[#C4A070] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
             title="ضبط النص"
           >
             <FaAlignJustify className="w-3.5 h-3.5" />
@@ -436,7 +436,7 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
           <button
             type="button"
             onClick={() => editor.chain().focus().toggleBulletList().run()}
-            className={`p-1.5 rounded ${editor.isActive('bulletList') ? 'bg-[#C5A880] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
+            className={`p-1.5 rounded ${editor.isActive('bulletList') ? 'bg-[#C4A070] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
             title="قائمة نقطية"
           >
             <FaListUl className="w-3.5 h-3.5" />
@@ -444,7 +444,7 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
           <button
             type="button"
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
-            className={`p-1.5 rounded ${editor.isActive('orderedList') ? 'bg-[#C5A880] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
+            className={`p-1.5 rounded ${editor.isActive('orderedList') ? 'bg-[#C4A070] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
             title="قائمة رقمية"
           >
             <FaListOl className="w-3.5 h-3.5" />
@@ -452,7 +452,7 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
           <button
             type="button"
             onClick={() => editor.chain().focus().toggleTaskList().run()}
-            className={`p-1.5 rounded ${editor.isActive('taskList') ? 'bg-[#C5A880] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
+            className={`p-1.5 rounded ${editor.isActive('taskList') ? 'bg-[#C4A070] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
             title="قائمة مهام"
           >
             <FaSquareCheck className="w-3.5 h-3.5" />
@@ -460,7 +460,7 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
           <button
             type="button"
             onClick={() => editor.chain().focus().toggleBlockquote().run()}
-            className={`p-1.5 rounded ${editor.isActive('blockquote') ? 'bg-[#C5A880] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
+            className={`p-1.5 rounded ${editor.isActive('blockquote') ? 'bg-[#C4A070] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
             title="اقتباس فاخر"
           >
             <FaQuoteRight className="w-3.5 h-3.5" />
@@ -468,7 +468,7 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
           <button
             type="button"
             onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-            className={`p-1.5 rounded ${editor.isActive('codeBlock') ? 'bg-[#C5A880] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
+            className={`p-1.5 rounded ${editor.isActive('codeBlock') ? 'bg-[#C4A070] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
             title="كتلة كود"
           >
             <FaCode className="w-3.5 h-3.5" />
@@ -488,7 +488,7 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
           <button
             type="button"
             onClick={openLinkModal}
-            className={`p-1.5 rounded ${editor.isActive('link') ? 'bg-[#C5A880] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
+            className={`p-1.5 rounded ${editor.isActive('link') ? 'bg-[#C4A070] text-white' : 'text-[#5C544E] hover:bg-[#F3EFEA]'}`}
             title="رابط"
           >
             <FaLink className="w-3.5 h-3.5" />
@@ -551,13 +551,13 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
       {activeModal === 'link' && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 border border-[#E6E1DC]" dir="rtl">
-            <h3 className="text-base font-bold text-[#14110F] mb-4">إدراج / تعديل الرابط</h3>
+            <h3 className="text-base font-bold text-[#141110] mb-4">إدراج / تعديل الرابط</h3>
             <div className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-[#5C544E] mb-1">عنوان الويب (URL)</label>
                 <input
                   type="url"
-                  className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-sm text-[#14110F] bg-white placeholder-[#8C7F75] focus:outline-none focus:border-[#C5A880]"
+                  className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-sm text-[#141110] bg-white placeholder-[#8C7F75] focus:outline-none focus:border-[#C4A070]"
                   placeholder="https://example.com"
                   value={modalData.url}
                   onChange={(e) => setModalData(prev => ({ ...prev, url: e.target.value }))}
@@ -566,7 +566,7 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
               <label className="flex items-center gap-2 text-xs text-[#5C544E] cursor-pointer">
                 <input
                   type="checkbox"
-                  className="rounded text-[#C5A880]"
+                  className="rounded text-[#C4A070]"
                   checked={modalData.target}
                   onChange={(e) => setModalData(prev => ({ ...prev, target: e.target.checked }))}
                 />
@@ -584,7 +584,7 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
               <button
                 type="button"
                 onClick={saveLinkModal}
-                className="px-5 py-2 rounded-xl text-xs font-bold bg-[#C5A880] text-white hover:bg-[#B59362]"
+                className="px-5 py-2 rounded-xl text-xs font-bold bg-[#C4A070] text-white hover:bg-[#B88F48]"
               >
                 تطبيق
               </button>
@@ -597,7 +597,7 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
       {activeModal === 'image' && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg p-6 border border-[#E6E1DC]" dir="rtl">
-            <h3 className="text-base font-bold text-[#14110F] mb-4">إدراج صورة مقال متطورة</h3>
+            <h3 className="text-base font-bold text-[#141110] mb-4">إدراج صورة مقال متطورة</h3>
             <div className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-[#5C544E] mb-1">مصدر الصورة</label>
@@ -605,14 +605,14 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
                   <button
                     type="button"
                     onClick={() => setIsMediaPickerOpen(true)}
-                    className="px-3.5 py-2 bg-[#C5A880] text-white hover:bg-[#B59362] rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
+                    className="px-3.5 py-2 bg-[#C4A070] text-white hover:bg-[#B88F48] rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
                   >
                     <FaPhotoFilm className="w-3.5 h-3.5" />
                     <span>اختيار من مكتبة الوسائط</span>
                   </button>
 
                   <label className="px-3.5 py-2 bg-[#FAF8F5] border border-[#E6E1DC] hover:bg-[#F3EFEA] rounded-xl text-xs font-bold text-[#5C544E] cursor-pointer flex items-center gap-1.5">
-                    <FaUpload className="w-3.5 h-3.5 text-[#C5A880]" />
+                    <FaUpload className="w-3.5 h-3.5 text-[#C4A070]" />
                     <span>{imageUploadLoading ? 'جار الرفع...' : 'رفع من الجهاز'}</span>
                     <input type="file" accept="image/*" className="hidden" onChange={handleModalImageUpload} />
                   </label>
@@ -621,7 +621,7 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
                 <div className="flex gap-2">
                   <input
                     type="text"
-                    className="flex-1 px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs text-[#14110F] bg-white placeholder-[#8C7F75] focus:outline-none focus:border-[#C5A880]"
+                    className="flex-1 px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs text-[#141110] bg-white placeholder-[#8C7F75] focus:outline-none focus:border-[#C4A070]"
                     placeholder="أو الصق رابط صورة خارجي مباشر (https://...)"
                     value={modalData.src}
                     onChange={(e) => setModalData(prev => ({ ...prev, src: e.target.value }))}
@@ -634,7 +634,7 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
                   <label className="block text-xs font-semibold text-[#5C544E] mb-1">النص البديل (Alt)</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs text-[#14110F] bg-white placeholder-[#8C7F75] focus:border-[#C5A880] focus:outline-none"
+                    className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs text-[#141110] bg-white placeholder-[#8C7F75] focus:border-[#C4A070] focus:outline-none"
                     value={modalData.alt}
                     onChange={(e) => setModalData(prev => ({ ...prev, alt: e.target.value }))}
                   />
@@ -643,7 +643,7 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
                   <label className="block text-xs font-semibold text-[#5C544E] mb-1">عنوان الصورة (Title)</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs text-[#14110F] bg-white placeholder-[#8C7F75] focus:border-[#C5A880] focus:outline-none"
+                    className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs text-[#141110] bg-white placeholder-[#8C7F75] focus:border-[#C4A070] focus:outline-none"
                     value={modalData.title}
                     onChange={(e) => setModalData(prev => ({ ...prev, title: e.target.value }))}
                   />
@@ -654,7 +654,7 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
                 <label className="block text-xs font-semibold text-[#5C544E] mb-1">شرح الصورة (Caption)</label>
                 <input
                   type="text"
-                  className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs text-[#14110F] bg-white placeholder-[#8C7F75] focus:border-[#C5A880] focus:outline-none"
+                  className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs text-[#141110] bg-white placeholder-[#8C7F75] focus:border-[#C4A070] focus:outline-none"
                   placeholder="وصف اختياري يظهر أسفل الصورة"
                   value={modalData.caption}
                   onChange={(e) => setModalData(prev => ({ ...prev, caption: e.target.value }))}
@@ -665,7 +665,7 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
                 <div>
                   <label className="block text-xs font-semibold text-[#5C544E] mb-1">العرض</label>
                   <select
-                    className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs text-[#14110F] bg-white focus:border-[#C5A880] focus:outline-none cursor-pointer"
+                    className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs text-[#141110] bg-white focus:border-[#C4A070] focus:outline-none cursor-pointer"
                     value={modalData.width}
                     onChange={(e) => setModalData(prev => ({ ...prev, width: e.target.value }))}
                   >
@@ -678,7 +678,7 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
                 <div>
                   <label className="block text-xs font-semibold text-[#5C544E] mb-1">المحاذاة</label>
                   <select
-                    className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs text-[#14110F] bg-white focus:border-[#C5A880] focus:outline-none cursor-pointer"
+                    className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-xs text-[#141110] bg-white focus:border-[#C4A070] focus:outline-none cursor-pointer"
                     value={modalData.align}
                     onChange={(e) => setModalData(prev => ({ ...prev, align: e.target.value }))}
                   >
@@ -702,7 +702,7 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
                 type="button"
                 onClick={saveImageModal}
                 disabled={imageUploadLoading || !modalData.src}
-                className="px-5 py-2 rounded-xl text-xs font-bold bg-[#C5A880] text-white hover:bg-[#B59362] disabled:opacity-50"
+                className="px-5 py-2 rounded-xl text-xs font-bold bg-[#C4A070] text-white hover:bg-[#B88F48] disabled:opacity-50"
               >
                 إدراج
               </button>
@@ -715,13 +715,13 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
       {activeModal === 'youtube' && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 border border-[#E6E1DC]" dir="rtl">
-            <h3 className="text-base font-bold text-[#14110F] mb-4">تضمين فيديو YouTube</h3>
+            <h3 className="text-base font-bold text-[#141110] mb-4">تضمين فيديو YouTube</h3>
             <div className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-[#5C544E] mb-1">رابط الفيديو</label>
                 <input
                   type="url"
-                  className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-sm text-[#14110F] bg-white placeholder-[#8C7F75] focus:outline-none focus:border-[#C5A880]"
+                  className="w-full px-3 py-2 rounded-xl border border-[#E6E1DC] text-sm text-[#141110] bg-white placeholder-[#8C7F75] focus:outline-none focus:border-[#C4A070]"
                   placeholder="https://www.youtube.com/watch?v=..."
                   value={modalData.url}
                   onChange={(e) => setModalData(prev => ({ ...prev, url: e.target.value }))}
@@ -739,7 +739,7 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
               <button
                 type="button"
                 onClick={saveYoutubeModal}
-                className="px-5 py-2 rounded-xl text-xs font-bold bg-[#C5A880] text-white"
+                className="px-5 py-2 rounded-xl text-xs font-bold bg-[#C4A070] text-white"
               >
                 تضمين
               </button>

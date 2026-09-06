@@ -8,6 +8,7 @@ import type { Offer, OfferVariant, LimitedEdition } from '../../../types/databas
 export interface AdminOfferVariant extends OfferVariant {
   id?: string
   name: string
+  name_en?: string
   price: number | string
   original_price?: number | string | null
   image?: string
@@ -25,11 +26,15 @@ export function useAdminOffers() {
   // Basic Form States
   const [selectedProductId, setSelectedProductId] = useState<string>('')
   const [title, setTitle] = useState<string>('')
+  const [titleEn, setTitleEn] = useState<string>('')
   const [slug, setSlug] = useState<string>('')
   const [description, setDescription] = useState<string>('')
+  const [descriptionEn, setDescriptionEn] = useState<string>('')
   const [discountLabel, setDiscountLabel] = useState<string>('')
+  const [discountLabelEn, setDiscountLabelEn] = useState<string>('')
   const [validUntil, setValidUntil] = useState<string>('')
   const [badge, setBadge] = useState<string>('')
+  const [badgeEn, setBadgeEn] = useState<string>('')
   const [status, setStatus] = useState<string>('published')
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [imageUrl, setImageUrl] = useState<string>('')
@@ -40,7 +45,9 @@ export function useAdminOffers() {
 
   // SEO States
   const [metaTitle, setMetaTitle] = useState<string>('')
+  const [metaTitleEn, setMetaTitleEn] = useState<string>('')
   const [metaDescription, setMetaDescription] = useState<string>('')
+  const [metaDescriptionEn, setMetaDescriptionEn] = useState<string>('')
   const [keywords, setKeywords] = useState<string>('')
   const [canonicalUrl, setCanonicalUrl] = useState<string>('')
   const [robotsIndex, setRobotsIndex] = useState<boolean>(true)
@@ -89,12 +96,16 @@ export function useAdminOffers() {
     if (!product) return
 
     setTitle(`عرض حصري: ${product.title}`)
+    setTitleEn(product.title_en ? `Exclusive Offer: ${product.title_en}` : '')
     setSlug(`offer-${product.slug}`)
     setDescription(product.description || '')
+    setDescriptionEn(product.description_en || '')
     setImageUrl(product.main_image || '')
     setImageFile(null)
     setBadge(product.badge ? `عرض ${product.badge}` : 'عرض خاص لفترة محدودة')
+    setBadgeEn(product.badge_en ? `Special ${product.badge_en}` : 'Limited Time Offer')
     setDiscountLabel('خصم 15% لفترة محدودة')
+    setDiscountLabelEn('15% Off Limited Time')
     
     // Copy variants with original_price and default 15% discount
     if (Array.isArray(product.variants) && product.variants.length > 0) {
@@ -104,6 +115,7 @@ export function useAdminOffers() {
         return {
           id: `off-var-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
           name: v.name,
+          name_en: v.name_en || '',
           original_price: origPrice,
           price: discountedPrice,
           image: v.image || product.main_image || '',
@@ -115,7 +127,9 @@ export function useAdminOffers() {
     }
 
     setMetaTitle(`عرض ${product.title} | تخفيضات ATELIER`)
+    setMetaTitleEn(product.title_en ? `Offer: ${product.title_en} | ATELIER Sale` : '')
     setMetaDescription(`استفد من العرض الحصري على ${product.title}. خصومات خاصة مع شحن وتركيب مجاني.`)
+    setMetaDescriptionEn(product.title_en ? `Take advantage of our exclusive offer on ${product.title_en}. Special discounts with complimentary delivery.` : '')
     setKeywords(product.keywords ? `عروض, ${product.keywords}` : 'عروض أثاث, تخفيضات')
   }
 
@@ -134,6 +148,7 @@ export function useAdminOffers() {
       })
     )
     setDiscountLabel(`خصم ${percent}% لفترة محدودة`)
+    setDiscountLabelEn(`${percent}% Off Limited Time`)
   }
 
   // Variant Helpers
@@ -141,6 +156,7 @@ export function useAdminOffers() {
     const newVariant: AdminOfferVariant = {
       id: `off-var-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
       name: '',
+      name_en: '',
       price: '',
       original_price: '',
       image: '',
@@ -174,11 +190,15 @@ export function useAdminOffers() {
     setCurrentOffer(offer)
     setSelectedProductId(offer.product_id || '')
     setTitle(offer.title || '')
+    setTitleEn(offer.title_en || '')
     setSlug(offer.slug || '')
     setDescription(offer.description || '')
+    setDescriptionEn(offer.description_en || '')
     setDiscountLabel(offer.discount_label || '')
+    setDiscountLabelEn(offer.discount_label_en || '')
     setValidUntil(offer.valid_until || '')
     setBadge(offer.badge || '')
+    setBadgeEn(offer.badge_en || '')
     setStatus(offer.status || 'published')
     setImageUrl(offer.cover_image || '')
     setImageFile(null)
@@ -190,6 +210,7 @@ export function useAdminOffers() {
         {
           id: `off-var-${Date.now()}`,
           name: 'الخيار القياسي المشمول بالعرض',
+          name_en: 'Standard Offer Option',
           price: 0,
           original_price: 0,
           image: offer.cover_image || '',
@@ -200,7 +221,9 @@ export function useAdminOffers() {
     }
 
     setMetaTitle(offer.meta_title || '')
+    setMetaTitleEn(offer.meta_title_en || '')
     setMetaDescription(offer.meta_description || '')
+    setMetaDescriptionEn(offer.meta_description_en || '')
     setKeywords(offer.keywords || '')
     setCanonicalUrl(offer.canonical_url || '')
     setRobotsIndex(offer.robots_index ?? true)
@@ -221,11 +244,15 @@ export function useAdminOffers() {
     setCurrentOffer(null)
     setSelectedProductId('')
     setTitle('')
+    setTitleEn('')
     setSlug('')
     setDescription('')
+    setDescriptionEn('')
     setDiscountLabel('')
+    setDiscountLabelEn('')
     setValidUntil('')
     setBadge('')
+    setBadgeEn('')
     setStatus('published')
     setImageUrl('')
     setImageFile(null)
@@ -234,6 +261,7 @@ export function useAdminOffers() {
       {
         id: `off-var-${Date.now()}`,
         name: 'الخيار الأول (مثال: طقم كامل VIP مع التركيب)',
+        name_en: 'Option 1 (e.g. Full VIP Set with Installation)',
         price: '',
         original_price: '',
         image: '',
@@ -243,7 +271,9 @@ export function useAdminOffers() {
     ])
 
     setMetaTitle('')
+    setMetaTitleEn('')
     setMetaDescription('')
+    setMetaDescriptionEn('')
     setKeywords('')
     setCanonicalUrl('')
     setRobotsIndex(true)
@@ -319,6 +349,7 @@ export function useAdminOffers() {
 
       const cleanedVariants = variants.map((v) => ({
         ...v,
+        name_en: v.name_en || null,
         price: Number(v.price),
         original_price: v.original_price ? Number(v.original_price) : null,
         image: v.image || finalCoverImage,
@@ -326,17 +357,23 @@ export function useAdminOffers() {
 
       const offerData: Partial<Offer> = {
         title,
+        title_en: titleEn || null,
         slug: targetSlug,
         description,
+        description_en: descriptionEn || null,
         discount_label: discountLabel,
+        discount_label_en: discountLabelEn || null,
         valid_until: validUntil || null,
         badge,
+        badge_en: badgeEn || null,
         status,
         cover_image: finalCoverImage,
         product_id: selectedProductId || null,
         variants: cleanedVariants,
         meta_title: metaTitle,
+        meta_title_en: metaTitleEn || null,
         meta_description: metaDescription,
+        meta_description_en: metaDescriptionEn || null,
         keywords,
         canonical_url: canonicalUrl,
         robots_index: robotsIndex,
@@ -378,16 +415,24 @@ export function useAdminOffers() {
     applyBulkDiscount,
     title,
     setTitle,
+    titleEn,
+    setTitleEn,
     slug,
     setSlug,
     description,
     setDescription,
+    descriptionEn,
+    setDescriptionEn,
     discountLabel,
     setDiscountLabel,
+    discountLabelEn,
+    setDiscountLabelEn,
     validUntil,
     setValidUntil,
     badge,
     setBadge,
+    badgeEn,
+    setBadgeEn,
     status,
     setStatus,
     imageFile,
@@ -408,8 +453,12 @@ export function useAdminOffers() {
     setIsEditing,
     metaTitle,
     setMetaTitle,
+    metaTitleEn,
+    setMetaTitleEn,
     metaDescription,
     setMetaDescription,
+    metaDescriptionEn,
+    setMetaDescriptionEn,
     keywords,
     setKeywords,
     canonicalUrl,

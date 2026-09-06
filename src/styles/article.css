@@ -45,27 +45,27 @@
 
 /* Light Theme: Admin Dashboard Editor & Preview */
 .article-content.article-theme-light {
-  --article-text: #2b2623;
+  --article-text: #26211f;
   --article-text-muted: #5c544e;
-  --article-heading: #14110f;
-  --article-heading-accent: #8c6a2d;
-  --article-heading-sub: #795e40;
-  --article-strong: #14110f;
+  --article-heading: #141110;
+  --article-heading-accent: #9e7939;
+  --article-heading-sub: #7a5d2b;
+  --article-strong: #141110;
   --article-quote-bg: #faf6f0;
-  --article-quote-border: #c5a880;
+  --article-quote-border: #c4a070;
   --article-quote-text: #423b37;
   --article-code-bg: #f3efea;
-  --article-code-text: #a07842;
-  --article-table-border: #d6cdc4;
+  --article-code-text: #9e7939;
+  --article-table-border: #e6e1dc;
   --article-table-header-bg: #f3efea;
-  --article-table-header-text: #14110f;
+  --article-table-header-text: #141110;
   --article-table-even-bg: #faf8f5;
   --article-hr: #e6e1dc;
-  --article-link: #b59362;
-  --article-link-hover: #8c6a2d;
+  --article-link: #c4a070;
+  --article-link-hover: #9e7939;
   --article-mark-bg: #f8edda;
-  --article-mark-text: #8c6a2d;
-  --article-bullet: #c5a880;
+  --article-mark-text: #9e7939;
+  --article-bullet: #c4a070;
 }
 
 /* ==========================================================================
@@ -78,7 +78,7 @@
 .article-content h4,
 .article-content h5,
 .article-content h6 {
-  font-family: var(--font-serif, "Cinzel", "Playfair Display", "Cairo", serif);
+  font-family: var(--font-serif);
   color: var(--article-heading);
   font-weight: 700;
   margin-top: 2.75rem;

@@ -9,16 +9,31 @@ import type {
   MediaItem 
 } from '../../../types/database'
 
+let cachedSettings: SiteSettings | null = null
+let settingsPromise: Promise<SiteSettings | null> | null = null
+
 export const adminService = {
   // Site Settings
-  async fetchSettings(): Promise<SiteSettings | null> {
-    const { data, error } = await supabase
-      .from('site_settings')
-      .select('*')
-      .eq('id', 1)
-      .maybeSingle()
-    if (error) throw error
-    return data as SiteSettings | null
+  async fetchSettings(forceRefresh = false): Promise<SiteSettings | null> {
+    if (cachedSettings && !forceRefresh) return cachedSettings
+    if (settingsPromise && !forceRefresh) return settingsPromise
+
+    settingsPromise = (async () => {
+      try {
+        const { data, error } = await supabase
+          .from('site_settings')
+          .select('*')
+          .eq('id', 1)
+          .maybeSingle()
+        if (error) throw error
+        cachedSettings = data as SiteSettings | null
+        return cachedSettings
+      } finally {
+        settingsPromise = null
+      }
+    })()
+
+    return settingsPromise
   },
 
   async updateSettings(settingsData: Partial<SiteSettings>): Promise<SiteSettings> {
@@ -28,6 +43,7 @@ export const adminService = {
       .select()
       .single()
     if (error) throw error
+    cachedSettings = data as SiteSettings
     return data as SiteSettings
   },
 
@@ -244,11 +260,10 @@ export const adminService = {
       })
     }
 
-    const newMediaItem = {
+    const newMediaItem: Record<string, unknown> = {
       name: file.name,
       file_path: filePath,
       file_url: fileUrl,
-      url: fileUrl,
       file_size: file.size,
       file_type: file.type,
       width,
@@ -259,15 +274,32 @@ export const adminService = {
       folder,
     }
 
-    const { data, error } = await supabase
+    let insertRes = await supabase
       .from('media_library')
       .insert([newMediaItem])
       .select()
       .single()
-    if (error) throw error
+
+    // Fallback if the database schema has 'url' instead of 'file_url'
+    if (insertRes.error && insertRes.error.message?.includes("'file_url'")) {
+      delete newMediaItem.file_url
+      newMediaItem.url = fileUrl
+      insertRes = await supabase
+        .from('media_library')
+        .insert([newMediaItem])
+        .select()
+        .single()
+    }
+
+    if (insertRes.error) throw insertRes.error
+    const data = insertRes.data
 
     window.dispatchEvent(new CustomEvent('atelier:media-updated', { detail: { action: 'upload', item: data } }))
-    return data as MediaItem
+    return {
+      ...(data as MediaItem),
+      url: (data as MediaItem).file_url || (data as { url?: string }).url || fileUrl,
+      file_url: (data as MediaItem).file_url || (data as { url?: string }).url || fileUrl,
+    }
   },
 
   async updateMediaMetadata(id: string, metaData: Partial<MediaItem>): Promise<MediaItem> {

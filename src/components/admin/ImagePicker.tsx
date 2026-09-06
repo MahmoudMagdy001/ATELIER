@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+﻿import React, { useState, useEffect, useRef } from 'react'
 import { 
   FaUpload, 
   FaPhotoFilm, 
@@ -116,13 +116,13 @@ export default function ImagePicker({
           )}
 
           {/* Upload Button */}
-          <label className={`px-3 py-1.5 bg-white border border-[#E6E1DC] hover:bg-[#FAF8F5] hover:border-[#C5A880] rounded-xl text-xs font-bold text-[#5C544E] cursor-pointer flex items-center gap-1.5 transition-all shadow-sm ${
+          <label className={`px-3 py-1.5 bg-white border border-[#E6E1DC] hover:bg-[#FAF8F5] hover:border-[#C4A070] rounded-xl text-xs font-bold text-[#5C544E] cursor-pointer flex items-center gap-1.5 transition-all shadow-sm ${
             uploading ? 'opacity-60 pointer-events-none' : ''
           }`}>
             {uploading ? (
-              <FaSpinner className="w-3 h-3 text-[#C5A880] animate-spin" />
+              <FaSpinner className="w-3 h-3 text-[#C4A070] animate-spin" />
             ) : (
-              <FaUpload className="w-3 h-3 text-[#C5A880]" />
+              <FaUpload className="w-3 h-3 text-[#C4A070]" />
             )}
             <span>{uploading ? 'جار الرفع...' : 'رفع'}</span>
             <input
@@ -139,9 +139,9 @@ export default function ImagePicker({
           <button
             type="button"
             onClick={() => setIsModalOpen(true)}
-            className="px-3 py-1.5 bg-[#FAF8F5] border border-[#C5A880]/60 hover:bg-[#C5A880] hover:text-white rounded-xl text-xs font-bold text-[#14110F] flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
+            className="px-3 py-1.5 bg-[#FAF8F5] border border-[#C4A070]/60 hover:bg-[#C4A070] hover:text-white rounded-xl text-xs font-bold text-[#141110] flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
           >
-            <FaPhotoFilm className="w-3 h-3 text-[#C5A880] group-hover:text-white" />
+            <FaPhotoFilm className="w-3 h-3 text-[#C4A070] group-hover:text-white" />
             <span>من الوسائط</span>
           </button>
 
@@ -149,7 +149,7 @@ export default function ImagePicker({
           <input
             type="url"
             placeholder="أو رابط مباشر..."
-            className="flex-1 min-w-[140px] rounded-xl border border-[#E6E1DC] bg-white px-3 py-1.5 text-xs text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:outline-none font-medium"
+            className="flex-1 min-w-[140px] rounded-xl border border-[#E6E1DC] bg-white px-3 py-1.5 text-xs text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:outline-none font-medium"
             value={value || ''}
             onChange={(e) => {
               if (onFileChange) onFileChange(null)
@@ -199,7 +199,7 @@ export default function ImagePicker({
           <div className={`rounded-xl border-2 border-dashed border-[#D6CDC4] bg-white flex flex-col items-center justify-center text-[#8C7F75] shrink-0 p-3 text-center ${
             aspectRatio === 'square' ? 'w-28 h-28' : 'w-36 h-24 sm:w-40 sm:h-28'
           }`}>
-            <FaImage className="w-6 h-6 text-[#C5A880]/40 mb-1" />
+            <FaImage className="w-6 h-6 text-[#C4A070]/40 mb-1" />
             <span className="text-[10px] text-[#8C7F75] font-medium">لا توجد صورة</span>
           </div>
         )}
@@ -208,13 +208,13 @@ export default function ImagePicker({
         <div className="flex-1 w-full space-y-2.5">
           <div className="flex flex-wrap items-center gap-2">
             {/* Upload From Device */}
-            <label className={`px-4 py-2 rounded-xl bg-white border border-[#E6E1DC] hover:border-[#C5A880] hover:bg-[#F3EFEA] text-xs font-bold text-[#5C544E] cursor-pointer flex items-center gap-2 transition-all shadow-sm ${
+            <label className={`px-4 py-2 rounded-xl bg-white border border-[#E6E1DC] hover:border-[#C4A070] hover:bg-[#F3EFEA] text-xs font-bold text-[#5C544E] cursor-pointer flex items-center gap-2 transition-all shadow-sm ${
               uploading ? 'opacity-60 pointer-events-none' : ''
             }`}>
               {uploading ? (
-                <FaSpinner className="w-3.5 h-3.5 text-[#C5A880] animate-spin" />
+                <FaSpinner className="w-3.5 h-3.5 text-[#C4A070] animate-spin" />
               ) : (
-                <FaUpload className="w-3.5 h-3.5 text-[#C5A880]" />
+                <FaUpload className="w-3.5 h-3.5 text-[#C4A070]" />
               )}
               <span>{uploading ? 'جار الرفع...' : 'رفع من الجهاز'}</span>
               <input
@@ -231,7 +231,7 @@ export default function ImagePicker({
             <button
               type="button"
               onClick={() => setIsModalOpen(true)}
-              className="px-4 py-2 rounded-xl bg-[#C5A880] text-white hover:bg-[#B59362] text-xs font-bold flex items-center gap-2 transition-all shadow-sm cursor-pointer"
+              className="px-4 py-2 rounded-xl bg-[#C4A070] text-white hover:bg-[#B88F48] text-xs font-bold flex items-center gap-2 transition-all shadow-sm cursor-pointer"
             >
               <FaPhotoFilm className="w-3.5 h-3.5" />
               <span>اختيار من مكتبة الوسائط</span>
@@ -241,7 +241,7 @@ export default function ImagePicker({
             <button
               type="button"
               onClick={() => setShowUrlInput(!showUrlInput)}
-              className="px-3 py-2 rounded-xl bg-white border border-[#E6E1DC] text-[#8C7F75] hover:text-[#14110F] text-xs font-medium flex items-center gap-1.5 transition-all"
+              className="px-3 py-2 rounded-xl bg-white border border-[#E6E1DC] text-[#8C7F75] hover:text-[#141110] text-xs font-medium flex items-center gap-1.5 transition-all"
               title="إدخال رابط مباشر"
             >
               <FaPhotoFilm className="w-3 h-3" />
@@ -255,7 +255,7 @@ export default function ImagePicker({
               <input
                 type="url"
                 placeholder={placeholder}
-                className="w-full rounded-xl border border-[#E6E1DC] bg-white px-3.5 py-2 text-xs text-[#14110F] placeholder-[#8C7F75] focus:border-[#C5A880] focus:outline-none"
+                className="w-full rounded-xl border border-[#E6E1DC] bg-white px-3.5 py-2 text-xs text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:outline-none"
                 value={value || ''}
                 onChange={(e) => {
                   if (onFileChange) onFileChange(null)

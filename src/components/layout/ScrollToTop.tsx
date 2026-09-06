@@ -1,8 +1,10 @@
 import { useState, memo } from 'react'
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion'
 import { FaArrowUp } from 'react-icons/fa6'
+import { useTranslation } from 'react-i18next'
 
 const ScrollToTop = memo(function ScrollToTop() {
+  const { t } = useTranslation()
   const [isVisible, setIsVisible] = useState<boolean>(false)
   
   // High-performance scroll tracking via framer-motion
@@ -33,8 +35,8 @@ const ScrollToTop = memo(function ScrollToTop() {
           transition={{ type: 'spring', stiffness: 320, damping: 24 }}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.92 }}
-          className="fixed bottom-6 left-6 z-40 flex items-center justify-center w-13 h-13 rounded-full group cursor-pointer select-none shadow-2xl"
-          aria-label="الرجوع للأعلى"
+          className="fixed bottom-6 start-6 z-40 flex items-center justify-center w-13 h-13 rounded-full group cursor-pointer select-none shadow-2xl"
+          aria-label={t('floating.scrollToTopAria')}
         >
           {/* Scroll Progress Indicator Ring */}
           <svg className="absolute inset-0 w-full h-full -rotate-90 pointer-events-none" viewBox="0 0 60 60">

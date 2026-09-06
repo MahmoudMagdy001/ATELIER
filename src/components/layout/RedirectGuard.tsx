@@ -1,5 +1,5 @@
-import { useEffect, useState, type ReactNode } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useEffect, type ReactNode } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { supabase, isSupabaseConfigured } from '../../lib/supabase'
 import type { RedirectRule } from '../../types/database'
 
@@ -9,13 +9,10 @@ export interface RedirectGuardProps {
 
 export default function RedirectGuard({ children }: RedirectGuardProps) {
   const location = useLocation()
-  const [checking, setChecking] = useState<boolean>(isSupabaseConfigured)
+  const navigate = useNavigate()
 
   useEffect(() => {
-    if (!isSupabaseConfigured) {
-      setChecking(false)
-      return
-    }
+    if (!isSupabaseConfigured) return
 
     let isMounted = true
 
@@ -32,15 +29,15 @@ export default function RedirectGuard({ children }: RedirectGuardProps) {
 
         const typedData = data as RedirectRule | null
         if (!error && typedData?.target_path && isMounted) {
-          window.location.replace(typedData.target_path)
-          return
+          const target = typedData.target_path.trim()
+          if (target.startsWith('http://') || target.startsWith('https://')) {
+            window.location.replace(target)
+          } else {
+            navigate(target, { replace: true })
+          }
         }
       } catch {
         // quiet fallback
-      } finally {
-        if (isMounted) {
-          setChecking(false)
-        }
       }
     }
 
@@ -49,9 +46,8 @@ export default function RedirectGuard({ children }: RedirectGuardProps) {
     return () => {
       isMounted = false
     }
-  }, [location])
-
-  if (checking) return null
+  }, [location.pathname, navigate])
 
   return <>{children}</>
 }
+

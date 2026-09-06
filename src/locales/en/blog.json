@@ -1,0 +1,43 @@
+{
+  "meta_title": "The Architectural Journal | S&I Atelier",
+  "meta_description": "Curated architectural essays and interior design perspectives from Milan and Riyadh.",
+  "hero_title_pre": "The Architectural Journal &",
+  "hero_title_highlight": "Refined Furnishing Arts",
+  "hero_desc": "Exclusive essays and design perspectives, exploring bespoke architecture, rare marble sourcing, and palace interiors.",
+  "filter_all": "All Essays",
+  "empty_state": "No articles published in this category yet.",
+  "read_time": "{{time}} min read",
+  "read_article": "Read Essay",
+  "catalog": {
+    "allArticles": "All Articles"
+  },
+  "detail": {
+    "loading": "Loading architectural essay...",
+    "notFoundTitle": "Article Unavailable",
+    "notFoundDesc": "We were unable to locate this essay. You may explore our curated articles in the journal archive.",
+    "backToJournal": "Return to Journal",
+    "allArticles": "All Articles",
+    "journalPill": "Architectural Inquiries & Furnishing Arts",
+    "defaultAuthor": "Atelier Editorial House",
+    "authorRole": "Architecture & Bespoke Advisory Team",
+    "readingTimeMinutes": "{{time}} min read",
+    "tagsLabel": "Topics & Keywords:",
+    "shareTitle": "Share Architectural Essay",
+    "shareDesc": "Share this inspiring perspective with fellow connoisseurs of architecture and refined interior design.",
+    "shareWhatsApp": "Share via WhatsApp",
+    "shareTwitter": "Share on X",
+    "shareLinkedIn": "Share on LinkedIn",
+    "copyLink": "Copy Article Link",
+    "copiedLink": "Link Copied!",
+    "aboutPublisher": "About The Editorial Studio",
+    "publisherTeam": "Design & Architectural Research Team | ATELIER",
+    "publisherBio": "The Architectural Journal is published by Atelier Studio for palace furnishing and luxury spaces, in close collaboration with premier architects and master artisans in Italy and the Middle East.",
+    "bespokeBannerBadge": "BESPOKE ARCHITECTURAL FURNITURE",
+    "bespokeBannerTitle": "Desire Bespoke Furnishings for Your Architectural Canvas?",
+    "bespokeBannerDesc": "Consult with Atelier engineers and design principals to study dimensional plans and sculpt collector pieces befitting the grandeur of your estate.",
+    "bespokeBannerBtn": "Request Architectural Design Consultation",
+    "relatedTitle": "Related Architectural Essays",
+    "relatedSubtitle": "Explore further perspectives and curated design dialogues",
+    "readArticle": "Read Essay"
+  }
+}

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import { adminService } from '../../features/admin/services/adminService'
 import { CONTACT_INFO } from '../../constants/contactInfo'
 import BrandLogo from '../ui/BrandLogo'
 import CrCertificateBadge from '../ui/CrCertificateBadge'
+import LanguageSwitcher from '../ui/LanguageSwitcher'
 import ContactShowroomSection from '../../features/home/components/ContactShowroomSection'
 import ScrollToTop from './ScrollToTop'
 import FloatingWhatsApp from './FloatingWhatsApp'
@@ -23,13 +25,6 @@ import {
   FaWhatsapp, 
 } from 'react-icons/fa6'
 
-const NAV_LINKS = [
-  { to: '/', label: 'الرئيسية' },
-  { to: '/limited-edition', label: 'قطع ذات إصدار محدود' },
-  { to: '/bespoke', label: 'تنفيذ حسب الطلب' },
-  { to: '/offers', label: 'العروض الحصرية' },
-]
-
 const SOCIAL_LINKS = [
   { name: 'Instagram', icon: FaInstagram, url: CONTACT_INFO.instagramUrl },
   { name: 'Snapchat', icon: FaSnapchat, url: CONTACT_INFO.snapchatUrl },
@@ -43,14 +38,22 @@ const SOCIAL_LINKS = [
 ]
 
 export default function Layout() {
+  const { t, i18n } = useTranslation()
+  const isEn = i18n.language?.startsWith('en')
   const [settings, setSettings] = useState<SiteSettings | null>(null)
   const [isScrolled, setIsScrolled] = useState<boolean>(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false)
   const location = useLocation()
 
-  // Reset scroll to top on route change (like Milaf)
+  const navLinks = [
+    { to: '/', label: t('nav.home') },
+    { to: '/limited-edition', label: t('nav.limitedEdition') },
+    { to: '/bespoke', label: t('nav.bespoke') },
+    { to: '/offers', label: t('nav.offers') },
+  ]
+
+  // Close mobile menu on route change
   useEffect(() => {
-    window.scrollTo(0, 0)
     setMobileMenuOpen(false)
   }, [location.pathname])
 
@@ -59,11 +62,14 @@ export default function Layout() {
       if (data) setSettings(data)
     }).catch(() => {})
 
+    let ticking = false
     const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setIsScrolled(true)
-      } else {
-        setIsScrolled(false)
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setIsScrolled(window.scrollY > 20)
+          ticking = false
+        })
+        ticking = true
       }
     }
 
@@ -83,8 +89,12 @@ export default function Layout() {
     setMobileMenuOpen(false)
   }
 
+  const whatsappInquiryText = i18n.language?.startsWith('en')
+    ? 'Hello S&I Atelier, I would like to inquire regarding bespoke architectural furniture commissions.'
+    : 'مرحباً S&I Atelier، أود الاستفسار عن تفصيل قطع أثاث خاصة'
+
   return (
-    <div className="min-h-screen bg-transparent text-[#F2EFE8] flex flex-col selection:bg-[#C4A070]/30 selection:text-[#F2EFE8] font-sans relative" dir="rtl">
+    <div className="min-h-screen bg-transparent text-[#F2EFE8] flex flex-col selection:bg-[#C4A070]/30 selection:text-[#F2EFE8] font-sans relative">
       {/* Dynamic Transparent / Solid Navbar */}
       <header
         className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ease-in-out ${
@@ -100,7 +110,7 @@ export default function Layout() {
 
           {/* Desktop Navigation with Framer Motion Layout Transition */}
           <nav className="hidden md:flex flex-1 items-center justify-center gap-5 lg:gap-8 text-sm font-medium px-4">
-            {NAV_LINKS.map((link) => (
+            {navLinks.map((link) => (
               <NavLink 
                 key={link.to}
                 to={link.to} 
@@ -131,14 +141,17 @@ export default function Layout() {
           </nav>
 
           <div className="flex items-center gap-3 shrink-0">
+            {/* Desktop Language Switcher */}
+            <LanguageSwitcher className="hidden md:inline-flex" />
+
             <div className="hidden lg:flex items-center gap-3">
               <a
-                href={`https://wa.me/${CONTACT_INFO.whatsappRaw}?text=${encodeURIComponent('مرحباً S&I Atelier، أود الاستفسار عن تفصيل قطع أثاث خاصة')}`}
+                href={`https://wa.me/${CONTACT_INFO.whatsappRaw}?text=${encodeURIComponent(whatsappInquiryText)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-5 py-2.5 rounded-full text-xs font-bold gold-btn-primary transition-all duration-300 shadow-lg flex items-center gap-2"
               >
-                <span>طلب استشارة تصميم</span>
+                <span>{t('nav.consultationBtn')}</span>
               </a>
             </div>
 
@@ -146,7 +159,7 @@ export default function Layout() {
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="md:hidden p-2 rounded-xl text-[#C4A070] hover:text-[#F2EFE8] hover:bg-white/5 transition-colors"
-              aria-label="القائمة"
+              aria-label={t('nav.menuAria')}
             >
               {mobileMenuOpen ? <FaXmark className="w-6 h-6" /> : <FaBars className="w-6 h-6" />}
             </button>
@@ -161,9 +174,15 @@ export default function Layout() {
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.25, ease: 'easeInOut' }}
-              className="md:hidden border-t border-[#C4A070]/15 bg-[#141110] px-6 py-4 space-y-1.5 overflow-hidden"
+              className="md:hidden border-t border-[#C4A070]/15 bg-[#141110] px-6 py-4 space-y-2 overflow-hidden"
             >
-              {NAV_LINKS.map((link) => (
+              {/* Mobile Language Switcher Row */}
+              <div className="pb-3 pt-1 border-b border-[#C4A070]/15 flex items-center justify-between">
+                <span className="text-xs font-medium text-[#B3A9A3]">Language / اللغة</span>
+                <LanguageSwitcher compact />
+              </div>
+
+              {navLinks.map((link) => (
                 <NavLink
                   key={link.to}
                   to={link.to}
@@ -172,7 +191,7 @@ export default function Layout() {
                   className={({ isActive }) =>
                     `block px-4 py-3 rounded-xl text-sm font-medium transition-all ${
                       isActive
-                        ? 'bg-[#C4A070]/15 text-[#C4A070] font-bold border-r-2 border-[#C4A070]'
+                        ? 'bg-[#C4A070]/15 text-[#C4A070] font-bold border-s-2 border-[#C4A070]'
                         : 'text-[#B3A9A3] hover:text-[#F2EFE8] hover:bg-white/5'
                     }`
                   }
@@ -180,6 +199,17 @@ export default function Layout() {
                   {link.label}
                 </NavLink>
               ))}
+
+              <div className="pt-2">
+                <a
+                  href={`https://wa.me/${CONTACT_INFO.whatsappRaw}?text=${encodeURIComponent(whatsappInquiryText)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-3 rounded-xl text-xs font-bold gold-btn-primary flex items-center justify-center gap-2 shadow-lg"
+                >
+                  <span>{t('nav.consultationBtn')}</span>
+                </a>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -201,7 +231,7 @@ export default function Layout() {
           <div className="space-y-5 lg:col-span-5">
             <BrandLogo size="lg" customLogo={settings?.logo_url} />
             <p className="text-xs sm:text-sm leading-relaxed text-[#B3A9A3] pt-1 max-w-sm">
-              صياغة مساحات استثنائية وأثاث راقٍ مخصص يعكس الهوية الفاخرة للقصور والفيلات العصرية بأيدي كبار الحرفيين.
+              {t('footer.bio')}
             </p>
             <div className="pt-2">
               <CrCertificateBadge />
@@ -209,25 +239,25 @@ export default function Layout() {
           </div>
 
           <div className="lg:col-span-2">
-            <h4 className="text-sm font-bold text-[#F2EFE8] mb-4 font-serif">روابط سريعة</h4>
+            <h4 className="text-sm font-bold text-[#F2EFE8] mb-4 font-serif">{t('footer.quickLinks')}</h4>
             <ul className="space-y-2.5 text-xs">
-              <li><Link to="/limited-edition" className="hover:text-[#C4A070] transition-colors">قطع ذات إصدار محدود</Link></li>
-              <li><Link to="/bespoke" className="hover:text-[#C4A070] transition-colors">التنفيذ حسب الطلب</Link></li>
-              <li><Link to="/offers" className="hover:text-[#C4A070] transition-colors">العروض الحصرية</Link></li>
-              <li><Link to="/blog" className="hover:text-[#C4A070] transition-colors">المدونة</Link></li>
+              <li><Link to="/limited-edition" className="hover:text-[#C4A070] transition-colors">{t('nav.limitedEdition')}</Link></li>
+              <li><Link to="/bespoke" className="hover:text-[#C4A070] transition-colors">{t('nav.bespoke')}</Link></li>
+              <li><Link to="/offers" className="hover:text-[#C4A070] transition-colors">{t('nav.offers')}</Link></li>
+              <li><Link to="/blog" className="hover:text-[#C4A070] transition-colors">{t('nav.blog')}</Link></li>
             </ul>
           </div>
 
           <div className="lg:col-span-3">
-            <h4 className="text-sm font-bold text-[#F2EFE8] mb-4 font-serif">التواصل والمعرض</h4>
-            <p className="text-xs text-[#B3A9A3] mb-2">{CONTACT_INFO.address}</p>
-            <a href={`tel:${CONTACT_INFO.phone.replace(/\s+/g, '')}`} className="text-xs text-[#C4A070] font-mono hover:underline block">
+            <h4 className="text-sm font-bold text-[#F2EFE8] mb-4 font-serif">{t('footer.showroomContact')}</h4>
+            <p className="text-xs text-[#B3A9A3] mb-2">{isEn ? 'Riyadh / Industrial District / Al-Shifa Area' : CONTACT_INFO.address}</p>
+            <a href={`tel:${CONTACT_INFO.phone.replace(/\s+/g, '')}`} className="text-xs text-[#C4A070] font-mono hover:underline block" dir="ltr">
               {CONTACT_INFO.phone}
             </a>
           </div>
 
           <div className="lg:col-span-2">
-            <h4 className="text-sm font-bold text-[#F2EFE8] mb-4 font-serif">تابعنا على وسائل التواصل</h4>
+            <h4 className="text-sm font-bold text-[#F2EFE8] mb-4 font-serif">{t('footer.followUs')}</h4>
             <div className="flex flex-wrap items-center gap-2.5 text-base text-[#C4A070]">
               {SOCIAL_LINKS.map((social) => (
                 <a
@@ -249,16 +279,16 @@ export default function Layout() {
         {/* Brand Values Ribbon */}
         <div className="max-w-7xl mx-auto mt-12 pt-6 border-t border-white/5 flex flex-col md:flex-row items-center justify-between text-xs text-[#B3A9A3] gap-4">
           <div className="flex items-center gap-4 text-[11px] tracking-[0.28em] text-[#C4A070] uppercase font-extrabold font-serif" dir="ltr">
-            <span>LUXURY</span>
+            <span>{t('ribbon.luxury')}</span>
             <span>•</span>
-            <span>MINIMAL</span>
+            <span>{t('ribbon.minimal')}</span>
             <span>•</span>
-            <span>TIMELESS</span>
+            <span>{t('ribbon.timeless')}</span>
             <span>•</span>
-            <span>BESPOKE</span>
+            <span>{t('ribbon.bespoke')}</span>
           </div>
 
-          <p>© {new Date().getFullYear()} {settings?.site_name || 'ATELIER Bespoke Luxury Furniture'}. جميع الحقوق محفوظة.</p>
+          <p>{t('footer.copyright', { year: new Date().getFullYear(), siteName: settings?.site_name || 'S&I ATELIER' })}</p>
         </div>
       </footer>
 
