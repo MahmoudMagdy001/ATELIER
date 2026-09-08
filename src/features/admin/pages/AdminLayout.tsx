@@ -39,13 +39,18 @@ export default function AdminLayout() {
   const location = useLocation()
   const mainRef = useRef<HTMLElement | null>(null)
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState<boolean>(false)
+  const [prevPathname, setPrevPathname] = useState<string>(location.pathname)
 
-  // Scroll to top and close mobile sidebar on route change
+  if (prevPathname !== location.pathname) {
+    setPrevPathname(location.pathname)
+    setMobileSidebarOpen(false)
+  }
+
+  // Scroll to top on route change
   useEffect(() => {
     if (mainRef.current) {
       mainRef.current.scrollTo({ top: 0, left: 0, behavior: 'instant' })
     }
-    setMobileSidebarOpen(false)
   }, [location.pathname])
 
   // Escape key handler for mobile sidebar
@@ -62,7 +67,9 @@ export default function AdminLayout() {
   const handleSignOut = async () => {
     try {
       await supabase.auth.signOut()
-    } catch (_e) {}
+    } catch {
+      // ignore
+    }
     localStorage.removeItem('atelier_user')
     navigate('/admin/login', { replace: true })
   }

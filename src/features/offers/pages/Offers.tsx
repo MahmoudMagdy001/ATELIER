@@ -4,16 +4,15 @@ import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { offerService } from '../services/offerService'
 import SEO from '../../../components/ui/SEO'
-import { PageLoading, GridSkeleton } from '../../../components/ui/Loading'
+import { GridSkeleton } from '../../../components/ui/Loading'
 import { 
   fadeUp, 
   heroStagger, 
   staggerContainer, 
-  viewportOnce, 
   springHover, 
   cardHover 
 } from '../../../constants/animations'
-import { FaTag, FaArrowLeft, FaLayerGroup, FaCalendarDays, FaPercent } from 'react-icons/fa6'
+import { FaTag, FaArrowLeft, FaLayerGroup, FaCalendarDays } from 'react-icons/fa6'
 
 import type { Offer, OfferVariant } from '../../../types/database'
 

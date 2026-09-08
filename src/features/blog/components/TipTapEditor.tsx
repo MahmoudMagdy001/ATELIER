@@ -1,4 +1,4 @@
-﻿import { useEditor, EditorContent } from '@tiptap/react'
+import { useEditor, EditorContent } from '@tiptap/react'
 import { StarterKit } from '@tiptap/starter-kit'
 import { Underline } from '@tiptap/extension-underline'
 import { Highlight } from '@tiptap/extension-highlight'
@@ -21,7 +21,7 @@ import {
   FaArrowRotateLeft, FaArrowRotateRight, FaBold, FaItalic, FaUnderline, FaStrikethrough, FaHighlighter, 
   FaAlignLeft, FaAlignCenter, FaAlignRight, FaAlignJustify, 
   FaListUl, FaListOl, FaSquareCheck, FaQuoteRight, FaCode, 
-  FaLink, FaImage, FaYoutube, FaMinus, FaTable, FaEraser, FaUpload, FaXmark, FaPhotoFilm 
+  FaLink, FaImage, FaYoutube, FaMinus, FaTable, FaEraser, FaUpload, FaPhotoFilm 
 } from 'react-icons/fa6'
 import MediaPickerModal from '../../../components/admin/MediaPickerModal'
 import '../../../styles/article.css'
@@ -120,7 +120,7 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
         }
         return false
       },
-      handlePaste: (view, event, slice) => {
+      handlePaste: (view, event, _slice) => {
         if (event.clipboardData?.files?.length) {
           const file = event.clipboardData.files[0]
           if (file.type.startsWith('image/')) {
@@ -246,58 +246,9 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
     setActiveModal(null)
   }
 
-  const openIframeModal = () => {
-    setActiveModal('iframe')
-    setModalData({ src: '', width: '100%', height: '450' })
-  }
-
-  const saveIframeModal = (e?: React.FormEvent) => {
-    if (e && typeof e.preventDefault === 'function') e.preventDefault()
-    let { src, width, height } = modalData
-    if (!src) return
-
-    if (src.includes('<iframe')) {
-      const match = src.match(/src="([^"]+)"/)
-      if (match) src = match[1]
-    }
-
-    editor.chain().focus().setIframe({
-      src,
-      width: width ? width.toString() : '100%',
-      height: height ? height.toString() : '450'
-    }).run()
-    setActiveModal(null)
-  }
-
   const insertTable = () => {
     editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()
   }
-
-  const fonts = [
-    { label: 'الافتراضي (Alexandria - الإسكندرية)', value: 'Alexandria' },
-    { label: 'المسيري الفاخر (El Messiri)', value: 'El Messiri' },
-    { label: 'سينزل الفندقي (Cinzel Serif)', value: 'Cinzel' },
-    { label: 'كورمورانت الملكي (Cormorant Garamond)', value: 'Cormorant Garamond' },
-    { label: 'جاكرتا الحديث (Plus Jakarta Sans)', value: 'Plus Jakarta Sans' }
-  ]
-
-  const sizes = [
-    { label: '14 بكسل', value: '14px' },
-    { label: '16 بكسل', value: '16px' },
-    { label: '18 بكسل', value: '18px' },
-    { label: '20 بكسل', value: '20px' },
-    { label: '24 بكسل', value: '24px' },
-    { label: '32 بكسل', value: '32px' }
-  ]
-
-  const colors = [
-    { name: 'الافتراضي الداكن', value: '#141110' },
-    { name: 'الذهبي الأتيليه', value: '#C4A070' },
-    { name: 'برونزي فاخر', value: '#795E40' },
-    { name: 'رمادي حجري', value: '#5C544E' },
-    { name: 'أحمر تنبيه', value: '#EF4444' },
-    { name: 'أخضر نجاح', value: '#10B981' }
-  ]
 
   return (
     <div className="border border-[#E6E1DC] rounded-2xl overflow-hidden bg-white shadow-sm transition-all focus-within:border-[#C4A070]">

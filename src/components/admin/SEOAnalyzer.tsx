@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react'
+import { useMemo } from 'react'
 import { FaCircleCheck, FaCircleXmark, FaCircleExclamation, FaCalculator } from 'react-icons/fa6'
 
 export interface SEOCheckItem {
@@ -8,8 +8,8 @@ export interface SEOCheckItem {
 }
 
 export interface SEOAnalyzerProps {
-  title?: string
-  description?: string
+  title: string
+  description: string
   content?: string
   focusKeyword?: string
   imageAlt?: string
@@ -25,12 +25,9 @@ export default function SEOAnalyzer({
   content = '',
   focusKeyword = '',
   imageAlt = '',
-  canonicalUrl = '',
+  canonicalUrl: _canonicalUrl = '',
 }: SEOAnalyzerProps) {
-  const [score, setScore] = useState<number>(0)
-  const [checks, setChecks] = useState<SEOCheckItem[]>([])
-
-  useEffect(() => {
+  const { score, checks } = useMemo(() => {
     const textContent = content ? content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim() : ''
     const wordCount = textContent ? textContent.split(/\s+/).length : 0
 
@@ -144,9 +141,11 @@ export default function SEOAnalyzer({
       tempScore += 2
     }
 
-    setScore(Math.min(100, tempScore))
-    setChecks(newChecks)
-  }, [title, description, content, focusKeyword, imageAlt, canonicalUrl])
+    return {
+      score: Math.min(100, tempScore),
+      checks: newChecks
+    }
+  }, [title, description, content, focusKeyword, imageAlt])
 
   const getScoreColor = () => {
     if (score >= 80) return 'text-emerald-700 bg-emerald-50 border-emerald-300'

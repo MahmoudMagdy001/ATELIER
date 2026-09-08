@@ -6,9 +6,9 @@ import { offerService } from '../services/offerService'
 import { adminService } from '../../admin/services/adminService'
 import SEO from '../../../components/ui/SEO'
 import { PageLoading } from '../../../components/ui/Loading'
+import { Badge } from '../../../components/ui/Badge'
 import { CONTACT_INFO } from '../../../constants/contactInfo'
 import { 
-  FaArrowRight, 
   FaWhatsapp, 
   FaCheck, 
   FaCalendarDays, 
@@ -187,6 +187,7 @@ export default function OfferDetail() {
         twitterCard={offer.twitter_card}
         robotsIndex={offer.robots_index}
         robotsFollow={offer.robots_follow}
+        siteSettings={settings}
       />
 
       <div className="max-w-7xl mx-auto px-6 py-10 space-y-10">
@@ -200,16 +201,16 @@ export default function OfferDetail() {
         </div>
 
         {/* Main Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           
           {/* Gallery View */}
           <motion.div 
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
             className="lg:col-span-7 space-y-4"
           >
-            <div className="relative aspect-[4/3] rounded-3xl bg-[#141110] border border-[#C4A070]/30 overflow-hidden shadow-2xl">
+            <div className="relative aspect-4/3 rounded-3xl overflow-hidden border border-[#C4A070]/30 shadow-2xl bg-[#141110]">
               <motion.img
                 key={activeImage}
                 initial={{ opacity: 0.8, scale: 1.02 }}
@@ -221,8 +222,9 @@ export default function OfferDetail() {
               />
               
               {offerDiscount && (
-                <span className="absolute top-5 end-5 px-4 py-2 rounded-full text-xs font-extrabold bg-[#C4A070] text-[#1C1816] shadow-xl">
-                  {offerDiscount}
+                <span className="absolute top-5 start-5 px-3.5 py-1.5 rounded-full text-xs font-black bg-[#C4A070] text-[#141110] shadow-lg flex items-center gap-1.5">
+                  <FaPercent className="w-3 h-3" />
+                  <span>{offerDiscount}</span>
                 </span>
               )}
 
@@ -267,9 +269,14 @@ export default function OfferDetail() {
           >
             
             <div>
-              <span className="text-[11px] font-bold tracking-widest text-[#C4A070] uppercase flex items-center gap-1.5">
-                <FaPercent className="w-3 h-3" /> {t('badge_promotional')}
-              </span>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-[11px] font-bold tracking-widest text-[#C4A070] uppercase flex items-center gap-1.5">
+                  <FaPercent className="w-3 h-3" /> {offerBadge || t('badge_promotional')}
+                </span>
+                {offerDiscount && (
+                  <Badge variant="sale" size="sm">{offerDiscount}</Badge>
+                )}
+              </div>
               <h1 className="text-2xl md:text-3xl font-serif font-bold text-[#F2EFE8] mt-1 leading-snug">
                 {offerTitle}
               </h1>

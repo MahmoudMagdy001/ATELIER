@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { adminService } from '../services/adminService'
 import { PageLoading } from '../../../components/ui/Loading'
 import Button from '../../../components/ui/Button'
@@ -10,10 +10,7 @@ import {
   FaFloppyDisk, 
   FaFolderOpen, 
   FaXmark, 
-  FaImage, 
-  FaUpload, 
-  FaArrowUpFromBracket,
-  FaLink
+  FaImage 
 } from 'react-icons/fa6'
 
 import AdminLanguageTabs, { AdminLocale } from '../../../components/admin/AdminLanguageTabs'
@@ -35,22 +32,13 @@ export default function AdminCategories() {
   const [description, setDescription] = useState<string>('')
   const [descriptionEn, setDescriptionEn] = useState<string>('')
   const [imageUrl, setImageUrl] = useState<string>('')
-  const [imageFile, setImageFile] = useState<File | null>(null)
-  const [imagePreview, setImagePreview] = useState<string>('')
   const [type, setType] = useState<string>('products')
   const [displayOrder, setDisplayOrder] = useState<number>(0)
   const [metaTitle, setMetaTitle] = useState<string>('')
   const [metaDescription, setMetaDescription] = useState<string>('')
   const [submitting, setSubmitting] = useState<boolean>(false)
-  const [uploadingImage, setUploadingImage] = useState<boolean>(false)
 
-  const fileInputRef = useRef<HTMLInputElement | null>(null)
-
-  useEffect(() => {
-    fetchCategories()
-  }, [filterType])
-
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     setLoading(true)
     try {
       const data = await adminService.fetchCategories(filterType)
@@ -60,7 +48,25 @@ export default function AdminCategories() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [filterType])
+
+  useEffect(() => {
+    let isMounted = true
+    adminService.fetchCategories(filterType)
+      .then(data => {
+        if (isMounted) {
+          setCategories(data)
+          setLoading(false)
+        }
+      })
+      .catch(err => {
+        console.warn('Fetch categories fallback:', (err as Error)?.message || err)
+        if (isMounted) setLoading(false)
+      })
+    return () => {
+      isMounted = false
+    }
+  }, [filterType])
 
   const handleEdit = (cat: Category) => {
     setCurrentId(cat.id)
@@ -70,8 +76,6 @@ export default function AdminCategories() {
     setDescription(cat.description || '')
     setDescriptionEn(cat.description_en || '')
     setImageUrl(cat.image_url || '')
-    setImagePreview(cat.image_url || '')
-    setImageFile(null)
     setType(cat.type || 'products')
     setDisplayOrder(cat.display_order || 0)
     setMetaTitle(cat.meta_title || '')
@@ -88,31 +92,12 @@ export default function AdminCategories() {
     setDescription('')
     setDescriptionEn('')
     setImageUrl('')
-    setImagePreview('')
-    setImageFile(null)
     setType(filterType)
     setDisplayOrder(categories.length + 1)
     setMetaTitle('')
     setMetaDescription('')
     setAdminLocale('ar')
     setIsEditing(true)
-  }
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      setImageFile(file)
-      setImagePreview(URL.createObjectURL(file))
-    }
-  }
-
-  const handleRemoveImage = () => {
-    setImageFile(null)
-    setImageUrl('')
-    setImagePreview('')
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ''
-    }
   }
 
   const handleDelete = async (id: string) => {
@@ -130,13 +115,6 @@ export default function AdminCategories() {
     setSubmitting(true)
 
     try {
-      let finalImageUrl = imageUrl
-      if (imageFile) {
-        setUploadingImage(true)
-        finalImageUrl = await adminService.uploadCategoryImage(imageFile)
-        setUploadingImage(false)
-      }
-
       const targetSlug = slug || name.toLowerCase().replace(/[^a-z0-9\u0600-\u06FF]+/g, '-').replace(/(^-|-$)/g, '')
 
       const catData = {
@@ -145,7 +123,7 @@ export default function AdminCategories() {
         slug: targetSlug,
         description,
         description_en: descriptionEn.trim() || null,
-        image_url: finalImageUrl,
+        image_url: imageUrl.trim() || null,
         type,
         display_order: Number(displayOrder),
         meta_title: metaTitle,
@@ -163,7 +141,6 @@ export default function AdminCategories() {
       alert('حدث خطأ أثناء الحفظ: ' + ((err as Error)?.message || String(err)))
     } finally {
       setSubmitting(false)
-      setUploadingImage(false)
     }
   }
 
@@ -318,22 +295,8 @@ export default function AdminCategories() {
             <ImagePicker
               label={adminLocale === 'en' ? 'Category Image (Homepage Showcase)' : 'صورة التصنيف (للعرض في الصفحة الرئيسية)'}
               value={imageUrl}
-              onChange={(url) => {
-                setImageUrl(url)
-                setImagePreview(url)
-              }}
-              file={imageFile}
-              onFileChange={(file) => {
-                setImageFile(file)
-                if (file) {
-                  setImagePreview(URL.createObjectURL(file))
-                }
-              }}
-              onRemove={() => {
-                setImageFile(null)
-                setImageUrl('')
-                setImagePreview('')
-              }}
+              onChange={(url) => setImageUrl(url)}
+              onRemove={() => setImageUrl('')}
               aspectRatio="square"
               title={adminLocale === 'en' ? 'Select category image from Media Library' : 'اختر صورة للتصنيف من مكتبة الوسائط'}
             />
@@ -415,6 +378,15 @@ export default function AdminCategories() {
               </div>
             )}
 
+            {/* Category Image */}
+            <div>
+              <ImagePicker
+                label={adminLocale === 'en' ? 'Category Image (Optional)' : 'صورة التصنيف (اختياري)'}
+                value={imageUrl}
+                onChange={(val) => setImageUrl(val)}
+              />
+            </div>
+
             {/* Type and Order */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
@@ -456,12 +428,12 @@ export default function AdminCategories() {
               </button>
               <Button 
                 type="submit" 
-                disabled={submitting || uploadingImage} 
+                disabled={submitting} 
                 icon={<FaFloppyDisk />} 
                 size="md"
               >
-                {submitting || uploadingImage 
-                  ? (adminLocale === 'en' ? 'Saving...' : 'جار الحفظ والرفع...') 
+                {submitting
+                  ? (adminLocale === 'en' ? 'Saving...' : 'جار الحفظ...') 
                   : (adminLocale === 'en' ? 'Save Category' : 'حفظ التصنيف')}
               </Button>
             </div>

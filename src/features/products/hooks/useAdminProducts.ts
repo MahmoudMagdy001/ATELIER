@@ -1,4 +1,4 @@
-import { useState, useEffect, type FormEvent } from 'react'
+import { useState, useEffect, useCallback, type FormEvent } from 'react'
 import { productService } from '../services/productService'
 import { adminService } from '../../admin/services/adminService'
 import { regenerateSitemapAndRobots } from '../../../lib/sitemapGenerator'
@@ -58,12 +58,7 @@ export function useAdminProducts() {
   const [imageAlt, setImageAlt] = useState<string>('')
   const [imageTitle, setImageTitle] = useState<string>('')
 
-  useEffect(() => {
-    fetchProducts()
-    fetchCategories()
-  }, [])
-
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     setLoading(true)
     try {
       const data = await productService.fetchAllProducts()
@@ -73,16 +68,39 @@ export function useAdminProducts() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       const data = await adminService.fetchCategories('products')
       setCategories(data)
     } catch (err: unknown) {
       console.warn('Fetch categories fallback:', (err as Error)?.message || err)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    let isMounted = true
+    Promise.all([
+      productService.fetchAllProducts().catch(err => {
+        console.warn('Fetch products fallback:', (err as Error)?.message || err)
+        return []
+      }),
+      adminService.fetchCategories('products').catch(err => {
+        console.warn('Fetch categories fallback:', (err as Error)?.message || err)
+        return []
+      }),
+    ]).then(([productsData, categoriesData]) => {
+      if (isMounted) {
+        setProducts(productsData)
+        setCategories(categoriesData)
+        setLoading(false)
+      }
+    })
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   // Variant Helpers
   const addVariant = () => {
@@ -403,6 +421,7 @@ export function useAdminProducts() {
     setImageAlt,
     imageTitle,
     setImageTitle,
+    fetchCategories,
   }
 }
 

@@ -5,12 +5,11 @@ import { useTranslation } from 'react-i18next'
 import { blogService } from '../services/blogService'
 import { adminService } from '../../admin/services/adminService'
 import SEO from '../../../components/ui/SEO'
-import { PageLoading, GridSkeleton } from '../../../components/ui/Loading'
+import { GridSkeleton } from '../../../components/ui/Loading'
 import { 
   fadeUp, 
   heroStagger, 
   staggerContainer, 
-  viewportOnce, 
   springHover, 
   cardHover 
 } from '../../../constants/animations'
@@ -168,7 +167,7 @@ export default function Blog() {
                       <div className="space-y-2">
                         <div className="flex items-center gap-2 text-[10px] text-[#C4A070]">
                           <FaCalendarDays className="w-2.5 h-2.5" />
-                          <span>{new Date(post.published_at || post.created_at || Date.now()).toLocaleDateString(isEn ? 'en-US' : 'ar-SA')}</span>
+                          <span>{new Date(post.published_at || post.created_at || '').toLocaleDateString(isEn ? 'en-US' : 'ar-SA')}</span>
                           {post.reading_time && (
                             <>
                               <span>•</span>

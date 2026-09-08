@@ -9,9 +9,6 @@ import {
   FaPlus, 
   FaTrashCan, 
   FaPenToSquare, 
-  FaEye, 
-  FaEyeSlash,
-  FaArrowLeft,
   FaCheck
 } from 'react-icons/fa6'
 
@@ -49,16 +46,6 @@ export default function AdminPortfolio() {
     handleSubmit,
     setIsEditing,
   } = useAdminPortfolio()
-
-  const [previewUrl, setPreviewUrl] = useState('')
-
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      setImageFile(file)
-      setPreviewUrl(URL.createObjectURL(file))
-    }
-  }
 
   if (loading && !isEditing) return <PageLoading text="جار تحميل معرض الأعمال..." />
 
@@ -211,19 +198,12 @@ export default function AdminPortfolio() {
                 <ImagePicker
                   label={activeLocale === 'en' ? 'Commission Portfolio Image *' : 'صورة العمل المنفذ *'}
                   value={imageUrl}
-                  onChange={(url) => {
-                    setImageUrl(url)
-                    setPreviewUrl(url)
-                  }}
+                  onChange={(url) => setImageUrl(url)}
                   file={imageFile}
-                  onFileChange={(file) => {
-                    setImageFile(file)
-                    if (file) setPreviewUrl(URL.createObjectURL(file))
-                  }}
+                  onFileChange={(file) => setImageFile(file)}
                   onRemove={() => {
                     setImageUrl('')
                     setImageFile(null)
-                    setPreviewUrl('')
                   }}
                   hint={activeLocale === 'en' ? 'High-resolution photograph of the completed work' : 'صورة فوتوغرافية واضحة للعمل المنفذ'}
                   title={activeLocale === 'en' ? 'Select portfolio image from Media Library' : 'اختر صورة من مكتبة الوسائط لمعرض الأعمال'}

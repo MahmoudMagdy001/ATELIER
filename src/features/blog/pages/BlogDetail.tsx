@@ -223,14 +223,16 @@ export default function BlogDetail() {
               </div>
 
               <div className="flex items-center gap-4 sm:gap-6 text-xs text-[#827771]">
-                <span className="flex items-center gap-1.5 font-medium text-[#C4A070]">
-                  <FaCalendarDays className="w-3.5 h-3.5" />
-                  {new Date(post.published_at || post.created_at || Date.now()).toLocaleDateString(isRtl ? 'ar-SA' : 'en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  })}
-                </span>
+                {(post.published_at || post.created_at) && (
+                  <span className="flex items-center gap-1.5 font-medium text-[#C4A070]">
+                    <FaCalendarDays className="w-3.5 h-3.5" />
+                    {new Date(post.published_at || post.created_at || '').toLocaleDateString(isRtl ? 'ar-SA' : 'en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </span>
+                )}
 
                 {post.reading_time && (
                   <span className="flex items-center gap-1.5">
@@ -442,7 +444,7 @@ export default function BlogDetail() {
                           <div className="space-y-2">
                             <div className="flex items-center gap-2 text-[10px] text-[#C4A070]">
                               <FaCalendarDays className="w-2.5 h-2.5" />
-                              <span>{new Date(rPost.published_at || rPost.created_at || Date.now()).toLocaleDateString(isRtl ? 'ar-SA' : 'en-US')}</span>
+                              <span>{new Date(rPost.published_at || rPost.created_at || '').toLocaleDateString(isRtl ? 'ar-SA' : 'en-US')}</span>
                               {rPost.reading_time && (
                                 <>
                                   <span>•</span>

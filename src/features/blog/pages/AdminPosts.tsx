@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Button from '../../../components/ui/Button'
 import { PageLoading } from '../../../components/ui/Loading'
 import { useAdminPosts } from '../hooks/useAdminPosts'
-import { FaPen, FaTrash, FaPlus, FaUpload, FaEye, FaFloppyDisk, FaNewspaper } from 'react-icons/fa6'
+import { FaPen, FaTrash, FaPlus, FaEye, FaFloppyDisk, FaNewspaper } from 'react-icons/fa6'
 import SEOSection from '../../../components/admin/SEOSection'
 import SEOAnalyzer from '../../../components/admin/SEOAnalyzer'
 import ImagePicker from '../../../components/admin/ImagePicker'
@@ -84,24 +84,9 @@ export default function AdminPosts() {
     setTwitterCard,
     imageAlt,
     setImageAlt,
-    imageTitle,
-    setImageTitle,
-    caption,
-    setCaption,
   } = useAdminPosts()
 
   const [editorTab, setEditorTab] = useState('edit')
-  const [imagePreview, setImagePreview] = useState('')
-
-  useEffect(() => {
-    if (imageFile) {
-      const objectUrl = URL.createObjectURL(imageFile)
-      setImagePreview(objectUrl)
-      return () => URL.revokeObjectURL(objectUrl)
-    } else {
-      setImagePreview(imageUrl || '')
-    }
-  }, [imageFile, imageUrl])
 
   if (loading && !isEditing) return <PageLoading text="جار تحميل المقالات..." />
 

@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { blogService } from '../services/blogService'
 import { PageLoading } from '../../../components/ui/Loading'
@@ -58,9 +58,11 @@ export default function AdminPostPreview() {
       <article className="bg-white rounded-3xl p-8 md:p-12 space-y-8 border border-[#E6E1DC] shadow-sm">
         <div className="space-y-4">
           <div className="flex items-center gap-3 text-xs text-[#C4A070]">
-            <span className="flex items-center gap-1 font-bold">
-              <FaCalendar className="w-3 h-3" /> {new Date(post.created_at || Date.now()).toLocaleDateString('ar-SA')}
-            </span>
+            {post.created_at && (
+              <span className="flex items-center gap-1 font-bold">
+                <FaCalendar className="w-3 h-3" /> {new Date(post.created_at).toLocaleDateString('ar-SA')}
+              </span>
+            )}
           </div>
 
           <h1 className="text-2xl md:text-3xl font-bold text-[#141110] leading-tight">

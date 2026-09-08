@@ -48,8 +48,7 @@ interface StandardItem {
 }
 
 export default function BespokeService() {
-  const { t, i18n } = useTranslation('bespoke')
-  const isEn = i18n.language?.startsWith('en')
+  const { t } = useTranslation('bespoke')
 
   const whatsappNum = CONTACT_INFO.whatsappRaw
   const primaryPhone = CONTACT_INFO.phone

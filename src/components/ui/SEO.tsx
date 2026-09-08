@@ -46,19 +46,17 @@ const SEO = memo(function SEO({
   jsonLd,
   siteSettings,
 }: SEOProps) {
-  const [settings, setSettings] = useState<SiteSettings | null>(() => siteSettings || adminService.getCachedSettings())
+  const [fetchedSettings, setFetchedSettings] = useState<SiteSettings | null>(() => adminService.getCachedSettings())
+  const settings = siteSettings || fetchedSettings
   const siteUrl = typeof window !== 'undefined' && window.location.origin ? window.location.origin : 'https://atelier-luxury.com'
 
   useEffect(() => {
-    if (siteSettings) {
-      setSettings(siteSettings)
-      return
-    }
+    if (siteSettings) return
 
     let isMounted = true
     adminService.fetchSettings().then(data => {
       if (isMounted && data) {
-        setSettings(data)
+        setFetchedSettings(data)
       }
     }).catch(() => {})
 

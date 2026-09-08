@@ -1,4 +1,4 @@
-import { useState, useEffect, type FormEvent } from 'react'
+import { useState, useEffect, useCallback, type FormEvent } from 'react'
 import { blogService } from '../services/blogService'
 import { adminService } from '../../admin/services/adminService'
 import { regenerateSitemapAndRobots } from '../../../lib/sitemapGenerator'
@@ -48,12 +48,7 @@ export function useAdminPosts() {
   const [imageTitle, setImageTitle] = useState<string>('')
   const [caption, setCaption] = useState<string>('')
 
-  useEffect(() => {
-    fetchPosts()
-    fetchCategories()
-  }, [])
-
-  const fetchPosts = async () => {
+  const fetchPosts = useCallback(async () => {
     setLoading(true)
     try {
       const data = await blogService.fetchAllPosts()
@@ -63,16 +58,39 @@ export function useAdminPosts() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       const data = await adminService.fetchCategories('blog')
       setCategories(data)
     } catch (err: unknown) {
       console.warn('Categories fetch:', (err as Error)?.message || err)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    let isMounted = true
+    Promise.all([
+      blogService.fetchAllPosts().catch(err => {
+        console.warn('Posts fetch:', (err as Error)?.message || err)
+        return []
+      }),
+      adminService.fetchCategories('blog').catch(err => {
+        console.warn('Categories fetch:', (err as Error)?.message || err)
+        return []
+      }),
+    ]).then(([postsData, categoriesData]) => {
+      if (isMounted) {
+        setPosts(postsData)
+        setCategories(categoriesData)
+        setLoading(false)
+      }
+    })
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   const handleEdit = (post: Article) => {
     setCurrentPost(post)
@@ -334,6 +352,7 @@ export function useAdminPosts() {
     setImageTitle,
     caption,
     setCaption,
+    fetchCategories,
   }
 }
 

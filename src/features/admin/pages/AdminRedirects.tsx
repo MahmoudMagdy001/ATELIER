@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { adminService } from '../services/adminService'
 import { PageLoading } from '../../../components/ui/Loading'
 import Button from '../../../components/ui/Button'
@@ -19,11 +19,7 @@ export default function AdminRedirects() {
   const [statusCode, setStatusCode] = useState<number>(301)
   const [submitting, setSubmitting] = useState<boolean>(false)
 
-  useEffect(() => {
-    fetchRedirects()
-  }, [])
-
-  const fetchRedirects = async () => {
+  const fetchRedirects = useCallback(async () => {
     setLoading(true)
     try {
       const data = await adminService.fetchRedirects()
@@ -33,7 +29,25 @@ export default function AdminRedirects() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    let isMounted = true
+    adminService.fetchRedirects()
+      .then(data => {
+        if (isMounted) {
+          setRedirects(data)
+          setLoading(false)
+        }
+      })
+      .catch(err => {
+        console.warn('Fetch redirects fallback:', (err as Error)?.message || err)
+        if (isMounted) setLoading(false)
+      })
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   const handleEdit = (redir: RedirectRule) => {
     setCurrentId(redir.id)

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Button from '../../../components/ui/Button'
 import { PageLoading } from '../../../components/ui/Loading'
@@ -7,16 +7,10 @@ import {
   FaPen, 
   FaTrash, 
   FaPlus, 
-  FaUpload, 
   FaEye, 
   FaFloppyDisk, 
   FaCouch, 
-  FaTags, 
-  FaLayerGroup, 
-  FaImage,
-  FaCheck,
-  FaXmark,
-  FaCircleInfo
+  FaLayerGroup 
 } from 'react-icons/fa6'
 import SEOSection from '../../../components/admin/SEOSection'
 import SEOAnalyzer from '../../../components/admin/SEOAnalyzer'
@@ -60,7 +54,6 @@ export default function AdminProducts() {
     addVariant,
     updateVariant,
     removeVariant,
-    handleVariantImageUpload,
     submitting,
     handleEdit,
     handleCreateNew,
@@ -97,21 +90,7 @@ export default function AdminProducts() {
     setTwitterCard,
     imageAlt,
     setImageAlt,
-    imageTitle,
-    setImageTitle,
   } = useAdminProducts()
-
-  const [mainImagePreview, setMainImagePreview] = useState('')
-
-  useEffect(() => {
-    if (mainImageFile) {
-      const objectUrl = URL.createObjectURL(mainImageFile)
-      setMainImagePreview(objectUrl)
-      return () => URL.revokeObjectURL(objectUrl)
-    } else {
-      setMainImagePreview(mainImageUrl || '')
-    }
-  }, [mainImageFile, mainImageUrl])
 
   const getPriceRange = (itemVariants?: ProductVariant[] | null) => {
     if (!itemVariants || itemVariants.length === 0) return 'لا يوجد سعر محدد'

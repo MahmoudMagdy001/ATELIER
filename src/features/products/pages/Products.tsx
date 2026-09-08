@@ -1,19 +1,17 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { productService } from '../services/productService'
 import { adminService } from '../../admin/services/adminService'
 import SEO from '../../../components/ui/SEO'
-import { PageLoading, GridSkeleton } from '../../../components/ui/Loading'
+import { GridSkeleton } from '../../../components/ui/Loading'
 import { 
   fadeUp, 
   heroStagger, 
   staggerContainer, 
-  viewportOnce, 
   springHover, 
-  cardHover, 
-  hoverScale 
+  cardHover 
 } from '../../../constants/animations'
 import { FaCouch, FaArrowLeft, FaLayerGroup } from 'react-icons/fa6'
 
@@ -25,7 +23,6 @@ export default function Products() {
 
   const [products, setProducts] = useState<LimitedEdition[]>([])
   const [categories, setCategories] = useState<Category[]>([])
-  const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [loading, setLoading] = useState<boolean>(true)
   const [searchParams, setSearchParams] = useSearchParams()
   const categoryParam = searchParams.get('category')
@@ -48,19 +45,15 @@ export default function Products() {
     loadData()
   }, [])
 
-  useEffect(() => {
+  const selectedCategory = useMemo(() => {
     if (categoryParam && categories.length > 0) {
       const matched = categories.find((c) => c.slug === categoryParam || c.id === categoryParam)
-      if (matched) {
-        setSelectedCategory(matched.id)
-      }
-    } else if (!categoryParam) {
-      setSelectedCategory('all')
+      if (matched) return matched.id
     }
+    return 'all'
   }, [categoryParam, categories])
 
   const handleCategorySelect = (catId: string, catSlug?: string) => {
-    setSelectedCategory(catId)
     if (catId === 'all') {
       setSearchParams({})
     } else {

@@ -6,7 +6,6 @@ import {
   FaCopy, 
   FaTrash, 
   FaMagnifyingGlass, 
-  FaPlus, 
   FaRegFileImage, 
   FaFloppyDisk, 
   FaCheck,
@@ -32,10 +31,28 @@ export default function AdminMedia() {
   const [savingMeta, setSavingMeta] = useState<boolean>(false)
 
   useEffect(() => {
-    fetchMedia()
-    const handleUpdated = () => fetchMedia()
+    let isMounted = true
+    adminService.fetchMedia().then(data => {
+      if (isMounted) {
+        setMedia(data)
+        setLoading(false)
+      }
+    }).catch(err => {
+      console.warn('Media fetch fallback:', (err as Error)?.message || err)
+      if (isMounted) setLoading(false)
+    })
+
+    const handleUpdated = () => {
+      adminService.fetchMedia().then(data => {
+        if (isMounted) setMedia(data)
+      }).catch(() => {})
+    }
+
     window.addEventListener('atelier:media-updated', handleUpdated)
-    return () => window.removeEventListener('atelier:media-updated', handleUpdated)
+    return () => {
+      isMounted = false
+      window.removeEventListener('atelier:media-updated', handleUpdated)
+    }
   }, [])
 
   const fetchMedia = async () => {

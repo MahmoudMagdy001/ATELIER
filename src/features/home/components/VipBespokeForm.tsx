@@ -69,7 +69,7 @@ export const VipBespokeForm: React.FC<VipBespokeFormProps> = ({ whatsappNum, isE
       }
 
       setFormStatus({ submitting: false, submitted: true, error: null })
-    } catch (_err) {
+    } catch {
       setFormStatus({ submitting: false, submitted: false, error: t('form.errorGeneral') })
     }
   }

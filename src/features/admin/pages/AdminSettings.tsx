@@ -104,19 +104,15 @@ export default function AdminSettings() {
     return clean.trim().replace(/[<>"'/]/g, '')
   }
 
+
   useEffect(() => {
-    fetchSettingsAndScripts()
-  }, [])
-
-  const fetchSettingsAndScripts = async () => {
-    setLoading(true)
-    try {
-      const [settings, robots, scriptList] = await Promise.all([
-        adminService.fetchSettings().catch(() => null),
-        adminService.fetchRobots().catch(() => null),
-        adminService.fetchScripts().catch(() => []),
-      ])
-
+    let isMounted = true
+    Promise.all([
+      adminService.fetchSettings().catch(() => null),
+      adminService.fetchRobots().catch(() => null),
+      adminService.fetchScripts().catch(() => []),
+    ]).then(([settings, robots, scriptList]) => {
+      if (!isMounted) return
       if (settings) {
         setSiteName(settings.site_name || 'S&I Atelier')
         setSiteNameEn(settings.site_name_en || '')
@@ -147,12 +143,15 @@ export default function AdminSettings() {
       }
 
       setScripts(scriptList || [])
-    } catch (err: unknown) {
-      console.warn('Settings load fallback:', (err as Error)?.message || err)
-    } finally {
       setLoading(false)
+    }).catch(err => {
+      console.warn('Settings load fallback:', (err as Error)?.message || err)
+      if (isMounted) setLoading(false)
+    })
+    return () => {
+      isMounted = false
     }
-  }
+  }, [liveSitemapUrl])
 
   const handleSaveGeneralOrSEO = async (e: React.FormEvent) => {
     e.preventDefault()

@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useMemo, useRef } from 'react'
 import { 
   FaUpload, 
   FaPhotoFilm, 
@@ -38,19 +38,25 @@ export default function ImagePicker({
 }: ImagePickerProps) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const [showUrlInput, setShowUrlInput] = useState<boolean>(false)
-  const [preview, setPreview] = useState<string>('')
   const [uploading, setUploading] = useState<boolean>(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  useEffect(() => {
+  const fileUrl = useMemo(() => {
     if (file) {
-      const objectUrl = URL.createObjectURL(file)
-      setPreview(objectUrl)
-      return () => URL.revokeObjectURL(objectUrl)
-    } else {
-      setPreview(value || '')
+      return URL.createObjectURL(file)
     }
-  }, [file, value])
+    return null
+  }, [file])
+
+  useEffect(() => {
+    return () => {
+      if (fileUrl) {
+        URL.revokeObjectURL(fileUrl)
+      }
+    }
+  }, [fileUrl])
+
+  const preview = fileUrl || value || ''
 
   const handleLocalFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0]
@@ -58,15 +64,12 @@ export default function ImagePicker({
 
     if (onFileChange) {
       onFileChange(selectedFile)
-      const objectUrl = URL.createObjectURL(selectedFile)
-      setPreview(objectUrl)
     } else {
       // Auto-upload directly to Supabase storage & media library
       setUploading(true)
       try {
         const uploaded = await adminService.uploadMedia(selectedFile)
         const publicUrl = uploaded.file_url || (uploaded as unknown as { url?: string }).url || ''
-        setPreview(publicUrl)
         onChange?.(publicUrl)
       } catch (err: unknown) {
         alert('فشل رفع الصورة: ' + ((err as Error)?.message || 'خطأ غير متوقع'))
@@ -80,14 +83,12 @@ export default function ImagePicker({
   const handleMediaSelect = (mediaItem: SelectedMedia) => {
     if (onFileChange) onFileChange(null)
     onChange?.(mediaItem.url)
-    setPreview(mediaItem.url)
   }
 
   const handleClear = () => {
     if (onFileChange) onFileChange(null)
     if (onChange) onChange('')
     if (onRemove) onRemove()
-    setPreview('')
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
 

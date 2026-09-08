@@ -14,13 +14,15 @@ export async function regenerateSitemapAndRobots(): Promise<SitemapAndRobotsResu
     const siteUrl = typeof window !== 'undefined' && window.location.origin ? window.location.origin : 'https://atelier-luxury.com'
 
     // Fetch all published items for sitemap urls
-    const [articlesRes, productsRes] = await Promise.all([
+    const [articlesRes, productsRes, offersRes] = await Promise.all([
       supabase.from('articles').select('slug, created_at').eq('status', 'published'),
       supabase.from('limited_editions').select('slug, created_at').eq('status', 'published'),
+      supabase.from('offers').select('slug, created_at').eq('status', 'published'),
     ])
 
     const articles = (articlesRes.data as Array<{ slug: string; created_at: string }>) || []
     const products = (productsRes.data as Array<{ slug: string; created_at: string }>) || []
+    const offers = (offersRes.data as Array<{ slug: string; created_at: string }>) || []
 
     interface SitemapUrlItem {
       loc: string
@@ -33,12 +35,23 @@ export async function regenerateSitemapAndRobots(): Promise<SitemapAndRobotsResu
       { loc: `${siteUrl}/`, priority: '1.0', changefreq: 'daily' },
       { loc: `${siteUrl}/limited-edition`, priority: '0.9', changefreq: 'weekly' },
       { loc: `${siteUrl}/bespoke`, priority: '0.9', changefreq: 'weekly' },
+      { loc: `${siteUrl}/offers`, priority: '0.85', changefreq: 'weekly' },
+      { loc: `${siteUrl}/blog`, priority: '0.7', changefreq: 'daily' },
     ]
 
     products.forEach((item) => {
       urls.push({
         loc: `${siteUrl}/limited-edition/${item.slug}`,
         priority: '0.9',
+        changefreq: 'weekly',
+        lastmod: new Date(item.created_at || Date.now()).toISOString().split('T')[0],
+      })
+    })
+
+    offers.forEach((item) => {
+      urls.push({
+        loc: `${siteUrl}/offers/${item.slug}`,
+        priority: '0.85',
         changefreq: 'weekly',
         lastmod: new Date(item.created_at || Date.now()).toISOString().split('T')[0],
       })

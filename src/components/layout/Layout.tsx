@@ -42,8 +42,14 @@ export default function Layout() {
   const isEn = i18n.language?.startsWith('en')
   const [settings, setSettings] = useState<SiteSettings | null>(() => adminService.getCachedSettings())
   const [isScrolled, setIsScrolled] = useState<boolean>(false)
-  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false)
   const location = useLocation()
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false)
+  const [prevPathname, setPrevPathname] = useState<string>(location.pathname)
+
+  if (prevPathname !== location.pathname) {
+    setPrevPathname(location.pathname)
+    setMobileMenuOpen(false)
+  }
 
   const navLinks = [
     { to: '/', label: t('nav.home') },
@@ -51,11 +57,6 @@ export default function Layout() {
     { to: '/bespoke', label: t('nav.bespoke') },
     { to: '/offers', label: t('nav.offers') },
   ]
-
-  // Close mobile menu on route change
-  useEffect(() => {
-    setMobileMenuOpen(false)
-  }, [location.pathname])
 
   useEffect(() => {
     adminService.fetchSettings().then(data => {

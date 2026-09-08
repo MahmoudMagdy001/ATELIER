@@ -280,7 +280,7 @@ export const CustomImage = Image.extend({
   },
 
   renderHTML({ node, HTMLAttributes }: { node: any; HTMLAttributes: Record<string, any> }) {
-    const { caption, align: _a, width: _w, 'data-align': _da, 'data-caption': _dc, style: _s, ...cleanAttributes } = HTMLAttributes
+    const { caption: _c, align: _a, width: _w, 'data-align': _da, 'data-caption': _dc, style: _s, ...cleanAttributes } = HTMLAttributes
     const align = node.attrs.align || 'center'
     const width = node.attrs.width || '100%'
     const nodeCaption = node.attrs.caption || null

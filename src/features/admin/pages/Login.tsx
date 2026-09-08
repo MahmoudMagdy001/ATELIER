@@ -95,11 +95,12 @@ export default function Login() {
                 <input
                   type="email"
                   required
-                  className="w-full rounded-2xl border border-[#E6E1DC] bg-white px-4 py-3 text-sm text-[#141110] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none"
+                  className="w-full rounded-2xl border border-[#E6E1DC] bg-white ps-10 pe-4 py-3 text-sm text-[#141110] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none"
                   placeholder="admin@atelier-luxury.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
+                <FaEnvelope className="absolute top-1/2 -translate-y-1/2 start-3.5 w-4 h-4 text-[#8C7F75] pointer-events-none" />
               </div>
             </div>
 
@@ -111,11 +112,12 @@ export default function Login() {
                 <input
                   type="password"
                   required
-                  className="w-full rounded-2xl border border-[#E6E1DC] bg-white px-4 py-3 text-sm text-[#141110] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none"
+                  className="w-full rounded-2xl border border-[#E6E1DC] bg-white ps-10 pe-4 py-3 text-sm text-[#141110] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
+                <FaLock className="absolute top-1/2 -translate-y-1/2 start-3.5 w-4 h-4 text-[#8C7F75] pointer-events-none" />
               </div>
             </div>
           </div>

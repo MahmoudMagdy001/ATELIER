@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { adminService } from '../../features/admin/services/adminService'
 import type { MediaItem } from '../../types/database'
 import { 
@@ -49,7 +49,15 @@ export default function MediaPickerModal({
   const [isEditingMeta, setIsEditingMeta] = useState<boolean>(false)
   const [savingMeta, setSavingMeta] = useState<boolean>(false)
 
-  const fetchMedia = async () => {
+  const selectItem = useCallback((item: MediaItem) => {
+    setActiveItem(item)
+    setEditName(item.name || '')
+    setEditAlt(item.alt_text || '')
+    setEditTitle(item.title || '')
+    setIsEditingMeta(false)
+  }, [])
+
+  const fetchMedia = useCallback(async () => {
     setLoading(true)
     try {
       const data = await adminService.fetchMedia()
@@ -65,13 +73,31 @@ export default function MediaPickerModal({
     } finally {
       setLoading(false)
     }
-  }
+  }, [selectedUrl, selectItem])
 
   useEffect(() => {
-    if (isOpen) {
-      fetchMedia()
+    if (!isOpen) return
+    let isMounted = true
+    adminService.fetchMedia()
+      .then(data => {
+        if (!isMounted) return
+        setMedia(data)
+        if (selectedUrl && data.length > 0) {
+          const found = data.find(m => (m.file_url || (m as unknown as { url?: string }).url) === selectedUrl)
+          if (found) {
+            selectItem(found)
+          }
+        }
+        setLoading(false)
+      })
+      .catch(err => {
+        console.warn('Failed to load media in modal:', (err as Error)?.message || err)
+        if (isMounted) setLoading(false)
+      })
+    return () => {
+      isMounted = false
     }
-  }, [isOpen, selectedUrl])
+  }, [isOpen, selectedUrl, selectItem])
 
   // Lock body scroll and close on Escape key when modal is open
   useEffect(() => {
@@ -101,14 +127,6 @@ export default function MediaPickerModal({
     window.addEventListener('atelier:media-updated', handleMediaUpdated)
     return () => window.removeEventListener('atelier:media-updated', handleMediaUpdated)
   }, [])
-
-  const selectItem = (item: MediaItem) => {
-    setActiveItem(item)
-    setEditName(item.name || '')
-    setEditAlt(item.alt_text || '')
-    setEditTitle(item.title || '')
-    setIsEditingMeta(false)
-  }
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files

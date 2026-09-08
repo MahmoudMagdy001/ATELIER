@@ -1,4 +1,4 @@
-import { useState, useEffect, type FormEvent } from 'react'
+import { useState, useEffect, useCallback, type FormEvent } from 'react'
 import { portfolioService } from '../services/portfolioService'
 import type { PortfolioItem } from '../../../types/database'
 
@@ -20,11 +20,7 @@ export function useAdminPortfolio() {
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [submitting, setSubmitting] = useState<boolean>(false)
 
-  useEffect(() => {
-    fetchItems()
-  }, [])
-
-  const fetchItems = async () => {
+  const fetchItems = useCallback(async () => {
     setLoading(true)
     try {
       const data = await portfolioService.fetchAllPortfolio()
@@ -34,7 +30,25 @@ export function useAdminPortfolio() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    let mounted = true
+    portfolioService.fetchAllPortfolio()
+      .then(data => {
+        if (mounted) {
+          setItems(data)
+          setLoading(false)
+        }
+      })
+      .catch((err: unknown) => {
+        console.warn('Fetch portfolio fallback:', (err as Error)?.message || err)
+        if (mounted) setLoading(false)
+      })
+    return () => {
+      mounted = false
+    }
+  }, [])
 
   const handleEdit = (item: PortfolioItem) => {
     setCurrentItem(item)

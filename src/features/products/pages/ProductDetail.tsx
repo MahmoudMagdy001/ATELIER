@@ -13,7 +13,6 @@ import {
   FaShieldHalved, 
   FaTruckFast, 
   FaGem, 
-  FaShareNodes, 
   FaLayerGroup,
   FaPhone
 } from 'react-icons/fa6'
@@ -179,6 +178,7 @@ export default function ProductDetail() {
         twitterCard={product.twitter_card}
         robotsIndex={product.robots_index}
         robotsFollow={product.robots_follow}
+        siteSettings={settings}
       />
 
       <div className="max-w-7xl mx-auto px-6 py-10 space-y-10">

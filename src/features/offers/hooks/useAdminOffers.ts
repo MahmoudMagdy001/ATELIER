@@ -1,4 +1,4 @@
-import { useState, useEffect, type FormEvent } from 'react'
+import { useState, useEffect, useCallback, type FormEvent } from 'react'
 import { offerService } from '../services/offerService'
 import { productService } from '../../products/services/productService'
 import { regenerateSitemapAndRobots } from '../../../lib/sitemapGenerator'
@@ -61,12 +61,7 @@ export function useAdminOffers() {
   const [imageAlt, setImageAlt] = useState<string>('')
   const [imageTitle, setImageTitle] = useState<string>('')
 
-  useEffect(() => {
-    fetchOffers()
-    fetchProducts()
-  }, [])
-
-  const fetchOffers = async () => {
+  const fetchOffers = useCallback(async () => {
     setLoading(true)
     try {
       const data = await offerService.fetchAllOffers()
@@ -76,16 +71,39 @@ export function useAdminOffers() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     try {
       const data = await productService.fetchAllProducts()
       setProducts(data)
     } catch (err: unknown) {
       console.warn('Fetch products fallback:', (err as Error)?.message || err)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    let isMounted = true
+    Promise.all([
+      offerService.fetchAllOffers().catch(err => {
+        console.warn('Fetch offers fallback:', (err as Error)?.message || err)
+        return []
+      }),
+      productService.fetchAllProducts().catch(err => {
+        console.warn('Fetch products fallback:', (err as Error)?.message || err)
+        return []
+      }),
+    ]).then(([offersData, productsData]) => {
+      if (isMounted) {
+        setOffers(offersData)
+        setProducts(productsData)
+        setLoading(false)
+      }
+    })
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   // Auto-fill from selected Product
   const handleSelectProduct = (productId: string) => {
@@ -483,6 +501,7 @@ export function useAdminOffers() {
     setImageAlt,
     imageTitle,
     setImageTitle,
+    fetchProducts,
   }
 }
 
