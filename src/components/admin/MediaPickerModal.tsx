@@ -187,7 +187,7 @@ export default function MediaPickerModal({
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-[999] bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6" dir="rtl">
+    <div className="fixed inset-0 z-[999] bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6" dir="rtl" data-modal="light">
       <div className="bg-white rounded-2xl sm:rounded-3xl border border-[#E6E1DC] shadow-2xl w-full max-w-5xl h-[88vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         
         {/* Modal Header */}

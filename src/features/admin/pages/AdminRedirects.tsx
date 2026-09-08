@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { adminService } from '../services/adminService'
 import { PageLoading } from '../../../components/ui/Loading'
 import Button from '../../../components/ui/Button'
@@ -180,7 +180,7 @@ export default function AdminRedirects() {
 
       {/* Edit / Create Modal */}
       {isEditing && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" data-modal="light">
           <form onSubmit={handleSubmit} className="bg-white rounded-2xl p-6 shadow-2xl max-w-lg w-full border border-[#E6E1DC] space-y-4" dir="rtl">
             <div className="flex items-center justify-between border-b border-[#E6E1DC] pb-3">
               <h3 className="font-bold text-base text-[#141110]">{currentId ? 'تعديل مسار التحويل' : 'إنشاء تحويل جديد'}</h3>

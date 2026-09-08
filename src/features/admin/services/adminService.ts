@@ -13,6 +13,10 @@ let cachedSettings: SiteSettings | null = null
 let settingsPromise: Promise<SiteSettings | null> | null = null
 
 export const adminService = {
+  getCachedSettings(): SiteSettings | null {
+    return cachedSettings
+  },
+
   // Site Settings
   async fetchSettings(forceRefresh = false): Promise<SiteSettings | null> {
     if (cachedSettings && !forceRefresh) return cachedSettings

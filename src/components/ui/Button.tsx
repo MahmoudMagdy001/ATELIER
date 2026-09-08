@@ -59,7 +59,7 @@ const Button = memo(function Button({
   disabled,
   ...props
 }: ButtonProps) {
-  const classes = `inline-flex items-center justify-center transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed ${variants[variant] || variants.primary} ${sizes[size] || sizes.md} ${className}`
+  const classes = `inline-flex items-center justify-center transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-[#C4A070] focus-visible:outline-none focus-visible:ring-offset-2 focus-visible:ring-offset-[#141110] ${variants[variant] || variants.primary} ${sizes[size] || sizes.md} ${className}`
 
   const content = (
     <>

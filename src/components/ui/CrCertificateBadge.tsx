@@ -1,6 +1,5 @@
 import { FaAward } from 'react-icons/fa6'
 import { useTranslation } from 'react-i18next'
-import crCertificatePdf from '../../assets/CrCertificate.pdf'
 import { CONTACT_INFO } from '../../constants/contactInfo'
 
 export interface CrCertificateBadgeProps {
@@ -12,7 +11,7 @@ export default function CrCertificateBadge({ className = '' }: CrCertificateBadg
 
   return (
     <a
-      href={crCertificatePdf}
+      href="/CrCertificate.pdf"
       target="_blank"
       rel="noopener noreferrer"
       aria-label={t('certificate.ariaLabel', { date: CONTACT_INFO.foundedDate })}

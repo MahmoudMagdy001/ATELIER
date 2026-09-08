@@ -8,7 +8,6 @@ import SEO from '../../../components/ui/SEO'
 import { PageLoading } from '../../../components/ui/Loading'
 import { CONTACT_INFO } from '../../../constants/contactInfo'
 import { 
-  FaArrowRight, 
   FaWhatsapp, 
   FaCheck, 
   FaShieldHalved, 

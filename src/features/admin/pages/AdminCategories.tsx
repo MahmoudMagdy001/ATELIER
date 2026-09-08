@@ -286,7 +286,7 @@ export default function AdminCategories() {
 
       {/* Edit / Create Modal */}
       {isEditing && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto" data-modal="light">
           <form 
             onSubmit={handleSubmit} 
             className="bg-white rounded-3xl p-6 sm:p-8 shadow-2xl max-w-xl w-full border border-[#E6E1DC] space-y-5 my-8" 

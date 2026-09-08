@@ -66,28 +66,53 @@ body::before {
   opacity: 0.9 !important;
 }
 
-/* Force dark text inside all white modals and dialogs, respecting explicit button/text colors */
-.fixed .bg-white input:not([class*="text-"]),
-.fixed .bg-white textarea:not([class*="text-"]),
-.fixed .bg-white select:not([class*="text-"]),
-.fixed .bg-white p:not([class*="text-"]),
-.fixed .bg-white label:not([class*="text-"]),
-.fixed .bg-white span:not(button span):not([class*="text-"]) {
+/* Semantic Light Modal & Dialog text contrast */
+[data-modal="light"],
+.dialog-light,
+.modal-light-dialog {
+  color: #141110;
+}
+
+[data-modal="light"] input:not([class*="text-"]),
+[data-modal="light"] textarea:not([class*="text-"]),
+[data-modal="light"] select:not([class*="text-"]),
+[data-modal="light"] p:not([class*="text-"]),
+[data-modal="light"] label:not([class*="text-"]),
+[data-modal="light"] span:not(button span):not([class*="text-"]),
+.dialog-light input:not([class*="text-"]),
+.dialog-light textarea:not([class*="text-"]),
+.dialog-light select:not([class*="text-"]),
+.dialog-light p:not([class*="text-"]),
+.dialog-light label:not([class*="text-"]),
+.dialog-light span:not(button span):not([class*="text-"]),
+.modal-light-dialog input:not([class*="text-"]),
+.modal-light-dialog textarea:not([class*="text-"]),
+.modal-light-dialog select:not([class*="text-"]),
+.modal-light-dialog p:not([class*="text-"]),
+.modal-light-dialog label:not([class*="text-"]),
+.modal-light-dialog span:not(button span):not([class*="text-"]) {
   color: #141110 !important;
 }
 
-.fixed .bg-white button[class*="text-white"],
-.fixed .bg-white button[class*="text-white"] span,
-.fixed .bg-white [class*="text-white"],
-.fixed .bg-white [class*="text-white"] span {
+[data-modal="light"] button[class*="text-white"],
+[data-modal="light"] button[class*="text-white"] span,
+[data-modal="light"] [class*="text-white"],
+[data-modal="light"] [class*="text-white"] span,
+.dialog-light button[class*="text-white"],
+.dialog-light button[class*="text-white"] span,
+.dialog-light [class*="text-white"],
+.dialog-light [class*="text-white"] span,
+.modal-light-dialog button[class*="text-white"],
+.modal-light-dialog button[class*="text-white"] span,
+.modal-light-dialog [class*="text-white"],
+.modal-light-dialog [class*="text-white"] span {
   color: #ffffff !important;
 }
 
-/* Storefront dark input fields override - STRICTLY excluded inside admin scope */
-body:not(.admin-scope) div:not(.admin-scope) .bg-\[\#1C1816\]:not(.admin-scope) input:not([class*="text-"]):not(.admin-scope input),
-body:not(.admin-scope) div:not(.admin-scope) .bg-\[\#141110\]:not(.admin-scope) input:not([class*="text-"]):not(.admin-scope input),
-body:not(.admin-scope) div:not(.admin-scope) .bg-\[\#1C1816\]:not(.admin-scope) textarea:not([class*="text-"]):not(.admin-scope textarea),
-body:not(.admin-scope) div:not(.admin-scope) .bg-\[\#141110\]:not(.admin-scope) textarea:not([class*="text-"]):not(.admin-scope textarea) {
+/* Storefront dark input fields default contrast */
+:root:not(.admin-scope) input:not(.admin-scope input):not([data-modal="light"] input):not([class*="text-"]),
+:root:not(.admin-scope) textarea:not(.admin-scope textarea):not([data-modal="light"] textarea):not([class*="text-"]),
+:root:not(.admin-scope) select:not(.admin-scope select):not([data-modal="light"] select):not([class*="text-"]) {
   color: #f2efe8;
 }
 

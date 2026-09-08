@@ -40,7 +40,7 @@ const SOCIAL_LINKS = [
 export default function Layout() {
   const { t, i18n } = useTranslation()
   const isEn = i18n.language?.startsWith('en')
-  const [settings, setSettings] = useState<SiteSettings | null>(null)
+  const [settings, setSettings] = useState<SiteSettings | null>(() => adminService.getCachedSettings())
   const [isScrolled, setIsScrolled] = useState<boolean>(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false)
   const location = useLocation()
@@ -95,6 +95,14 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen bg-transparent text-[#F2EFE8] flex flex-col selection:bg-[#C4A070]/30 selection:text-[#F2EFE8] font-sans relative">
+      {/* Skip to Main Content Link for Keyboard Accessibility */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:start-4 focus:z-[100] focus:px-4 focus:py-2.5 focus:bg-[#C4A070] focus:text-[#141110] focus:font-bold focus:rounded-xl focus:shadow-2xl focus:ring-2 focus:ring-white"
+      >
+        {isEn ? 'Skip to main content' : 'الانتقال إلى المحتوى الرئيسي'}
+      </a>
+
       {/* Dynamic Transparent / Solid Navbar */}
       <header
         className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ease-in-out ${
@@ -104,12 +112,20 @@ export default function Layout() {
         }`}
       >
         <div className="w-full px-6 md:px-8 lg:px-10 h-20 flex items-center justify-between">
-          <Link to="/" className="group flex items-center shrink-0" onClick={(e) => handleNavClick(e, '/')}>
+          <Link 
+            to="/" 
+            className="group flex items-center shrink-0 focus-visible:ring-2 focus-visible:ring-[#C4A070] focus-visible:outline-none rounded-lg" 
+            onClick={(e) => handleNavClick(e, '/')}
+            aria-label="S&I Atelier Home"
+          >
             <BrandLogo size="md" customLogo={settings?.logo_url} />
           </Link>
 
           {/* Desktop Navigation with Framer Motion Layout Transition */}
-          <nav className="hidden md:flex flex-1 items-center justify-center gap-5 lg:gap-8 text-sm font-medium px-4">
+          <nav 
+            className="hidden md:flex flex-1 items-center justify-center gap-5 lg:gap-8 text-sm font-medium px-4"
+            aria-label={isEn ? 'Main navigation' : 'التنقل الرئيسي'}
+          >
             {navLinks.map((link) => (
               <NavLink 
                 key={link.to}
@@ -117,7 +133,7 @@ export default function Layout() {
                 end={link.to === '/'}
                 onClick={(e) => handleNavClick(e, link.to)}
                 className={({ isActive }) => 
-                  `relative px-3 py-2 text-sm font-medium transition-colors duration-200 ${
+                  `relative px-3 py-2 text-sm font-medium transition-colors duration-200 rounded-lg focus-visible:ring-2 focus-visible:ring-[#C4A070] focus-visible:outline-none focus-visible:ring-offset-2 focus-visible:ring-offset-[#141110] ${
                     isActive 
                       ? 'text-[#C4A070] font-bold' 
                       : 'text-[#B3A9A3] hover:text-[#F2EFE8]'
@@ -149,7 +165,7 @@ export default function Layout() {
                 href={`https://wa.me/${CONTACT_INFO.whatsappRaw}?text=${encodeURIComponent(whatsappInquiryText)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-5 py-2.5 rounded-full text-xs font-bold gold-btn-primary transition-all duration-300 shadow-lg flex items-center gap-2"
+                className="px-5 py-2.5 rounded-full text-xs font-bold gold-btn-primary transition-all duration-300 shadow-lg flex items-center gap-2 focus-visible:ring-2 focus-visible:ring-[#C4A070] focus-visible:outline-none"
               >
                 <span>{t('nav.consultationBtn')}</span>
               </a>
@@ -158,8 +174,11 @@ export default function Layout() {
             {/* Mobile Hamburger Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-xl text-[#C4A070] hover:text-[#F2EFE8] hover:bg-white/5 transition-colors"
-              aria-label={t('nav.menuAria')}
+              type="button"
+              className="md:hidden p-2 rounded-xl text-[#C4A070] hover:text-[#F2EFE8] hover:bg-white/5 transition-colors focus-visible:ring-2 focus-visible:ring-[#C4A070] focus-visible:outline-none cursor-pointer"
+              aria-label={t('nav.menuAria', 'القائمة الرئيسية')}
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-navigation-drawer"
             >
               {mobileMenuOpen ? <FaXmark className="w-6 h-6" /> : <FaBars className="w-6 h-6" />}
             </button>
@@ -170,6 +189,9 @@ export default function Layout() {
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div
+              id="mobile-navigation-drawer"
+              role="navigation"
+              aria-label={isEn ? 'Mobile navigation' : 'قائمة الجوال'}
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
@@ -189,7 +211,7 @@ export default function Layout() {
                   end={link.to === '/'}
                   onClick={(e) => handleNavClick(e, link.to)}
                   className={({ isActive }) =>
-                    `block px-4 py-3 rounded-xl text-sm font-medium transition-all ${
+                    `block px-4 py-3 rounded-xl text-sm font-medium transition-all focus-visible:ring-2 focus-visible:ring-[#C4A070] focus-visible:outline-none ${
                       isActive
                         ? 'bg-[#C4A070]/15 text-[#C4A070] font-bold border-s-2 border-[#C4A070]'
                         : 'text-[#B3A9A3] hover:text-[#F2EFE8] hover:bg-white/5'
@@ -205,7 +227,7 @@ export default function Layout() {
                   href={`https://wa.me/${CONTACT_INFO.whatsappRaw}?text=${encodeURIComponent(whatsappInquiryText)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full py-3 rounded-xl text-xs font-bold gold-btn-primary flex items-center justify-center gap-2 shadow-lg"
+                  className="w-full py-3 rounded-xl text-xs font-bold gold-btn-primary flex items-center justify-center gap-2 shadow-lg focus-visible:ring-2 focus-visible:ring-[#C4A070] focus-visible:outline-none"
                 >
                   <span>{t('nav.consultationBtn')}</span>
                 </a>
@@ -216,7 +238,7 @@ export default function Layout() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1">
+      <main id="main-content" tabIndex={-1} className="flex-1 outline-none">
         <Outlet />
       </main>
 

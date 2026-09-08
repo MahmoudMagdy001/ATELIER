@@ -44,11 +44,17 @@ const SEO = memo(function SEO({
   ogImage,
   twitterCard = 'summary_large_image',
   jsonLd,
+  siteSettings,
 }: SEOProps) {
-  const [settings, setSettings] = useState<SiteSettings | null>(null)
+  const [settings, setSettings] = useState<SiteSettings | null>(() => siteSettings || adminService.getCachedSettings())
   const siteUrl = typeof window !== 'undefined' && window.location.origin ? window.location.origin : 'https://atelier-luxury.com'
 
   useEffect(() => {
+    if (siteSettings) {
+      setSettings(siteSettings)
+      return
+    }
+
     let isMounted = true
     adminService.fetchSettings().then(data => {
       if (isMounted && data) {
@@ -59,7 +65,7 @@ const SEO = memo(function SEO({
     return () => {
       isMounted = false
     }
-  }, [])
+  }, [siteSettings])
 
   const { t, i18n } = useTranslation()
   const currentLang = i18n.language?.startsWith('en') ? 'en' : 'ar'
@@ -148,21 +154,47 @@ const SEO = memo(function SEO({
       <script type="application/ld+json">
         {JSON.stringify(jsonLd || {
           "@context": "https://schema.org",
-          "@type": "Organization",
+          "@type": ["FurnitureStore", "HomeGoodsStore"],
           "name": settings?.site_name || CONTACT_INFO.brandFullName,
+          "alternateName": "S&I Atelier",
           "url": siteUrl,
           "logo": settings?.logo_url || `${siteUrl}/assets/logo.png`,
-          "foundingDate": CONTACT_INFO.foundedDate,
+          "image": imageUrl,
+          "description": finalDesc,
+          "telephone": CONTACT_INFO.phone,
+          "email": CONTACT_INFO.email,
+          "priceRange": "$$$$",
           "address": {
             "@type": "PostalAddress",
             "streetAddress": CONTACT_INFO.address,
+            "addressLocality": "Riyadh",
+            "addressRegion": "Riyadh Province",
             "addressCountry": "SA"
           },
-          "contactPoint": {
-            "@type": "ContactPoint",
-            "telephone": CONTACT_INFO.phone,
-            "contactType": "customer service"
-          }
+          "openingHoursSpecification": [
+            {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"],
+              "opens": "09:00",
+              "closes": "22:00"
+            },
+            {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": "Friday",
+              "opens": "16:00",
+              "closes": "22:00"
+            }
+          ],
+          "sameAs": [
+            CONTACT_INFO.instagramUrl,
+            CONTACT_INFO.tiktokUrl,
+            CONTACT_INFO.snapchatUrl,
+            CONTACT_INFO.twitterUrl,
+            CONTACT_INFO.pinterestUrl,
+            CONTACT_INFO.linkedinUrl,
+            CONTACT_INFO.facebookUrl,
+            CONTACT_INFO.youtubeUrl
+          ].filter(Boolean)
         })}
       </script>
     </Helmet>

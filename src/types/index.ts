@@ -24,4 +24,5 @@ export interface SEOProps {
   ogImage?: string | null
   twitterCard?: string | null
   jsonLd?: Record<string, unknown> | null
+  siteSettings?: import('./database').SiteSettings | null
 }
