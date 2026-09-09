@@ -110,10 +110,10 @@ export default function BlogDetail() {
     )
   }
 
-  const postTitle = (isRtl ? post.title : ((post as any).title_en || post.title)) || post.title
-  const postExcerpt = (isRtl ? post.excerpt : ((post as any).excerpt_en || post.excerpt)) || post.excerpt
-  const postContent = (isRtl ? post.content : ((post as any).content_en || post.content)) || post.content
-  const postAuthor = (isRtl ? post.author : ((post as any).author_en || post.author)) || t('detail.defaultAuthor')
+  const postTitle = (isRtl ? post.title : post.title_en || post.title) || post.title
+  const postExcerpt = (isRtl ? post.excerpt : post.excerpt_en || post.excerpt) || post.excerpt
+  const postContent = (isRtl ? post.content : post.content_en || post.content) || post.content
+  const postAuthor = (isRtl ? post.author : post.author_en || post.author) || t('detail.defaultAuthor')
 
   const currentUrl = typeof window !== 'undefined' ? window.location.href : ''
   const shareTitle = encodeURIComponent(postTitle)
@@ -124,10 +124,10 @@ export default function BlogDetail() {
     : (post.keywords ? post.keywords.split(',').map((k: string) => k.trim()) : [])
 
   const postMetaTitle = !isRtl
-    ? ((post as any).meta_title_en || post.meta_title || `${postTitle} | S&I Atelier`)
+    ? (post.meta_title_en || post.meta_title || `${postTitle} | S&I Atelier`)
     : (post.meta_title || `${postTitle} | S&I Atelier`)
   const postMetaDesc = !isRtl
-    ? ((post as any).meta_description_en || post.meta_description || postExcerpt)
+    ? (post.meta_description_en || post.meta_description || postExcerpt)
     : (post.meta_description || postExcerpt)
 
   return (
@@ -411,8 +411,8 @@ export default function BlogDetail() {
                 className="grid grid-cols-1 md:grid-cols-3 gap-6"
               >
                 {relatedPosts.map((rPost, idx) => {
-                  const rPostTitle = (isRtl ? rPost.title : ((rPost as any).title_en || rPost.title)) || rPost.title
-                  const rPostExcerpt = (isRtl ? rPost.excerpt : ((rPost as any).excerpt_en || rPost.excerpt)) || rPost.excerpt
+                  const rPostTitle = (isRtl ? rPost.title : rPost.title_en || rPost.title) || rPost.title
+                  const rPostExcerpt = (isRtl ? rPost.excerpt : rPost.excerpt_en || rPost.excerpt) || rPost.excerpt
                   return (
                     <motion.div
                       key={rPost.id}

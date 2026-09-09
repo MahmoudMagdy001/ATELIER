@@ -19,7 +19,7 @@
     /* Strict Type-Checking */
     "strict": true,
     "noFallthroughCasesInSwitch": true,
-    "allowJs": true
+    "allowJs": false
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

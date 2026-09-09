@@ -31,6 +31,7 @@ const AdminMedia = lazy(() => import('./features/admin/pages/AdminMedia'))
 const AdminCategories = lazy(() => import('./features/admin/pages/AdminCategories'))
 const AdminRedirects = lazy(() => import('./features/admin/pages/AdminRedirects'))
 const AdminSettings = lazy(() => import('./features/admin/pages/AdminSettings'))
+const AdminInquiries = lazy(() => import('./features/admin/pages/AdminInquiries'))
 
 export default function App() {
   return (
@@ -77,6 +78,7 @@ export default function App() {
               <Route path="categories" element={<AdminCategories />} />
               <Route path="redirects" element={<AdminRedirects />} />
               <Route path="settings" element={<AdminSettings />} />
+              <Route path="inquiries" element={<AdminInquiries />} />
 
               {/* Footer Access for Posts & Offers */}
               <Route path="posts" element={<AdminPosts />} />

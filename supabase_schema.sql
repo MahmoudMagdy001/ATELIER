@@ -242,6 +242,17 @@ CREATE TABLE IF NOT EXISTS public.custom_scripts (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Public contact submissions. Reading these records remains admin-only.
+CREATE TABLE IF NOT EXISTS public.inquiries (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT NOT NULL CHECK (char_length(trim(name)) BETWEEN 1 AND 120),
+  phone TEXT NOT NULL CHECK (char_length(trim(phone)) BETWEEN 3 AND 40),
+  service_type TEXT NOT NULL CHECK (char_length(service_type) <= 80),
+  preferred_time TEXT NOT NULL CHECK (char_length(preferred_time) <= 80),
+  message TEXT NOT NULL DEFAULT '' CHECK (char_length(message) <= 2000),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 -- =========================================================================
 -- 9. MEDIA LIBRARY TABLE (مكتبة الوسائط السحابية)
 -- =========================================================================
@@ -276,74 +287,90 @@ ALTER TABLE public.site_settings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.robots_settings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.custom_scripts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.media_library ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.inquiries ENABLE ROW LEVEL SECURITY;
+
+-- Only users explicitly marked by a trusted server process may administer CMS data.
+-- Set this with Supabase Auth app_metadata, never from client-side user_metadata.
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS BOOLEAN
+LANGUAGE sql
+STABLE
+SET search_path = ''
+AS $$ SELECT COALESCE((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin', false); $$;
 
 DO $$ 
 BEGIN
   -- Limited Editions Policies
   DROP POLICY IF EXISTS "Public can view published limited_editions" ON public.limited_editions;
-  CREATE POLICY "Public can view published limited_editions" ON public.limited_editions FOR SELECT TO public USING (status = 'published' OR (SELECT auth.role()) = 'authenticated');
+  CREATE POLICY "Public can view published limited_editions" ON public.limited_editions FOR SELECT TO public USING (status = 'published');
   DROP POLICY IF EXISTS "Admin full access for limited_editions" ON public.limited_editions;
-  CREATE POLICY "Admin full access for limited_editions" ON public.limited_editions FOR ALL TO public USING ((SELECT auth.role()) = 'authenticated') WITH CHECK ((SELECT auth.role()) = 'authenticated');
+  CREATE POLICY "Admin full access for limited_editions" ON public.limited_editions FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
 
   -- Offers Policies
   DROP POLICY IF EXISTS "Public can view published offers" ON public.offers;
-  CREATE POLICY "Public can view published offers" ON public.offers FOR SELECT TO public USING (status = 'published' OR (SELECT auth.role()) = 'authenticated');
+  CREATE POLICY "Public can view published offers" ON public.offers FOR SELECT TO public USING (status = 'published');
   DROP POLICY IF EXISTS "Admin full access for offers" ON public.offers;
-  CREATE POLICY "Admin full access for offers" ON public.offers FOR ALL TO public USING ((SELECT auth.role()) = 'authenticated') WITH CHECK ((SELECT auth.role()) = 'authenticated');
+  CREATE POLICY "Admin full access for offers" ON public.offers FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
 
   -- Articles Policies
   DROP POLICY IF EXISTS "Public can view published articles" ON public.articles;
-  CREATE POLICY "Public can view published articles" ON public.articles FOR SELECT TO public USING (status = 'published' OR (SELECT auth.role()) = 'authenticated');
+  CREATE POLICY "Public can view published articles" ON public.articles FOR SELECT TO public USING (status = 'published');
   DROP POLICY IF EXISTS "Admin full access for articles" ON public.articles;
-  CREATE POLICY "Admin full access for articles" ON public.articles FOR ALL TO public USING ((SELECT auth.role()) = 'authenticated') WITH CHECK ((SELECT auth.role()) = 'authenticated');
+  CREATE POLICY "Admin full access for articles" ON public.articles FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
 
   -- Portfolio Policies
   DROP POLICY IF EXISTS "Public can view portfolio" ON public.portfolio;
-  CREATE POLICY "Public can view portfolio" ON public.portfolio FOR SELECT TO public USING (is_visible = true OR (SELECT auth.role()) = 'authenticated');
+  CREATE POLICY "Public can view portfolio" ON public.portfolio FOR SELECT TO public USING (is_visible = true);
   DROP POLICY IF EXISTS "Admin full access for portfolio" ON public.portfolio;
-  CREATE POLICY "Admin full access for portfolio" ON public.portfolio FOR ALL TO public USING ((SELECT auth.role()) = 'authenticated') WITH CHECK ((SELECT auth.role()) = 'authenticated');
+  CREATE POLICY "Admin full access for portfolio" ON public.portfolio FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
 
   -- Bespoke Service Policies
   DROP POLICY IF EXISTS "Public can view bespoke_service" ON public.bespoke_service;
   CREATE POLICY "Public can view bespoke_service" ON public.bespoke_service FOR SELECT TO public USING (true);
   DROP POLICY IF EXISTS "Admin full access for bespoke_service" ON public.bespoke_service;
-  CREATE POLICY "Admin full access for bespoke_service" ON public.bespoke_service FOR ALL TO public USING ((SELECT auth.role()) = 'authenticated') WITH CHECK ((SELECT auth.role()) = 'authenticated');
+  CREATE POLICY "Admin full access for bespoke_service" ON public.bespoke_service FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
 
   -- Categories Policies
   DROP POLICY IF EXISTS "Public can view categories" ON public.categories;
   CREATE POLICY "Public can view categories" ON public.categories FOR SELECT TO public USING (true);
   DROP POLICY IF EXISTS "Admin full access for categories" ON public.categories;
-  CREATE POLICY "Admin full access for categories" ON public.categories FOR ALL TO public USING ((SELECT auth.role()) = 'authenticated') WITH CHECK ((SELECT auth.role()) = 'authenticated');
+  CREATE POLICY "Admin full access for categories" ON public.categories FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
 
   -- Redirects Policies
   DROP POLICY IF EXISTS "Public can view redirects" ON public.redirects;
   CREATE POLICY "Public can view redirects" ON public.redirects FOR SELECT TO public USING (true);
   DROP POLICY IF EXISTS "Admin full access for redirects" ON public.redirects;
-  CREATE POLICY "Admin full access for redirects" ON public.redirects FOR ALL TO public USING ((SELECT auth.role()) = 'authenticated') WITH CHECK ((SELECT auth.role()) = 'authenticated');
+  CREATE POLICY "Admin full access for redirects" ON public.redirects FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
 
   -- Site Settings Policies
   DROP POLICY IF EXISTS "Public can view site settings" ON public.site_settings;
   CREATE POLICY "Public can view site settings" ON public.site_settings FOR SELECT TO public USING (true);
   DROP POLICY IF EXISTS "Admin full access for site settings" ON public.site_settings;
-  CREATE POLICY "Admin full access for site settings" ON public.site_settings FOR ALL TO public USING ((SELECT auth.role()) = 'authenticated') WITH CHECK ((SELECT auth.role()) = 'authenticated');
+  CREATE POLICY "Admin full access for site settings" ON public.site_settings FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
 
   -- Robots Settings Policies
   DROP POLICY IF EXISTS "Public can view robots settings" ON public.robots_settings;
   CREATE POLICY "Public can view robots settings" ON public.robots_settings FOR SELECT TO public USING (true);
   DROP POLICY IF EXISTS "Admin full access for robots settings" ON public.robots_settings;
-  CREATE POLICY "Admin full access for robots settings" ON public.robots_settings FOR ALL TO public USING ((SELECT auth.role()) = 'authenticated') WITH CHECK ((SELECT auth.role()) = 'authenticated');
+  CREATE POLICY "Admin full access for robots settings" ON public.robots_settings FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
 
   -- Custom Scripts Policies
   DROP POLICY IF EXISTS "Public can view active custom scripts" ON public.custom_scripts;
   CREATE POLICY "Public can view active custom scripts" ON public.custom_scripts FOR SELECT TO public USING (is_active = true);
   DROP POLICY IF EXISTS "Admin full access for custom scripts" ON public.custom_scripts;
-  CREATE POLICY "Admin full access for custom scripts" ON public.custom_scripts FOR ALL TO public USING ((SELECT auth.role()) = 'authenticated') WITH CHECK ((SELECT auth.role()) = 'authenticated');
+  CREATE POLICY "Admin full access for custom_scripts" ON public.custom_scripts FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
 
   -- Media Library Policies
   DROP POLICY IF EXISTS "Public can view media library" ON public.media_library;
   CREATE POLICY "Public can view media library" ON public.media_library FOR SELECT TO public USING (true);
   DROP POLICY IF EXISTS "Admin full access for media library" ON public.media_library;
-  CREATE POLICY "Admin full access for media library" ON public.media_library FOR ALL TO public USING ((SELECT auth.role()) = 'authenticated') WITH CHECK ((SELECT auth.role()) = 'authenticated');
+  CREATE POLICY "Admin full access for media library" ON public.media_library FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
+
+  -- Inquiries can be submitted publicly but cannot be listed or changed publicly.
+  DROP POLICY IF EXISTS "Public can submit inquiries" ON public.inquiries;
+  CREATE POLICY "Public can submit inquiries" ON public.inquiries FOR INSERT TO anon, authenticated WITH CHECK (true);
+  DROP POLICY IF EXISTS "Admin can manage inquiries" ON public.inquiries;
+  CREATE POLICY "Admin can manage inquiries" ON public.inquiries FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
 END $$;
 
 -- =========================================================================
@@ -372,11 +399,12 @@ BEGIN
   -- Allow authenticated admins to upload and delete files
   DROP POLICY IF EXISTS "Admin Upload Access" ON storage.objects;
   CREATE POLICY "Admin Upload Access" ON storage.objects
-    FOR INSERT TO public
-    WITH CHECK (bucket_id IN ('limited-edition-images', 'product-images', 'offer-covers', 'media-assets', 'blog-covers', 'public-assets'));
+    FOR INSERT TO authenticated
+    WITH CHECK (public.is_admin() AND bucket_id IN ('limited-edition-images', 'product-images', 'offer-covers', 'media-assets', 'blog-covers', 'public-assets'));
 
   DROP POLICY IF EXISTS "Admin Update and Delete Access" ON storage.objects;
   CREATE POLICY "Admin Update and Delete Access" ON storage.objects
-    FOR ALL TO public
-    USING (bucket_id IN ('limited-edition-images', 'product-images', 'offer-covers', 'media-assets', 'blog-covers', 'public-assets'));
+    FOR ALL TO authenticated
+    USING (public.is_admin() AND bucket_id IN ('limited-edition-images', 'product-images', 'offer-covers', 'media-assets', 'blog-covers', 'public-assets'))
+    WITH CHECK (public.is_admin() AND bucket_id IN ('limited-edition-images', 'product-images', 'offer-covers', 'media-assets', 'blog-covers', 'public-assets'));
 END $$;

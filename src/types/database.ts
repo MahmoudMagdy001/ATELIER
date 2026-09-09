@@ -216,6 +216,16 @@ export interface CustomScript {
   created_at: string
 }
 
+export interface Inquiry {
+  id: string
+  name: string
+  phone: string
+  service_type: string
+  preferred_time: string
+  message: string
+  created_at: string
+}
+
 export interface MediaItem {
   id: string
   name: string

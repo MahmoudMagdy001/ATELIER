@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Navigate, Outlet } from 'react-router-dom'
-import { supabase } from '../../../lib/supabase'
+import { isAdminUser, supabase } from '../../../lib/supabase'
 import { PageLoading } from '../../../components/ui/Loading'
 
 export default function ProtectedRoute() {
@@ -9,27 +9,17 @@ export default function ProtectedRoute() {
 
   useEffect(() => {
     supabase.auth.getSession()
-      .then(({ data: { session } }: any) => {
-        const localUser = localStorage.getItem('atelier_user')
-        if (session || localUser) {
-          setIsAuthenticated(true)
-        } else {
-          setIsAuthenticated(false)
-        }
+      .then(({ data: { session } }) => {
+        setIsAuthenticated(isAdminUser(session?.user))
         setLoading(false)
       })
       .catch(() => {
-        const localUser = localStorage.getItem('atelier_user')
-        setIsAuthenticated(Boolean(localUser))
+        setIsAuthenticated(false)
         setLoading(false)
       })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session || localStorage.getItem('atelier_user')) {
-        setIsAuthenticated(true)
-      } else {
-        setIsAuthenticated(false)
-      }
+      setIsAuthenticated(isAdminUser(session?.user))
       setLoading(false)
     })
 

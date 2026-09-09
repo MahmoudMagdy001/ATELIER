@@ -1,4 +1,5 @@
-import { Extension, Node } from '@tiptap/core'
+import { Extension, Node, type CommandProps } from '@tiptap/core'
+import type { Node as ProseMirrorNode } from '@tiptap/pm/model'
 import Image from '@tiptap/extension-image'
 
 declare module '@tiptap/core' {
@@ -50,12 +51,12 @@ export const FontSize = Extension.create({
   },
   addCommands() {
     return {
-      setFontSize: (fontSize: string) => ({ chain }: { chain: () => any }) => {
+      setFontSize: (fontSize: string) => ({ chain }: Pick<CommandProps, 'chain'>) => {
         return chain()
           .setMark('textStyle', { fontSize })
           .run()
       },
-      unsetFontSize: () => ({ chain }: { chain: () => any }) => {
+      unsetFontSize: () => ({ chain }: Pick<CommandProps, 'chain'>) => {
         return chain()
           .setMark('textStyle', { fontSize: null })
           .removeEmptyTextStyle()
@@ -94,10 +95,10 @@ export const LineHeight = Extension.create({
   },
   addCommands() {
     return {
-      setLineHeight: (lineHeight: string) => ({ commands }: { commands: any }) => {
+      setLineHeight: (lineHeight: string) => ({ commands }: Pick<CommandProps, 'commands'>) => {
         return this.options.types.every((type: string) => commands.updateAttributes(type, { lineHeight }))
       },
-      unsetLineHeight: () => ({ commands }: { commands: any }) => {
+      unsetLineHeight: () => ({ commands }: Pick<CommandProps, 'commands'>) => {
         return this.options.types.every((type: string) => commands.updateAttributes(type, { lineHeight: null }))
       },
     }
@@ -133,12 +134,12 @@ export const LetterSpacing = Extension.create({
   },
   addCommands() {
     return {
-      setLetterSpacing: (letterSpacing: string) => ({ chain }: { chain: () => any }) => {
+      setLetterSpacing: (letterSpacing: string) => ({ chain }: Pick<CommandProps, 'chain'>) => {
         return chain()
           .setMark('textStyle', { letterSpacing })
           .run()
       },
-      unsetLetterSpacing: () => ({ chain }: { chain: () => any }) => {
+      unsetLetterSpacing: () => ({ chain }: Pick<CommandProps, 'chain'>) => {
         return chain()
           .setMark('textStyle', { letterSpacing: null })
           .removeEmptyTextStyle()
@@ -195,7 +196,7 @@ export const Iframe = Node.create({
     ]
   },
 
-  renderHTML({ HTMLAttributes }: { HTMLAttributes: Record<string, any> }) {
+  renderHTML({ HTMLAttributes }: { HTMLAttributes: Record<string, unknown> }) {
     return ['div', this.options.HTMLAttributes, ['iframe', HTMLAttributes]]
   },
 
@@ -203,7 +204,7 @@ export const Iframe = Node.create({
     return {
       setIframe:
         (options: Record<string, unknown>) =>
-        ({ commands }: { commands: any }) => {
+        ({ commands }: Pick<CommandProps, 'commands'>) => {
           return commands.insertContent({
             type: this.name,
             attrs: options,
@@ -279,7 +280,7 @@ export const CustomImage = Image.extend({
     ]
   },
 
-  renderHTML({ node, HTMLAttributes }: { node: any; HTMLAttributes: Record<string, any> }) {
+  renderHTML({ node, HTMLAttributes }: { node: ProseMirrorNode; HTMLAttributes: Record<string, unknown> }) {
     const { caption: _c, align: _a, width: _w, 'data-align': _da, 'data-caption': _dc, style: _s, ...cleanAttributes } = HTMLAttributes
     const align = node.attrs.align || 'center'
     const width = node.attrs.width || '100%'

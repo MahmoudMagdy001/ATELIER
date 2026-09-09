@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { supabase } from '../../../lib/supabase'
+import { isAdminUser, isSupabaseConfigured, supabase } from '../../../lib/supabase'
 import Button from '../../../components/ui/Button'
 import logoImg from '../../../assets/newlogo.png'
 import { FaLock, FaEnvelope } from 'react-icons/fa6'
@@ -14,13 +14,8 @@ export default function Login() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
+      if (session && isAdminUser(session.user)) {
         navigate('/admin/products', { replace: true })
-      } else {
-        const localUser = localStorage.getItem('atelier_user')
-        if (localUser) {
-          navigate('/admin/products', { replace: true })
-        }
       }
     })
   }, [navigate])
@@ -30,6 +25,12 @@ export default function Login() {
     setLoading(true)
     setError('')
 
+    if (!isSupabaseConfigured) {
+      setError('تعذر تسجيل الدخول لأن إعدادات Supabase غير مكتملة.')
+      setLoading(false)
+      return
+    }
+
     try {
       const { data, error: loginError } = await supabase.auth.signInWithPassword({
         email,
@@ -37,28 +38,21 @@ export default function Login() {
       })
 
       if (loginError) {
-        // Fallback for development if user enters admin credentials
-        if (email.toLowerCase().includes('admin') && password.length >= 6) {
-          localStorage.setItem('atelier_user', JSON.stringify({ email, name: 'Atelier Director' }))
-          navigate('/admin/products', { replace: true })
-          return
-        }
         setError(
           loginError.message === 'Invalid login credentials'
             ? 'بيانات الدخول غير صحيحة. يرجى التحقق من البريد وكلمة المرور المسجلة في Supabase.'
             : loginError.message
         )
       } else if (data?.session) {
-        localStorage.setItem('atelier_user', JSON.stringify({ email: data.session.user.email, name: 'Atelier Director' }))
-        navigate('/admin/products', { replace: true })
+        if (isAdminUser(data.session.user)) {
+          navigate('/admin/products', { replace: true })
+        } else {
+          await supabase.auth.signOut()
+          setError('هذا الحساب لا يملك صلاحية الوصول إلى لوحة الإدارة.')
+        }
       }
     } catch (err: unknown) {
-      if (email.toLowerCase().includes('admin') && password.length >= 6) {
-        localStorage.setItem('atelier_user', JSON.stringify({ email, name: 'Atelier Director' }))
-        navigate('/admin/products', { replace: true })
-      } else {
-        setError('حدث خطأ أثناء تسجيل الدخول: ' + ((err as Error)?.message || String(err)))
-      }
+      setError('حدث خطأ أثناء تسجيل الدخول: ' + ((err as Error)?.message || String(err)))
     } finally {
       setLoading(false)
     }

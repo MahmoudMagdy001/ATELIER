@@ -1,5 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
-import type { AuthUser } from '../types/database'
+import { createClient, type User } from '@supabase/supabase-js'
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://placeholder.supabase.co'
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || 'placeholder-key'
@@ -11,6 +10,10 @@ export const isSupabaseConfigured = Boolean(
 )
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+
+export function isAdminUser(user: User | null | undefined): boolean {
+  return user?.app_metadata?.role === 'admin'
+}
 
 function getStorage<T>(key: string, fallback: T): T {
   try {
@@ -51,21 +54,4 @@ export const demoStore = {
   getSettings: <T = unknown>() => getStorage<T | null>('settings', null),
   saveSettings: <T>(data: T) => setStorage('settings', data),
 
-  getAuthUser: (): AuthUser | null => {
-    try {
-      const u = localStorage.getItem('atelier_user')
-      return u ? (JSON.parse(u) as AuthUser) : null
-    } catch {
-      return null
-    }
-  },
-  signIn: (email?: string, _password?: string) => {
-    const user: AuthUser = { email: email || 'admin@atelier-luxury.com', name: 'Atelier Director' }
-    localStorage.setItem('atelier_user', JSON.stringify(user))
-    return { data: { user }, error: null }
-  },
-  signOut: () => {
-    localStorage.removeItem('atelier_user')
-    return { error: null }
-  }
 }

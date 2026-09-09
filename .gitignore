@@ -10,6 +10,7 @@ lerna-debug.log*
 node_modules
 dist
 .agents
+supabase_schema.sql
 dist-ssr
 *.local
 .env

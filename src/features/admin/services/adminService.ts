@@ -6,7 +6,8 @@ import type {
   RedirectRule, 
   CustomScript, 
   Category, 
-  MediaItem 
+  MediaItem,
+  Inquiry
 } from '../../../types/database'
 
 let cachedSettings: SiteSettings | null = null
@@ -15,6 +16,24 @@ let settingsPromise: Promise<SiteSettings | null> | null = null
 export const adminService = {
   getCachedSettings(): SiteSettings | null {
     return cachedSettings
+  },
+
+  // Customer inquiries
+  async fetchInquiries(): Promise<Inquiry[]> {
+    const { data, error } = await supabase
+      .from('inquiries')
+      .select('*')
+      .order('created_at', { ascending: false })
+    if (error) throw error
+    return (data as Inquiry[]) || []
+  },
+
+  async deleteInquiry(id: string): Promise<void> {
+    const { error } = await supabase
+      .from('inquiries')
+      .delete()
+      .eq('id', id)
+    if (error) throw error
   },
 
   // Site Settings

@@ -9,6 +9,7 @@ import {
   FaTag, 
   FaImages, 
   FaFolderOpen, 
+  FaRegEnvelope,
   FaArrowRightArrowLeft, 
   FaGear, 
   FaRightFromBracket,
@@ -30,6 +31,7 @@ const MAIN_ADMIN_LINKS: AdminNavLinkItem[] = [
   { to: '/admin/posts', label: 'المقالات والمدونة (Blog)', Icon: FaPenToSquare },
   { to: '/admin/categories', label: 'التصنيفات (Categories)', Icon: FaFolderOpen },
   { to: '/admin/media', label: 'مكتبة الوسائط (Media)', Icon: FaImages },
+  { to: '/admin/inquiries', label: 'استفسارات العملاء (Inquiries)', Icon: FaRegEnvelope },
   { to: '/admin/redirects', label: 'التحويلات (Redirects)', Icon: FaArrowRightArrowLeft },
   { to: '/admin/settings', label: 'الإعدادات العامة (Settings)', Icon: FaGear },
 ]
@@ -70,7 +72,6 @@ export default function AdminLayout() {
     } catch {
       // ignore
     }
-    localStorage.removeItem('atelier_user')
     navigate('/admin/login', { replace: true })
   }
 

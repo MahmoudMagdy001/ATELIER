@@ -55,17 +55,16 @@ export const VipBespokeForm: React.FC<VipBespokeFormProps> = ({ whatsappNum, isE
     setFormStatus({ submitting: true, submitted: false, error: null })
 
     try {
-      try {
-        await supabase.from('inquiries').insert([{
-          name: formData.name.trim(),
-          phone: formData.phone.trim(),
-          service_type: formData.serviceType,
-          preferred_time: formData.preferredTime,
-          message: formData.message.trim(),
-          created_at: new Date().toISOString()
-        }])
-      } catch (dbErr: unknown) {
-        console.info('Inquiries table log:', (dbErr as Error)?.message)
+      const { error } = await supabase.from('inquiries').insert([{
+        name: formData.name.trim(),
+        phone: formData.phone.trim(),
+        service_type: formData.serviceType,
+        preferred_time: formData.preferredTime,
+        message: formData.message.trim(),
+        created_at: new Date().toISOString()
+      }])
+      if (error) {
+        throw error
       }
 
       setFormStatus({ submitting: false, submitted: true, error: null })

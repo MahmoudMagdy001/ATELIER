@@ -208,8 +208,8 @@ export default function TipTapEditor({ value = '', onChange }: TipTapEditorProps
       }).run()
     } else {
       editor.chain().focus().setImage({
-        src, alt, title, caption, width, align
-      } as any).run()
+        src, alt, title
+      }).updateAttributes('image', { caption, width, align }).run()
     }
     setActiveModal(null)
   }

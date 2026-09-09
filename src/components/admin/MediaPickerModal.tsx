@@ -58,7 +58,6 @@ export default function MediaPickerModal({
   }, [])
 
   const fetchMedia = useCallback(async () => {
-    setLoading(true)
     try {
       const data = await adminService.fetchMedia()
       setMedia(data)
@@ -77,27 +76,11 @@ export default function MediaPickerModal({
 
   useEffect(() => {
     if (!isOpen) return
-    let isMounted = true
-    adminService.fetchMedia()
-      .then(data => {
-        if (!isMounted) return
-        setMedia(data)
-        if (selectedUrl && data.length > 0) {
-          const found = data.find(m => (m.file_url || (m as unknown as { url?: string }).url) === selectedUrl)
-          if (found) {
-            selectItem(found)
-          }
-        }
-        setLoading(false)
-      })
-      .catch(err => {
-        console.warn('Failed to load media in modal:', (err as Error)?.message || err)
-        if (isMounted) setLoading(false)
-      })
-    return () => {
-      isMounted = false
-    }
-  }, [isOpen, selectedUrl, selectItem])
+    const fetchTimer = window.setTimeout(() => {
+      void fetchMedia()
+    }, 0)
+    return () => window.clearTimeout(fetchTimer)
+  }, [isOpen, fetchMedia])
 
   // Lock body scroll and close on Escape key when modal is open
   useEffect(() => {
