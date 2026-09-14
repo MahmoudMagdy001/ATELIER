@@ -90,7 +90,7 @@ export default function Login() {
                   type="email"
                   required
                   className="w-full rounded-2xl border border-[#E6E1DC] bg-white ps-10 pe-4 py-3 text-sm text-[#141110] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none"
-                  placeholder="admin@atelier-luxury.com"
+                  placeholder="admin@si-atelier.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />

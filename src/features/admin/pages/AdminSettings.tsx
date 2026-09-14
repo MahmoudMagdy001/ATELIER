@@ -89,9 +89,9 @@ export default function AdminSettings() {
   const [editingScriptId, setEditingScriptId] = useState<string | null>(null)
   const [scriptFormOpen, setScriptFormOpen] = useState<boolean>(false)
 
-  const liveBaseUrl = typeof window !== 'undefined' && window.location.origin
+  const liveBaseUrl = (import.meta.env.VITE_SITE_URL as string) || (typeof window !== 'undefined' && window.location.origin && !window.location.origin.includes('localhost') && !window.location.origin.includes('vercel.app')
     ? window.location.origin
-    : 'https://atelier-neon-three.vercel.app'
+    : 'https://www.si-atelier.com')
   const liveSitemapUrl = `${liveBaseUrl}/sitemap.xml`
   const liveRobotsUrl = `${liveBaseUrl}/robots.txt`
 
@@ -530,7 +530,7 @@ fbq('track', 'PageView');
                   <input
                     type="url"
                     className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-mono text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all"
-                    placeholder="https://atelier-luxury.com"
+                    placeholder="https://www.si-atelier.com"
                     value={defaultCanonical}
                     onChange={(e) => setDefaultCanonical(e.target.value)}
                   />
@@ -568,7 +568,7 @@ fbq('track', 'PageView');
                   <input
                     type="url"
                     className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-mono text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all text-left"
-                    placeholder="https://atelier-luxury.com"
+                    placeholder="https://www.si-atelier.com"
                     value={defaultCanonical}
                     onChange={(e) => setDefaultCanonical(e.target.value)}
                   />

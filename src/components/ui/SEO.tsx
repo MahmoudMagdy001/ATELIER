@@ -48,7 +48,7 @@ const SEO = memo(function SEO({
 }: SEOProps) {
   const [fetchedSettings, setFetchedSettings] = useState<SiteSettings | null>(() => adminService.getCachedSettings())
   const settings = siteSettings || fetchedSettings
-  const siteUrl = typeof window !== 'undefined' && window.location.origin ? window.location.origin : 'https://atelier-luxury.com'
+  const siteUrl = (import.meta.env.VITE_SITE_URL as string) || (typeof window !== 'undefined' && window.location.origin && !window.location.origin.includes('localhost') && !window.location.origin.includes('vercel.app') ? window.location.origin : 'https://www.si-atelier.com')
 
   useEffect(() => {
     if (siteSettings) return
@@ -94,8 +94,10 @@ const SEO = memo(function SEO({
   const finalImage = image || ogImage || settings?.default_og_image || '/assets/hero.png'
   const finalSlug = slug || ''
 
-  const finalCanonical = canonicalUrl || settings?.default_canonical || `${siteUrl}/${finalSlug}`
-  const imageUrl = finalImage.startsWith('http') ? finalImage : `${siteUrl}${finalImage}`
+  const normalizedBase = (settings?.default_canonical || siteUrl).replace(/\/$/, '')
+  const cleanPath = finalSlug ? (finalSlug.startsWith('/') ? finalSlug : `/${finalSlug}`) : ''
+  const finalCanonical = canonicalUrl || `${normalizedBase}${cleanPath}` || siteUrl
+  const imageUrl = finalImage.startsWith('http') ? finalImage : `${siteUrl}${finalImage.startsWith('/') ? finalImage : `/${finalImage}`}`
 
   const robotsParts: string[] = []
   robotsParts.push(robotsIndex ? 'index' : 'noindex')

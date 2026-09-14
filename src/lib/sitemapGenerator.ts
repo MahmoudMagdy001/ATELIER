@@ -11,7 +11,7 @@ export interface SitemapAndRobotsResult {
  */
 export async function regenerateSitemapAndRobots(): Promise<SitemapAndRobotsResult | null> {
   try {
-    const siteUrl = typeof window !== 'undefined' && window.location.origin ? window.location.origin : 'https://atelier-luxury.com'
+    const siteUrl = (import.meta.env.VITE_SITE_URL as string) || (typeof window !== 'undefined' && window.location.origin && !window.location.origin.includes('localhost') && !window.location.origin.includes('vercel.app') ? window.location.origin : 'https://www.si-atelier.com')
 
     // Fetch all published items for sitemap urls
     const [articlesRes, productsRes, offersRes] = await Promise.all([

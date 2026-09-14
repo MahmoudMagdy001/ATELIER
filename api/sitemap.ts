@@ -10,7 +10,8 @@ export default async function handler(req: Request) {
     const url = new URL(req.url)
     const host = req.headers.get('x-forwarded-host') || req.headers.get('host') || url.host
     const proto = req.headers.get('x-forwarded-proto') || 'https'
-    const baseUrl = `${proto}://${host}`
+    const isLocal = host?.includes('localhost') || host?.includes('127.0.0.1')
+    const baseUrl = isLocal ? `${proto}://${host}` : 'https://www.si-atelier.com'
 
     const headers = {
       apikey: SUPABASE_KEY,

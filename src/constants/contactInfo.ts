@@ -30,7 +30,7 @@ export const CONTACT_INFO: ContactInfo = {
   whatsappRaw: '966501234567',
   phone: '+966 50 123 4567',
   vipLine: '+966 11 456 7890',
-  email: 'concierge@atelier-luxury.com',
+  email: 'concierge@si-atelier.com',
   address: 'الرياض / حي الصناعية / منطقة الشفاء',
   googleMapsUrl: 'https://maps.google.com/?q=Riyadh+Olaya+King+Fahd+Road',
   instagramUrl: 'https://instagram.com/atelier_luxury',
