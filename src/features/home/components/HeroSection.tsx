@@ -42,11 +42,6 @@ export const HeroSection: React.FC<HeroSectionProps> = memo(({ heroImage }) => {
         animate="visible"
         className="relative z-10 max-w-4xl mx-auto space-y-4 sm:space-y-6 pt-20 sm:pt-28 pb-8 sm:pb-12"
       >
-        <motion.div variants={fadeUp} className="inline-block">
-          <span className="text-[10px] sm:text-xs tracking-[0.25em] sm:tracking-[0.35em] text-[#C4A070] uppercase font-bold font-serif px-3 py-1 rounded-full bg-[#141110]/60 border border-[#C4A070]/30 backdrop-blur-md">
-            HAUTE FURNITURE & BESPOKE LIVING
-          </span>
-        </motion.div>
 
         <motion.h1 variants={fadeUp} className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-bold leading-[1.2] drop-shadow-2xl">
           <span className="gold-gradient-text inline-block">
