@@ -56,11 +56,11 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    fallbackLng: 'ar',
+    fallbackLng: 'en',
     defaultNS: 'common',
     ns: ['common', 'home', 'products', 'bespoke', 'offers', 'blog', 'contact'],
     detection: {
-      order: ['querystring', 'localStorage', 'navigator'],
+      order: ['querystring', 'localStorage'],
       lookupQuerystring: 'lang',
       lookupLocalStorage: 'atelier_language',
       caches: ['localStorage'],
@@ -72,7 +72,7 @@ i18n
 
 // Keep document root synchronized with i18next language
 i18n.on('languageChanged', (lng) => {
-  const normalized = lng?.startsWith('en') ? 'en' : 'ar'
+  const normalized = lng?.startsWith('ar') ? 'ar' : 'en'
   updateDocumentDirection(normalized)
   try {
     localStorage.setItem('atelier_language', normalized)
@@ -82,7 +82,7 @@ i18n.on('languageChanged', (lng) => {
 })
 
 // Run on initial load
-const initialLanguage = i18n.language?.startsWith('en') ? 'en' : 'ar'
+const initialLanguage = i18n.language?.startsWith('ar') ? 'ar' : 'en'
 updateDocumentDirection(initialLanguage)
 
 export default i18n
