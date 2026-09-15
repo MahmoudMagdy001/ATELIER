@@ -35,7 +35,7 @@ const ScrollToTop = memo(function ScrollToTop() {
           transition={{ type: 'spring', stiffness: 320, damping: 24 }}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.92 }}
-          className="fixed bottom-6 start-6 z-40 flex items-center justify-center w-13 h-13 rounded-full group cursor-pointer select-none shadow-2xl"
+          className="fixed bottom-20 start-4 md:bottom-6 md:start-6 z-40 flex items-center justify-center w-11 h-11 md:w-13 md:h-13 rounded-full group cursor-pointer select-none shadow-2xl"
           aria-label={t('floating.scrollToTopAria')}
         >
           {/* Scroll Progress Indicator Ring */}

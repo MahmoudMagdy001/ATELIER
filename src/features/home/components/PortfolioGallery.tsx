@@ -57,14 +57,14 @@ export const PortfolioGallery: React.FC<PortfolioGalleryProps> = ({
       whileInView="visible"
       viewport={viewportOnce}
       variants={staggerContainer}
-      className="max-w-7xl mx-auto px-6 space-y-8"
+      className="max-w-7xl mx-auto px-4 sm:px-6 space-y-6 sm:space-y-8"
     >
-      <motion.div variants={fadeUp} className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#C4A070]/20 pb-6">
-        <div className="space-y-2 text-start">
+      <motion.div variants={fadeUp} className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#C4A070]/20 pb-4 sm:pb-6">
+        <div className="space-y-1.5 text-start">
           <span className="text-xs text-[#C4A070] tracking-widest uppercase font-bold flex items-center gap-2">
             <FaImages className="w-3.5 h-3.5" /> {t('portfolio_badge')}
           </span>
-          <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#F2EFE8]">
+          <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-[#F2EFE8]">
             {t('portfolio_title')}
           </h2>
         </div>

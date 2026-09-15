@@ -3,17 +3,11 @@ import { useTranslation } from 'react-i18next'
 import { useHomeData } from '../hooks/useHomeData'
 import SEO from '../../../components/ui/SEO'
 import HeroSection from '../components/HeroSection'
-import BrandValuesRibbon from '../components/BrandValuesRibbon'
-import AboutPhilosophySection from '../components/AboutPhilosophySection'
-import VisionStorySection from '../components/VisionStorySection'
 import ServicesDualCards from '../components/ServicesDualCards'
 import ProductCategoriesSection from '../components/ProductCategoriesSection'
 import PortfolioGallery from '../components/PortfolioGallery'
 import PortfolioLightbox from '../components/PortfolioLightbox'
-import CraftsmanshipSection from '../components/CraftsmanshipSection'
-import LuxuryStatsSection from '../components/LuxuryStatsSection'
 import heroBannerImg from '../../../assets/hero-banner.jpg'
-import { CONTACT_INFO } from '../../../constants/contactInfo'
 import type { PortfolioItem } from '../../../types/database'
 
 export default function Home() {
@@ -26,8 +20,6 @@ export default function Home() {
   const [activePortfolioCategory, setActivePortfolioCategory] = useState<string>('all')
   const [portfolioPage, setPortfolioPage] = useState<number>(0)
   const ITEMS_PER_PAGE = 6
-
-  const rawWhatsapp = CONTACT_INFO.whatsappRaw
 
   // Filter portfolio with bilingual category labels
   const portfolioCategories = useMemo(() => {
@@ -77,7 +69,7 @@ export default function Home() {
     : (settings?.default_meta_description || t('meta_description'))
 
   return (
-    <div className="space-y-24 pb-20 bg-transparent text-[#F2EFE8] font-sans">
+    <div className="space-y-16 md:space-y-24 pb-12 md:pb-20 bg-transparent text-[#F2EFE8] font-sans">
       <SEO
         title={homeMetaTitle}
         description={homeMetaDesc}
@@ -85,22 +77,13 @@ export default function Home() {
         siteSettings={settings}
       />
 
-      {/* 1. HERO SECTION */}
+      {/* 1. HERO SHOWCASE */}
       <HeroSection heroImage="/hero-banner.jpg" />
 
-      {/* 2. BRAND VALUES RIBBON */}
-      <BrandValuesRibbon />
-
-      {/* 3. ABOUT US & PHILOSOPHY */}
-      <AboutPhilosophySection rawWhatsapp={rawWhatsapp} isEn={isEn} />
-
-      {/* 4. VISION & BRAND STORY */}
-      <VisionStorySection />
-
-      {/* 5. SERVICES DUAL CARDS */}
+      {/* 2. SERVICES DUAL CARDS (Limited Edition & Bespoke) */}
       <ServicesDualCards productsCount={products?.length || 0} />
 
-      {/* 6. LIMITED EDITION CATEGORIES */}
+      {/* 3. PRODUCT CATEGORIES SHOWCASE */}
       <ProductCategoriesSection
         categories={displayProductCategories}
         products={products}
@@ -108,7 +91,7 @@ export default function Home() {
         isEn={isEn}
       />
 
-      {/* 7. PORTFOLIO GALLERY */}
+      {/* 4. PORTFOLIO ARCHITECTURAL WORKS */}
       <PortfolioGallery
         portfolioCategories={portfolioCategories}
         activeCategory={activePortfolioCategory}
@@ -129,12 +112,6 @@ export default function Home() {
         onClose={() => setSelectedImage(null)}
         isEn={isEn}
       />
-
-      {/* 8. CRAFTSMANSHIP & TRUST GUARANTEES */}
-      <CraftsmanshipSection />
-
-      {/* 9. LUXURY STATS & ACHIEVEMENTS */}
-      <LuxuryStatsSection />
     </div>
   )
 }

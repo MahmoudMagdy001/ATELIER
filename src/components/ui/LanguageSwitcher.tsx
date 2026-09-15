@@ -27,8 +27,10 @@ export default function LanguageSwitcher({ className = '', compact = false }: La
   }
 
   const handleLanguageToggle = (lang: 'ar' | 'en') => {
-    if (currentLang === lang) return
-    i18n.changeLanguage(lang)
+    if (currentLang !== lang) {
+      i18n.changeLanguage(lang)
+    }
+    setIsExpanded(false)
   }
 
   // Handle click outside to collapse on touch/mobile

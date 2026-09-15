@@ -163,3 +163,14 @@ h1, h2, h3, .font-serif {
   }
 }
 
+/* Mobile App-like Safe Area & Navigation Utilities */
+.pb-safe {
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 5rem);
+}
+
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .mobile-safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+

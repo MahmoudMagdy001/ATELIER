@@ -18,35 +18,35 @@ export const ServicesDualCards: React.FC<ServicesDualCardsProps> = ({ productsCo
       whileInView="visible"
       viewport={viewportOnce}
       variants={staggerContainer}
-      className="max-w-7xl mx-auto px-6 space-y-10"
+      className="max-w-7xl mx-auto px-4 sm:px-6 space-y-6 sm:space-y-8"
     >
-      <motion.div variants={fadeUp} className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#C4A070]/20 pb-6">
-        <div className="space-y-2 text-start">
+      <motion.div variants={fadeUp} className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 border-b border-[#C4A070]/20 pb-4 sm:pb-6">
+        <div className="space-y-1.5 text-start">
           <span className="text-xs text-[#C4A070] tracking-widest uppercase font-bold flex items-center gap-2">
             <FaGem className="w-3.5 h-3.5" /> {t('services_badge')}
           </span>
-          <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#F2EFE8]">
+          <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-[#F2EFE8]">
             {t('services_title')}
           </h2>
         </div>
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-start">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8 text-start">
         {/* Card 1: Limited Edition */}
         <motion.div 
           variants={fadeUp}
           whileHover={cardHover}
           transition={springHover}
-          className="rounded-3xl bg-[#141110] border border-[#C4A070]/25 overflow-hidden p-8 sm:p-10 flex flex-col justify-between space-y-6 shadow-2xl relative group"
+          className="rounded-3xl bg-[#141110] border border-[#C4A070]/25 overflow-hidden p-6 sm:p-8 md:p-10 flex flex-col justify-between space-y-5 shadow-2xl relative group"
         >
-          <div className="space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-[#C4A070]/15 flex items-center justify-center text-[#C4A070] text-xl">
+          <div className="space-y-3 sm:space-y-4">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-[#C4A070]/15 flex items-center justify-center text-[#C4A070] text-lg sm:text-xl">
               <FaCouch />
             </div>
-            <span className="text-[11px] font-bold text-[#C4A070] uppercase tracking-widest block" dir="ltr">
+            <span className="text-[10px] sm:text-[11px] font-bold text-[#C4A070] uppercase tracking-widest block" dir="ltr">
               {t('service_card1_num')}
             </span>
-            <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#F2EFE8] group-hover:text-[#C4A070] transition-colors">
+            <h3 className="font-serif text-xl sm:text-2xl md:text-3xl font-bold text-[#F2EFE8] group-hover:text-[#C4A070] transition-colors">
               {t('service_card1_title')}
             </h3>
             <p className="text-xs sm:text-sm text-[#DEDAD6]/80 leading-relaxed font-light">
@@ -54,13 +54,13 @@ export const ServicesDualCards: React.FC<ServicesDualCardsProps> = ({ productsCo
             </p>
           </div>
 
-          <div className="pt-6 border-t border-white/10 flex items-center justify-between">
+          <div className="pt-5 border-t border-white/10 flex items-center justify-between">
             <span className="text-xs text-[#827771]">
               {t('service_card1_count', { count: productsCount })}
             </span>
             <Link
               to="/limited-edition"
-              className="px-5 py-2.5 rounded-full gold-btn-primary text-xs font-bold flex items-center gap-2"
+              className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full gold-btn-primary text-xs font-bold flex items-center gap-2"
             >
               <span>{t('service_card1_cta')}</span>
               <FaArrowLeft className="w-3 h-3 ltr:rotate-180 transition-transform" />
@@ -73,16 +73,16 @@ export const ServicesDualCards: React.FC<ServicesDualCardsProps> = ({ productsCo
           variants={fadeUp}
           whileHover={cardHover}
           transition={springHover}
-          className="rounded-3xl bg-[#141110] border border-[#C4A070]/25 overflow-hidden p-8 sm:p-10 flex flex-col justify-between space-y-6 shadow-2xl relative group"
+          className="rounded-3xl bg-[#141110] border border-[#C4A070]/25 overflow-hidden p-6 sm:p-8 md:p-10 flex flex-col justify-between space-y-5 shadow-2xl relative group"
         >
-          <div className="space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-[#C4A070]/15 flex items-center justify-center text-[#C4A070] text-xl">
+          <div className="space-y-3 sm:space-y-4">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-[#C4A070]/15 flex items-center justify-center text-[#C4A070] text-lg sm:text-xl">
               <FaGem />
             </div>
-            <span className="text-[11px] font-bold text-[#C4A070] uppercase tracking-widest block" dir="ltr">
+            <span className="text-[10px] sm:text-[11px] font-bold text-[#C4A070] uppercase tracking-widest block" dir="ltr">
               {t('service_card2_num')}
             </span>
-            <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#F2EFE8] group-hover:text-[#C4A070] transition-colors">
+            <h3 className="font-serif text-xl sm:text-2xl md:text-3xl font-bold text-[#F2EFE8] group-hover:text-[#C4A070] transition-colors">
               {t('service_card2_title')}
             </h3>
             <p className="text-xs sm:text-sm text-[#DEDAD6]/80 leading-relaxed font-light">
@@ -90,11 +90,11 @@ export const ServicesDualCards: React.FC<ServicesDualCardsProps> = ({ productsCo
             </p>
           </div>
 
-          <div className="pt-6 border-t border-white/10 flex items-center justify-between">
+          <div className="pt-5 border-t border-white/10 flex items-center justify-between">
             <span className="text-xs text-[#827771]">{t('service_card2_highlight')}</span>
             <Link
               to="/bespoke"
-              className="px-5 py-2.5 rounded-full gold-btn-secondary text-xs font-bold flex items-center gap-2"
+              className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full gold-btn-secondary text-xs font-bold flex items-center gap-2"
             >
               <span>{t('service_card2_cta')}</span>
               <FaArrowLeft className="w-3 h-3 text-[#C4A070] ltr:rotate-180 transition-transform" />

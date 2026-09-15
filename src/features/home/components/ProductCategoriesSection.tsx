@@ -29,19 +29,16 @@ export const ProductCategoriesSection: React.FC<ProductCategoriesSectionProps> =
       whileInView="visible"
       viewport={viewportOnce}
       variants={staggerContainer}
-      className="max-w-7xl mx-auto px-6 space-y-10"
+      className="max-w-7xl mx-auto px-4 sm:px-6 space-y-6 sm:space-y-8"
     >
-      <motion.div variants={fadeUp} className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#C4A070]/20 pb-6">
-        <div className="space-y-2 text-start">
+      <motion.div variants={fadeUp} className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 border-b border-[#C4A070]/20 pb-4 sm:pb-6">
+        <div className="space-y-1.5 text-start">
           <span className="text-xs text-[#C4A070] tracking-widest uppercase font-bold flex items-center gap-2">
             <FaLayerGroup className="w-3.5 h-3.5" /> {t('categories_badge')}
           </span>
-          <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#F2EFE8]">
+          <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-[#F2EFE8]">
             {t('categories_title_pre')} <span className="gold-gradient-text">{t('categories_title_highlight')}</span>
           </h2>
-          <p className="text-xs sm:text-sm text-[#DEDAD6]/80 max-w-2xl font-light">
-            {t('categories_desc')}
-          </p>
         </div>
 
         <Link
@@ -53,7 +50,8 @@ export const ProductCategoriesSection: React.FC<ProductCategoriesSectionProps> =
         </Link>
       </motion.div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* 2-column on mobile, 4-column on desktop (App Catalog View) */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
         {categories.map((cat, idx) => {
           const catImage = cat.image_url || products.find(p => p.category_id === cat.id && p.main_image)?.main_image || fallbackImage
 
@@ -63,32 +61,26 @@ export const ProductCategoriesSection: React.FC<ProductCategoriesSectionProps> =
               variants={fadeUp}
               whileHover={cardHover}
               transition={springHover}
-              className="group relative rounded-3xl overflow-hidden border border-[#C4A070]/20 bg-[#141110] shadow-2xl flex flex-col justify-end min-h-[380px] sm:min-h-[420px] transition-all duration-500 hover:border-[#C4A070]/60 hover:shadow-[0_20px_50px_rgba(196,160,112,0.15)] text-start"
+              className="group relative rounded-2xl sm:rounded-3xl overflow-hidden border border-[#C4A070]/20 bg-[#141110] shadow-xl flex flex-col justify-end min-h-[220px] sm:min-h-[340px] md:min-h-[400px] transition-all duration-500 hover:border-[#C4A070]/60 hover:shadow-[0_20px_50px_rgba(196,160,112,0.15)] text-start cursor-pointer"
             >
               {/* Background Category Image with Vignette & Hover Zoom */}
               <div className="absolute inset-0 z-0 overflow-hidden">
                 <img 
                   src={catImage} 
                   alt={cat.name}
-                  className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700 ease-out brightness-[0.75] group-hover:brightness-90"
+                  className="w-full h-full object-cover object-center group-hover:scale-108 transition-transform duration-700 ease-out brightness-[0.75] group-hover:brightness-90"
                   loading="lazy"
                   decoding="async"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#141110] via-[#141110]/60 to-black/25 group-hover:via-[#141110]/40 transition-colors duration-500" />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#141110] via-[#141110]/50 to-black/20 group-hover:via-[#141110]/35 transition-colors duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-transparent pointer-events-none" />
               </div>
 
-              {/* Bottom Content Information */}
-              <div className="relative z-10 p-6 sm:p-7 space-y-2">
-                <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#F2EFE8] group-hover:text-[#C4A070] transition-colors leading-snug">
+              {/* Bottom Category Label */}
+              <div className="relative z-10 p-3.5 sm:p-6 space-y-1">
+                <h3 className="font-serif text-sm sm:text-xl md:text-2xl font-bold text-[#F2EFE8] group-hover:text-[#C4A070] transition-colors leading-snug">
                   {isEn ? (cat.name_en || cat.name) : cat.name}
                 </h3>
-
-                {(cat.description || cat.description_en) && (
-                  <p className="text-xs text-[#DEDAD6]/80 leading-relaxed font-light line-clamp-2">
-                    {isEn ? (cat.description_en || cat.description) : (cat.description || cat.description_en)}
-                  </p>
-                )}
               </div>
 
               {/* Invisible Overlay Link to Category Filter */}

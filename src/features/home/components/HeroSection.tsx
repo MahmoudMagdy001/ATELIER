@@ -13,10 +13,11 @@ export const HeroSection: React.FC<HeroSectionProps> = memo(({ heroImage }) => {
   const { t } = useTranslation('home')
 
   return (
-    <section className="relative min-h-[94vh] flex items-center justify-center text-center px-6 overflow-hidden">
+    <section className="relative min-h-[52vh] sm:min-h-[64vh] md:min-h-[80vh] flex items-center justify-center text-center px-4 sm:px-6 overflow-hidden">
+      {/* Background Image with Cinematic Luxury Gradients */}
       <motion.div 
-        initial={{ scale: 1.12, opacity: 0.8 }}
-        animate={{ scale: 1.03, opacity: 1 }}
+        initial={{ scale: 1.1, opacity: 0.85 }}
+        animate={{ scale: 1.02, opacity: 1 }}
         transition={{ duration: 1.4, ease: [0.25, 1, 0.5, 1] }}
         className="absolute inset-0 z-0"
       >
@@ -30,42 +31,46 @@ export const HeroSection: React.FC<HeroSectionProps> = memo(({ heroImage }) => {
           width={1920}
           height={1080}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1C1816] via-[#1C1816]/70 to-black/35" />
-        <div className="absolute inset-0 bg-black/25 backdrop-blur-[0.8px]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#141110] via-[#141110]/60 to-black/35" />
+        <div className="absolute inset-0 bg-black/20 backdrop-blur-[0.5px]" />
       </motion.div>
 
+      {/* Hero Showcase Content */}
       <motion.div 
         variants={heroStagger}
         initial="hidden"
         animate="visible"
-        className="relative z-10 max-w-4xl mx-auto space-y-7 pt-28 pb-12"
+        className="relative z-10 max-w-4xl mx-auto space-y-4 sm:space-y-6 pt-20 sm:pt-28 pb-8 sm:pb-12"
       >
-        <motion.h1 variants={fadeUp} className="text-4xl sm:text-6xl lg:text-7xl font-serif font-bold leading-[1.15] drop-shadow-2xl">
+        <motion.div variants={fadeUp} className="inline-block">
+          <span className="text-[10px] sm:text-xs tracking-[0.25em] sm:tracking-[0.35em] text-[#C4A070] uppercase font-bold font-serif px-3 py-1 rounded-full bg-[#141110]/60 border border-[#C4A070]/30 backdrop-blur-md">
+            HAUTE FURNITURE & BESPOKE LIVING
+          </span>
+        </motion.div>
+
+        <motion.h1 variants={fadeUp} className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-bold leading-[1.2] drop-shadow-2xl">
           <span className="gold-gradient-text inline-block">
             {t('hero_title_part1')} <br />
             {t('hero_title_highlight')}
           </span>
         </motion.h1>
 
-        <motion.p variants={fadeUp} className="text-sm sm:text-base md:text-lg text-[#E3CAA9]/90 max-w-2xl mx-auto leading-relaxed md:leading-8 drop-shadow-md font-light">
-          {t('hero_subtitle')}
-        </motion.p>
-
-        <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+        {/* Clean Showcase Discovery CTAs */}
+        <motion.div variants={fadeUp} className="flex flex-row items-center justify-center gap-3 pt-2">
           <Link
             to="/limited-edition"
-            className="w-full sm:w-auto px-8 py-3.5 rounded-full gold-btn-primary text-xs font-bold flex items-center justify-center gap-2.5 shadow-xl transition-all"
+            className="px-5 sm:px-7 py-2.5 sm:py-3 rounded-full gold-btn-primary text-xs font-bold flex items-center justify-center gap-2 shadow-lg transition-all"
           >
             <span>{t('hero_cta_limited')}</span>
-            <FaArrowLeft className="w-3 h-3 ltr:rotate-180 transition-transform" />
+            <FaArrowLeft className="w-2.5 h-2.5 ltr:rotate-180 transition-transform" />
           </Link>
 
           <Link
             to="/bespoke"
-            className="w-full sm:w-auto px-7 py-3.5 rounded-full gold-btn-secondary text-xs font-bold flex items-center justify-center gap-2 shadow-lg transition-all"
+            className="px-5 sm:px-7 py-2.5 sm:py-3 rounded-full gold-btn-secondary text-xs font-bold flex items-center justify-center gap-2 shadow-md transition-all"
           >
             <span>{t('hero_cta_bespoke')}</span>
-            <FaArrowLeft className="w-3 h-3 text-[#C4A070] ltr:rotate-180 transition-transform" />
+            <FaArrowLeft className="w-2.5 h-2.5 text-[#C4A070] ltr:rotate-180 transition-transform" />
           </Link>
         </motion.div>
       </motion.div>

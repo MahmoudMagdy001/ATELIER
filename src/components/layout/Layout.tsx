@@ -8,6 +8,7 @@ import BrandLogo from '../ui/BrandLogo'
 import CrCertificateBadge from '../ui/CrCertificateBadge'
 import LanguageSwitcher from '../ui/LanguageSwitcher'
 import ContactShowroomSection from '../../features/home/components/ContactShowroomSection'
+import MobileBottomNav from './MobileBottomNav'
 import ScrollToTop from './ScrollToTop'
 import FloatingWhatsApp from './FloatingWhatsApp'
 import type { SiteSettings } from '../../types/database'
@@ -112,7 +113,7 @@ export default function Layout() {
             : 'bg-transparent border-b border-transparent py-2'
         }`}
       >
-        <div className="w-full px-6 md:px-8 lg:px-10 h-20 flex items-center justify-between">
+        <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 h-16 md:h-20 flex items-center justify-between">
           <Link 
             to="/" 
             className="group flex items-center shrink-0 focus-visible:ring-2 focus-visible:ring-[#C4A070] focus-visible:outline-none rounded-lg" 
@@ -157,9 +158,9 @@ export default function Layout() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-3 shrink-0">
-            {/* Desktop Language Switcher */}
-            <LanguageSwitcher className="hidden md:inline-flex" />
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            {/* Single Unified Language Switcher */}
+            <LanguageSwitcher />
 
             <div className="hidden lg:flex items-center gap-3">
               <a
@@ -199,11 +200,6 @@ export default function Layout() {
               transition={{ duration: 0.25, ease: 'easeInOut' }}
               className="md:hidden border-t border-[#C4A070]/15 bg-[#141110] px-6 py-4 space-y-2 overflow-hidden"
             >
-              {/* Mobile Language Switcher Row */}
-              <div className="pb-3 pt-1 border-b border-[#C4A070]/15 flex items-center justify-between">
-                <span className="text-xs font-medium text-[#B3A9A3]">Language / اللغة</span>
-                <LanguageSwitcher compact />
-              </div>
 
               {navLinks.map((link) => (
                 <NavLink
@@ -238,18 +234,18 @@ export default function Layout() {
         </AnimatePresence>
       </header>
 
-      {/* Main Content */}
-      <main id="main-content" tabIndex={-1} className="flex-1 outline-none">
+      {/* Main Content with bottom padding on mobile for fixed tab bar */}
+      <main id="main-content" tabIndex={-1} className="flex-1 outline-none pb-20 md:pb-0">
         <Outlet />
       </main>
 
-      {/* Unified VIP Bespoke Concierge & Showroom Contact Section */}
-      <div className="pt-8 pb-20 bg-transparent">
+      {/* Showroom Contact Section */}
+      <div className="pt-8 pb-14 md:pb-20 bg-transparent">
         <ContactShowroomSection settings={settings} />
       </div>
 
       {/* Footer */}
-      <footer className="border-t border-[#C4A070]/20 bg-[#141110] text-[#B3A9A3] py-14 px-6">
+      <footer className="border-t border-[#C4A070]/20 bg-[#141110] text-[#B3A9A3] py-12 md:py-14 px-6">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12">
           <div className="space-y-5 lg:col-span-5">
             <BrandLogo size="lg" customLogo={settings?.logo_url} />
@@ -299,25 +295,21 @@ export default function Layout() {
           </div>
         </div>
 
-        {/* Brand Values Ribbon */}
-        <div className="max-w-7xl mx-auto mt-12 pt-6 border-t border-white/5 flex flex-col md:flex-row items-center justify-between text-xs text-[#B3A9A3] gap-4">
-          <div className="flex items-center gap-4 text-[11px] tracking-[0.28em] text-[#C4A070] uppercase font-extrabold font-serif" dir="ltr">
-            <span>{t('ribbon.luxury')}</span>
-            <span>•</span>
-            <span>{t('ribbon.minimal')}</span>
-            <span>•</span>
-            <span>{t('ribbon.timeless')}</span>
-            <span>•</span>
-            <span>{t('ribbon.bespoke')}</span>
-          </div>
-
+        {/* Footer Bottom / Copyright */}
+        <div className="max-w-7xl mx-auto mt-12 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between text-xs text-[#B3A9A3] gap-4">
           <p>{t('footer.copyright', { year: new Date().getFullYear(), siteName: settings?.site_name || 'S&I ATELIER' })}</p>
+          <div className="text-[11px] text-[#827771]">
+            <span>Haute Furniture & Bespoke Living</span>
+          </div>
         </div>
       </footer>
 
       {/* Floating Action Buttons: Scroll to Top (Bottom-Left) & WhatsApp (Bottom-Right) */}
       <ScrollToTop />
       <FloatingWhatsApp />
+
+      {/* Mobile App-Style Bottom Tab Navigation */}
+      <MobileBottomNav />
     </div>
   )
 }
