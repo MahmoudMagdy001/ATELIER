@@ -157,7 +157,7 @@ export default function AdminProducts() {
                       className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all"
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
-                      placeholder="طقم صالون Milano Velvet الملكي"
+                      placeholder="طقم صالون Milano Velvet الفاخر"
                     />
                   </div>
 
@@ -195,7 +195,7 @@ export default function AdminProducts() {
                       className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all text-left"
                       value={titleEn}
                       onChange={(e) => setTitleEn(e.target.value)}
-                      placeholder="Milano Velvet Royal Living Set"
+                      placeholder="Milano Velvet Luxury Living Set"
                     />
                     <p className="text-[11px] text-[#8C7F75] mt-1 text-left">Leave blank to use the Arabic title as fallback</p>
                   </div>
@@ -238,7 +238,7 @@ export default function AdminProducts() {
                   <input
                     type="text"
                     className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-mono text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all"
-                    placeholder="milano-velvet-royal-living-set"
+                    placeholder="milano-velvet-luxury-living-set"
                     value={slug}
                     onChange={(e) => setSlug(e.target.value)}
                   />
@@ -365,7 +365,7 @@ export default function AdminProducts() {
                           type="text"
                           required
                           className="w-full rounded-xl border border-[#E6E1DC] bg-white px-3.5 py-2 text-xs text-[#141110] focus:border-[#C4A070] focus:outline-none font-medium"
-                          placeholder="أزرق كحلي ملكي (240 سم)"
+                          placeholder="أزرق كحلي داكن (240 سم)"
                           value={v.name}
                           onChange={(e) => updateVariant(v.id, 'name', e.target.value)}
                         />
@@ -379,7 +379,7 @@ export default function AdminProducts() {
                           type="text"
                           className="w-full rounded-xl border border-[#E6E1DC] bg-white px-3.5 py-2 text-xs text-[#141110] focus:border-[#C4A070] focus:outline-none font-medium text-left"
                           dir="ltr"
-                          placeholder="Royal Navy Blue (240 cm)"
+                          placeholder="Navy Blue (240 cm)"
                           value={v.name_en || ''}
                           onChange={(e) => updateVariant(v.id, 'name_en', e.target.value)}
                         />

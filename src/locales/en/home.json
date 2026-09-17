@@ -16,7 +16,7 @@
   "about_title_pre": "The House of",
   "about_title_post": "Sculpting Timeless Luxury",
   "about_p1": "Founded in <date>September 2022</date>, <gold>S&I Atelier</gold> stands as a distinguished house for bespoke architectural furnishings, uniting master Italian craftsmanship with contemporary design sensibilities.",
-  "about_p2": "We believe every palace and private estate represents a singular architectural canvas. We reject mass production, crafting unique collector pieces sculpted from aged walnut, rare European marble, and haute couture textiles.",
+  "about_p2": "We believe every palace and private estate represents a singular architectural canvas. We reject mass production, crafting unique collector pieces sculpted from aged walnut, fine European marble, and haute couture textiles.",
   "about_cta_bespoke": "Explore Bespoke Services",
   "about_cta_whatsapp": "Connect via WhatsApp",
   "about_features": {
@@ -29,9 +29,9 @@
     "vip_val": "VIP",
     "vip_title": "Palace White-Glove",
     "vip_desc": "Specialist engineering team for private installations.",
-    "exclusive_val": "Rare",
+    "exclusive_val": "Exclusive",
     "exclusive_title": "Exclusive Editions",
-    "exclusive_desc": "Numbered limited editions ensuring absolute rarity."
+    "exclusive_desc": "Numbered limited editions ensuring bespoke distinction."
   },
   "history_badge": "VISION & HERITAGE",
   "history_title": "Brand Heritage & Architectural Vision",
@@ -44,6 +44,8 @@
   "history_step3_desc": "Standing today as the premier destination for palace furnishing, delivering bespoke solutions from architectural blueprints to turnkey curation.",
   "services_badge": "SERVICES & COLLECTIONS",
   "services_title": "Services & Collections",
+  "services_title_pre": "SERVICES &",
+  "services_title_highlight": "COLLECTIONS",
   "service_card1_num": "01 • LIMITED EDITION",
   "service_card1_title": "Limited Edition Collections",
   "service_card1_desc": "Exclusive furniture pieces crafted in limited quantities with architectural materials.",
@@ -61,7 +63,9 @@
   "categories_view_all": "View All Collections",
   "browse_category_aria": "Browse category {{name}}",
   "portfolio_badge": "OUR PORTFOLIO",
-  "portfolio_title": "Palace & Estate Installations",
+  "portfolio_title": "Our Projects & Portfolio",
+  "portfolio_title_pre": "OUR",
+  "portfolio_title_highlight": "PORTFOLIO",
   "portfolio_all": "All Installations",
   "portfolio_empty_title": "No projects currently showcased in this category",
   "portfolio_empty_desc": "Our installation archives are updated regularly with newly completed residences.",
@@ -69,7 +73,7 @@
   "portfolio_next_page": "Next Page",
   "portfolio_goto_page": "Go to page {{page}}",
   "lightbox_close": "Close Gallery",
-  "guarantees_rare_title": "Rare Certified Materials",
+  "guarantees_rare_title": "Certified Natural Materials",
   "guarantees_rare_desc": "Aged walnut timbers, European marbles, and authentic Italian leather.",
   "guarantees_warranty_title": "Official Lifetime Warranty",
   "guarantees_warranty_desc": "Accredited warranty up to 10 years covering structural integrity.",
@@ -85,7 +89,7 @@
     "craftedDesc": "100% bespoke artisanal crafting",
     "villasLabel": "Palaces & Estates",
     "villasDesc": "Curated turn-key private projects",
-    "materialsLabel": "Rare Natural Materials",
+    "materialsLabel": "Fine Natural Materials",
     "materialsDesc": "European timbers & natural marbles",
     "foundationLabel": "Accredited Foundation"
   }

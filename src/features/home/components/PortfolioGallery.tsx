@@ -2,8 +2,7 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { 
-  FaImages, 
-  FaArrowUpRightFromSquare, 
+  FaImages,
   FaChevronLeft, 
   FaChevronRight 
 } from 'react-icons/fa6'
@@ -60,12 +59,9 @@ export const PortfolioGallery: React.FC<PortfolioGalleryProps> = ({
       className="max-w-7xl mx-auto px-4 sm:px-6 space-y-6 sm:space-y-8"
     >
       <motion.div variants={fadeUp} className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#C4A070]/20 pb-4 sm:pb-6">
-        <div className="space-y-1.5 text-start">
-          <span className="text-xs text-[#C4A070] tracking-widest uppercase font-bold flex items-center gap-2">
-            <FaImages className="w-3.5 h-3.5" /> {t('portfolio_badge')}
-          </span>
+        <div className="text-start">
           <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-[#F2EFE8]">
-            {t('portfolio_title')}
+            {t('portfolio_title_pre', 'معرض')} <span className="gold-gradient-text">{t('portfolio_title_highlight', 'الأعمال والمشاريع')}</span>
           </h2>
         </div>
 
@@ -180,10 +176,6 @@ export const PortfolioGallery: React.FC<PortfolioGalleryProps> = ({
                           {descText}
                         </p>
                       )}
-                    </div>
-
-                    <div className="absolute top-4 start-4 w-9 h-9 rounded-full bg-black/60 backdrop-blur-md border border-white/10 flex items-center justify-center text-[#C4A070] opacity-0 group-hover:opacity-100 transition-opacity">
-                      <FaArrowUpRightFromSquare className="w-3 h-3" />
                     </div>
                   </motion.div>
                 )

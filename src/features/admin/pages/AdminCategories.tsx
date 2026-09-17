@@ -356,7 +356,7 @@ export default function AdminCategories() {
                   <input
                     type="text"
                     className="w-full px-3.5 py-2.5 rounded-xl border border-[#E6E1DC] text-xs font-medium text-[#141110] bg-white placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all text-left"
-                    placeholder="e.g. Salons & Royal Majlis Suites"
+                    placeholder="e.g. Salons & Luxury Majlis Suites"
                     value={nameEn}
                     onChange={(e) => setNameEn(e.target.value)}
                   />

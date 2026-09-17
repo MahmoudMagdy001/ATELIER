@@ -121,7 +121,7 @@ export default function SEOSection({
               <input
                 type="text"
                 className={`w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all ${isEn ? 'text-left' : ''}`}
-                placeholder={isEn ? 'luxury furniture, bespoke palace interior, royal majlis' : 'أثاث فاخر, تصميم داخلي, مجالس راقية'}
+                placeholder={isEn ? 'luxury furniture, bespoke palace interior, luxury majlis' : 'أثاث فاخر, تصميم داخلي, مجالس راقية'}
                 value={keywords}
                 onChange={(e) => setKeywords(e.target.value)}
               />

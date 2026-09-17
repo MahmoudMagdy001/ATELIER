@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
-import { FaGem, FaCouch, FaArrowLeft } from 'react-icons/fa6'
+import { FaGem, FaCouch } from 'react-icons/fa6'
 import { fadeUp, staggerContainer, viewportOnce, cardHover, springHover } from '../../../constants/animations'
 
 interface ServicesDualCardsProps {
@@ -21,12 +21,9 @@ export const ServicesDualCards: React.FC<ServicesDualCardsProps> = ({ productsCo
       className="max-w-7xl mx-auto px-4 sm:px-6 space-y-6 sm:space-y-8"
     >
       <motion.div variants={fadeUp} className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 border-b border-[#C4A070]/20 pb-4 sm:pb-6">
-        <div className="space-y-1.5 text-start">
-          <span className="text-xs text-[#C4A070] tracking-widest uppercase font-bold flex items-center gap-2">
-            <FaGem className="w-3.5 h-3.5" /> {t('services_badge')}
-          </span>
+        <div className="text-start">
           <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-[#F2EFE8]">
-            {t('services_title')}
+            {t('services_title_pre', 'الخدمات')} <span className="gold-gradient-text">{t('services_title_highlight', 'والمجموعات')}</span>
           </h2>
         </div>
       </motion.div>
@@ -60,10 +57,9 @@ export const ServicesDualCards: React.FC<ServicesDualCardsProps> = ({ productsCo
             </span>
             <Link
               to="/limited-edition"
-              className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full gold-btn-primary text-xs font-bold flex items-center gap-2"
+              className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full gold-btn-primary text-xs font-bold flex items-center justify-center transition-all"
             >
               <span>{t('service_card1_cta')}</span>
-              <FaArrowLeft className="w-3 h-3 ltr:rotate-180 transition-transform" />
             </Link>
           </div>
         </motion.div>
@@ -94,10 +90,9 @@ export const ServicesDualCards: React.FC<ServicesDualCardsProps> = ({ productsCo
             <span className="text-xs text-[#827771]">{t('service_card2_highlight')}</span>
             <Link
               to="/bespoke"
-              className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full gold-btn-secondary text-xs font-bold flex items-center gap-2"
+              className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full gold-btn-secondary text-xs font-bold flex items-center justify-center transition-all"
             >
               <span>{t('service_card2_cta')}</span>
-              <FaArrowLeft className="w-3 h-3 text-[#C4A070] ltr:rotate-180 transition-transform" />
             </Link>
           </div>
         </motion.div>

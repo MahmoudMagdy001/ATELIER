@@ -206,7 +206,7 @@ export function useAdminProducts() {
     setVariants([
       {
         id: `var-${Date.now()}`,
-        name: 'الخيار الأول (مثال: أزرق ملكي - مقاس 220 سم)',
+        name: 'الخيار الأول (مثال: أزرق داكن - مقاس 220 سم)',
         name_en: '',
         price: '',
         image: '',

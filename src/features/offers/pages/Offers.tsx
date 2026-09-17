@@ -12,7 +12,7 @@ import {
   springHover, 
   cardHover 
 } from '../../../constants/animations'
-import { FaTag, FaArrowLeft, FaLayerGroup, FaCalendarDays } from 'react-icons/fa6'
+import { FaTag, FaLayerGroup, FaCalendarDays } from 'react-icons/fa6'
 
 import type { Offer, OfferVariant } from '../../../types/database'
 
@@ -185,9 +185,8 @@ export default function Offers() {
                               <FaCalendarDays className="text-[#C4A070] w-3 h-3" /> {t('until')} {offer.valid_until}
                             </span>
                           )}
-                          <div className="flex items-center gap-1.5 text-xs font-bold text-[#C4A070] group-hover:ltr:translate-x-1 group-hover:rtl:translate-x-[-4px] transition-transform">
+                          <div className="text-xs font-bold text-[#C4A070] transition-colors">
                             <span>{t('details_cta')}</span>
-                            <FaArrowLeft className="w-3 h-3 ltr:rotate-180 transition-transform" />
                           </div>
                         </div>
                       </div>

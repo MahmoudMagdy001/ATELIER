@@ -13,7 +13,7 @@ import {
   springHover, 
   cardHover 
 } from '../../../constants/animations'
-import { FaArrowLeft, FaCalendarDays, FaBookOpen } from 'react-icons/fa6'
+import { FaCalendarDays, FaBookOpen } from 'react-icons/fa6'
 
 import type { Article, Category } from '../../../types/database'
 
@@ -187,7 +187,6 @@ export default function Blog() {
 
                       <div className="pt-4 border-t border-white/5 flex items-center justify-between text-xs font-bold text-[#C4A070]">
                         <span>{t('read_article')}</span>
-                        <FaArrowLeft className="w-3 h-3 ltr:rotate-180 group-hover:ltr:translate-x-1 group-hover:rtl:translate-x-[-4px] transition-transform" />
                       </div>
                     </div>
                   </Link>

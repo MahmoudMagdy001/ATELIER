@@ -56,7 +56,6 @@ export default function Layout() {
     { to: '/', label: t('nav.home') },
     { to: '/limited-edition', label: t('nav.limitedEdition') },
     { to: '/bespoke', label: t('nav.bespoke') },
-    { to: '/offers', label: t('nav.offers') },
   ]
 
   useEffect(() => {
@@ -262,7 +261,6 @@ export default function Layout() {
             <ul className="space-y-2.5 text-xs">
               <li><Link to="/limited-edition" className="hover:text-[#C4A070] transition-colors">{t('nav.limitedEdition')}</Link></li>
               <li><Link to="/bespoke" className="hover:text-[#C4A070] transition-colors">{t('nav.bespoke')}</Link></li>
-              <li><Link to="/offers" className="hover:text-[#C4A070] transition-colors">{t('nav.offers')}</Link></li>
               <li><Link to="/blog" className="hover:text-[#C4A070] transition-colors">{t('nav.blog')}</Link></li>
             </ul>
           </div>

@@ -7,8 +7,6 @@ import SEO from '../../../components/ui/SEO'
 import { PageLoading } from '../../../components/ui/Loading'
 import { fadeUp, staggerContainer, viewportOnce, springHover, cardHover } from '../../../constants/animations'
 import { 
-  FaArrowRight, 
-  FaArrowLeft, 
   FaCalendarDays, 
   FaClock, 
   FaShareNodes, 
@@ -100,9 +98,8 @@ export default function BlogDetail() {
           </p>
           <Link 
             to="/blog" 
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#C4A070] text-[#1C1816] text-xs font-bold hover:bg-[#D4B58C] transition-all shadow-lg shadow-[#C4A070]/20"
+            className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-[#C4A070] text-[#1C1816] text-xs font-bold hover:bg-[#D4B58C] transition-all shadow-lg shadow-[#C4A070]/20"
           >
-            {isRtl ? <FaArrowRight className="w-3.5 h-3.5" /> : <FaArrowLeft className="w-3.5 h-3.5" />}
             <span>{t('detail.backToJournal')}</span>
           </Link>
         </div>
@@ -171,13 +168,8 @@ export default function BlogDetail() {
 
             <Link 
               to="/blog" 
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-[#C4A070] hover:bg-[#C4A070]/10 hover:border-[#C4A070]/30 transition-all group"
+              className="inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-[#C4A070] hover:bg-[#C4A070]/10 hover:border-[#C4A070]/30 transition-all"
             >
-              {isRtl ? (
-                <FaArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-              ) : (
-                <FaArrowLeft className="w-3 h-3 group-hover:-translate-x-1 transition-transform" />
-              )}
               <span>{t('detail.allArticles')}</span>
             </Link>
           </div>
@@ -378,10 +370,9 @@ export default function BlogDetail() {
             <div className="relative pt-2">
               <Link 
                 to="/bespoke" 
-                className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full bg-[#C4A070] text-[#1C1816] text-xs font-bold hover:bg-[#D4B58C] transition-all shadow-xl shadow-[#C4A070]/20 hover:scale-105"
+                className="inline-flex items-center justify-center px-8 py-3.5 rounded-full bg-[#C4A070] text-[#1C1816] text-xs font-bold hover:bg-[#D4B58C] transition-all shadow-xl shadow-[#C4A070]/20 hover:scale-105"
               >
                 <span>{t('detail.bespokeBannerBtn')}</span>
-                {isRtl ? <FaArrowLeft className="w-3.5 h-3.5" /> : <FaArrowRight className="w-3.5 h-3.5" />}
               </Link>
             </div>
           </div>
@@ -396,10 +387,9 @@ export default function BlogDetail() {
                 </div>
                 <Link 
                   to="/blog" 
-                  className="text-xs text-[#C4A070] hover:text-[#E5C9A3] flex items-center gap-1 font-bold"
+                  className="text-xs text-[#C4A070] hover:text-[#E5C9A3] font-bold"
                 >
                   <span>{t('catalog.allArticles')}</span>
-                  {isRtl ? <FaArrowLeft className="w-2.5 h-2.5" /> : <FaArrowRight className="w-2.5 h-2.5" />}
                 </Link>
               </div>
 
@@ -464,11 +454,6 @@ export default function BlogDetail() {
 
                           <div className="pt-3 border-t border-white/5 flex items-center justify-between text-[11px] font-bold text-[#C4A070]">
                             <span>{t('detail.readArticle')}</span>
-                            {isRtl ? (
-                              <FaArrowLeft className="w-2.5 h-2.5 group-hover:translate-x-[-3px] transition-transform" />
-                            ) : (
-                              <FaArrowRight className="w-2.5 h-2.5 group-hover:translate-x-[3px] transition-transform" />
-                            )}
                           </div>
                         </div>
                       </Link>

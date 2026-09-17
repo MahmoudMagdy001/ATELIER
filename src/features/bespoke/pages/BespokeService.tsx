@@ -14,11 +14,9 @@ import {
 } from '../../../constants/animations'
 import { 
   FaGem, 
-  FaAward, 
   FaPhone, 
   FaWhatsapp, 
   FaCheck, 
-  FaCompass, 
   FaShieldHalved,
   FaTruckFast,
   FaCouch,
@@ -26,8 +24,7 @@ import {
   FaBed,
   FaLayerGroup,
   FaCertificate,
-  FaLock,
-  FaHandshake
+  FaLock
 } from 'react-icons/fa6'
 
 interface BespokeStepItem {
@@ -115,12 +112,9 @@ export default function BespokeService() {
           variants={fadeUp}
           className="rounded-3xl fluted-panel border border-[#C4A070]/25 p-8 sm:p-12 md:p-16 space-y-8 shadow-2xl relative overflow-hidden"
         >
-          <div className="space-y-4">
-            <span className="text-xs text-[#C4A070] tracking-widest uppercase font-bold flex items-center gap-2">
-              <FaCompass className="w-3.5 h-3.5" /> {t('philosophy_badge')}
-            </span>
+          <div className="border-b border-[#C4A070]/20 pb-4 sm:pb-6">
             <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-[#F2EFE8] leading-snug">
-              {t('philosophy_title')}
+              {t('philosophy_title_pre', 'فلسفة')} <span className="gold-gradient-text">{t('philosophy_title_highlight', 'الدار المعمارية')}</span>
             </h2>
           </div>
 
@@ -170,13 +164,10 @@ export default function BespokeService() {
             whileInView="visible"
             viewport={viewportOnce}
             variants={fadeUp}
-            className="text-center max-w-2xl mx-auto space-y-4"
+            className="text-center max-w-2xl mx-auto space-y-4 border-b border-[#C4A070]/20 pb-4 sm:pb-6"
           >
-            <span className="text-xs text-[#C4A070] tracking-widest uppercase font-bold flex items-center justify-center gap-2">
-              <FaHandshake className="w-3.5 h-3.5" /> {t('capabilities_badge')}
-            </span>
-            <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#F2EFE8]">
-              {t('capabilities_title')}
+            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-[#F2EFE8]">
+              {t('capabilities_title_pre', 'مجالات')} <span className="gold-gradient-text">{t('capabilities_title_highlight', 'وحلول التنفيذ')}</span>
             </h2>
             <p className="text-xs sm:text-sm text-[#A19A91] leading-relaxed">
               {t('capabilities_desc')}
@@ -220,13 +211,10 @@ export default function BespokeService() {
           whileInView="visible"
           viewport={viewportOnce}
           variants={fadeUp}
-          className="text-center max-w-2xl mx-auto space-y-4"
+          className="text-center max-w-2xl mx-auto space-y-4 border-b border-[#C4A070]/20 pb-4 sm:pb-6"
         >
-          <span className="text-xs text-[#C4A070] tracking-widest uppercase font-bold flex items-center justify-center gap-2">
-            <FaAward className="w-3.5 h-3.5" /> {t('process_badge')}
-          </span>
-          <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#F2EFE8]">
-            {t('process_title')}
+          <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-[#F2EFE8]">
+            {t('process_title_pre', 'مسار')} <span className="gold-gradient-text">{t('process_title_highlight', 'التجربة الحرفية')}</span>
           </h2>
           <p className="text-xs sm:text-sm text-[#A19A91] leading-relaxed">
             {t('process_desc')}
@@ -274,13 +262,10 @@ export default function BespokeService() {
             whileInView="visible"
             viewport={viewportOnce}
             variants={fadeUp}
-            className="text-center max-w-xl mx-auto space-y-3"
+            className="text-center max-w-xl mx-auto space-y-3 border-b border-[#C4A070]/20 pb-4 sm:pb-6"
           >
-            <span className="text-xs text-[#C4A070] tracking-widest uppercase font-bold flex items-center justify-center gap-2">
-              <FaShieldHalved className="w-3.5 h-3.5" /> {t('standards_badge')}
-            </span>
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#F2EFE8]">
-              {t('standards_title')}
+            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-[#F2EFE8]">
+              {t('standards_title_pre', 'ميثاق')} <span className="gold-gradient-text">{t('standards_title_highlight', 'الجودة والحصرية')}</span>
             </h2>
           </motion.div>
 
@@ -322,9 +307,6 @@ export default function BespokeService() {
           className="rounded-3xl bg-gradient-to-r from-[#7A5D2B] via-[#C4A070] to-[#E5C9A3] p-8 sm:p-12 text-[#1C1816] shadow-2xl space-y-8 text-center relative overflow-hidden"
         >
           <div className="space-y-3 max-w-xl mx-auto">
-            <span className="text-xs tracking-widest font-extrabold uppercase bg-black/10 px-4 py-1.5 rounded-full inline-block" dir="ltr">
-              {t('cta_badge')}
-            </span>
             <h3 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold leading-tight">
               {t('cta_title')}
             </h3>

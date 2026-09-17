@@ -6,15 +6,19 @@
   "hero_subtitle": "Crafting refined furnishings and sculptured spaces tailored to the exact millimeter of your palace or private villa blueprints.",
   "philosophy_badge": "THE ATELIER PHILOSOPHY",
   "philosophy_title": "Translating Blueprint Visions into Legacy Masterpieces",
+  "philosophy_title_pre": "ATELIER",
+  "philosophy_title_highlight": "PHILOSOPHY",
   "philosophy_desc": "At S&I Atelier, we reject commercial uniformity; every architectural space possesses its own distinctive sculptural soul. We harmonize imported Italian bookmatched marbles, aged European walnut, and haute couture leathers to sculpt singular works designed specifically for your estate's proportions, lighting vectors, and sightlines.",
   "feature1_title": "100% Architectural Precision",
   "feature1_desc": "Precise execution matching CAD blueprints and spatial floorplans with zero tolerance for error.",
-  "feature2_title": "Certified Rare Natural Materials",
+  "feature2_title": "Certified Natural Materials",
   "feature2_desc": "Curated selection of bookmatched marbles, aged solid hardwoods, and hand-finished bronze.",
   "feature3_title": "VIP White-Glove Installation",
   "feature3_desc": "Specialist engineering team supervising seamless site installation and handover of certified warranty.",
   "capabilities_badge": "BESPOKE CAPABILITIES",
   "capabilities_title": "Architectural Craftsmanship Across Every Chamber",
+  "capabilities_title_pre": "BESPOKE",
+  "capabilities_title_highlight": "CAPABILITIES",
   "capabilities_desc": "Comprehensive custom solutions brought to life by master artisans according to your interior schemes.",
   "capabilities": [
     {
@@ -40,6 +44,8 @@
   ],
   "process_badge": "THE BESPOKE JOURNEY",
   "process_title": "The Path from Blueprint to Heirloom",
+  "process_title_pre": "THE BESPOKE",
+  "process_title_highlight": "JOURNEY",
   "process_desc": "From our initial structural review to final placement in your residence, our disciplined milestones guarantee unparalleled distinction.",
   "step_certified": "Certified & Documented Milestone",
   "steps": [
@@ -50,7 +56,7 @@
     },
     {
       "step": "02",
-      "title": "Rare Material Curation",
+      "title": "Fine Material Curation",
       "description": "Tactile review of imported natural stone slabs, burled walnut timbers, and Italian couture textile swatches."
     },
     {
@@ -66,6 +72,8 @@
   ],
   "standards_badge": "EXCLUSIVITY & TRUST STANDARDS",
   "standards_title": "S&I Atelier Pillars of Distinction",
+  "standards_title_pre": "EXCLUSIVITY &",
+  "standards_title_highlight": "STANDARDS",
   "standards": [
     {
       "title": "Certified 10-Year Comprehensive Warranty",

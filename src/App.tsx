@@ -58,9 +58,9 @@ export default function App() {
             <Route path="services/:slug" element={<Navigate to="/bespoke" replace />} />
             <Route path="about" element={<Navigate to="/" replace />} />
             
-            {/* Offers & Blog (Kept accessible for direct links if any, but clean redirects) */}
-            <Route path="offers" element={<Offers />} />
-            <Route path="offers/:slug" element={<OfferDetail />} />
+            {/* Offers Redirect to Collections & Blog */}
+            <Route path="offers" element={<Navigate to="/limited-edition" replace />} />
+            <Route path="offers/:slug" element={<Navigate to="/limited-edition" replace />} />
             <Route path="blog" element={<Blog />} />
             <Route path="blog/:slug" element={<BlogDetail />} />
           </Route>

@@ -122,7 +122,7 @@ export default function AdminSettings() {
         setSiteDescriptionEn(settings.site_description_en || '')
         setDefaultMetaTitle(settings.default_meta_title || 'ATELIER | صياغة الأثاث الفاخر والتصميم الداخلي')
         setDefaultMetaTitleEn(settings.default_meta_title_en || '')
-        setDefaultMetaDescription(settings.default_meta_description || 'استكشف أرقى تشكيلات الأثاث الإيطالي المصنوع بالطلب من الصالونات وغرف الطعام والمجالس الملكية.')
+        setDefaultMetaDescription(settings.default_meta_description || 'استكشف أرقى تشكيلات الأثاث الإيطالي المصنوع بالطلب من الصالونات وغرف الطعام والمجالس الفاخرة.')
         setDefaultMetaDescriptionEn(settings.default_meta_description_en || '')
         setDefaultCanonical(settings.default_canonical || '')
         setDefaultRobots(settings.default_robots || 'index, follow')
@@ -544,7 +544,7 @@ fbq('track', 'PageView');
                   className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all"
                   value={defaultMetaDescription}
                   onChange={(e) => setDefaultMetaDescription(e.target.value)}
-                  placeholder="استكشف أرقى تشكيلات الأثاث الإيطالي المصنوع بالطلب من الصالونات وغرف الطعام والمجالس الملكية."
+                  placeholder="استكشف أرقى تشكيلات الأثاث الإيطالي المصنوع بالطلب من الصالونات وغرف الطعام والمجالس الفاخرة."
                 />
               </div>
             </div>
@@ -582,7 +582,7 @@ fbq('track', 'PageView');
                   className="w-full rounded-xl border border-[#E6E1DC] bg-white px-4 py-2.5 text-sm font-medium text-[#141110] placeholder-[#8C7F75] focus:border-[#C4A070] focus:ring-1 focus:ring-[#C4A070] focus:outline-none transition-all text-left"
                   value={defaultMetaDescriptionEn}
                   onChange={(e) => setDefaultMetaDescriptionEn(e.target.value)}
-                  placeholder="Explore prestigious Italian furniture commissions tailored for royal villas and architectural sanctuaries."
+                  placeholder="Explore prestigious Italian furniture commissions tailored for private villas and architectural sanctuaries."
                 />
               </div>
             </div>

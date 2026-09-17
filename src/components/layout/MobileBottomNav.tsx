@@ -5,8 +5,7 @@ import {
   FaHouse, 
   FaCouch, 
   FaCompassDrafting, 
-  FaWhatsapp,
-  FaTag
+  FaWhatsapp
 } from 'react-icons/fa6'
 import { CONTACT_INFO } from '../../constants/contactInfo'
 
@@ -38,12 +37,6 @@ export default function MobileBottomNav() {
       icon: FaCompassDrafting,
       exact: false,
     },
-    {
-      to: '/offers',
-      label: t('nav.offers', 'العروض'),
-      icon: FaTag,
-      exact: false,
-    },
   ]
 
   return (
@@ -51,7 +44,7 @@ export default function MobileBottomNav() {
       aria-label={isEn ? 'Mobile bottom navigation' : 'شريط التنقل السفلي'}
       className="md:hidden fixed bottom-0 inset-x-0 z-50 bg-[#141110]/95 backdrop-blur-xl border-t border-[#C4A070]/20 shadow-[0_-8px_30px_rgba(0,0,0,0.7)] pb-[env(safe-area-inset-bottom,0px)]"
     >
-      <div className="grid grid-cols-5 h-16 max-w-md mx-auto items-center px-1">
+      <div className="grid grid-cols-4 h-16 max-w-md mx-auto items-center px-2">
         {navItems.map((item) => {
           const isActive = item.exact 
             ? location.pathname === item.to 

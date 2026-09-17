@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
-import { FaLayerGroup, FaArrowLeft } from 'react-icons/fa6'
+
 import { fadeUp, staggerContainer, viewportOnce, cardHover, springHover } from '../../../constants/animations'
 import type { Category, LimitedEdition } from '../../../types/database'
 
@@ -32,10 +32,7 @@ export const ProductCategoriesSection: React.FC<ProductCategoriesSectionProps> =
       className="max-w-7xl mx-auto px-4 sm:px-6 space-y-6 sm:space-y-8"
     >
       <motion.div variants={fadeUp} className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 border-b border-[#C4A070]/20 pb-4 sm:pb-6">
-        <div className="space-y-1.5 text-start">
-          <span className="text-xs text-[#C4A070] tracking-widest uppercase font-bold flex items-center gap-2">
-            <FaLayerGroup className="w-3.5 h-3.5" /> {t('categories_badge')}
-          </span>
+        <div className="text-start">
           <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-[#F2EFE8]">
             {t('categories_title_pre')} <span className="gold-gradient-text">{t('categories_title_highlight')}</span>
           </h2>
@@ -43,10 +40,9 @@ export const ProductCategoriesSection: React.FC<ProductCategoriesSectionProps> =
 
         <Link
           to="/limited-edition"
-          className="text-xs font-bold text-[#C4A070] hover:text-[#E5C9A3] flex items-center gap-1.5 transition-colors group shrink-0 self-start sm:self-auto pb-1"
+          className="text-xs font-bold text-[#C4A070] hover:text-[#E5C9A3] transition-colors shrink-0 self-start sm:self-auto pb-1"
         >
           <span>{t('categories_view_all')}</span>
-          <FaArrowLeft className="w-3 h-3 ltr:rotate-180 group-hover:ltr:translate-x-1 group-hover:rtl:translate-x-[-4px] transition-transform" />
         </Link>
       </motion.div>
 
