@@ -189,11 +189,7 @@ const SEO = memo(function SEO({
             CONTACT_INFO.instagramUrl,
             CONTACT_INFO.tiktokUrl,
             CONTACT_INFO.snapchatUrl,
-            CONTACT_INFO.twitterUrl,
-            CONTACT_INFO.pinterestUrl,
-            CONTACT_INFO.linkedinUrl,
-            CONTACT_INFO.facebookUrl,
-            CONTACT_INFO.youtubeUrl
+            CONTACT_INFO.linkedinUrl
           ].filter(Boolean)
         })}
       </script>

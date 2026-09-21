@@ -14,13 +14,9 @@ import FloatingWhatsApp from './FloatingWhatsApp'
 import type { SiteSettings } from '../../types/database'
 import { 
   FaInstagram, 
-  FaPinterest, 
-  FaLinkedin, 
-  FaTiktok, 
   FaSnapchat, 
-  FaXTwitter, 
-  FaFacebookF, 
-  FaYoutube, 
+  FaTiktok, 
+  FaLinkedin, 
   FaBars, 
   FaXmark, 
   FaWhatsapp, 
@@ -30,12 +26,7 @@ const SOCIAL_LINKS = [
   { name: 'Instagram', icon: FaInstagram, url: CONTACT_INFO.instagramUrl },
   { name: 'Snapchat', icon: FaSnapchat, url: CONTACT_INFO.snapchatUrl },
   { name: 'TikTok', icon: FaTiktok, url: CONTACT_INFO.tiktokUrl },
-  { name: 'X (Twitter)', icon: FaXTwitter, url: CONTACT_INFO.twitterUrl },
-  { name: 'Pinterest', icon: FaPinterest, url: CONTACT_INFO.pinterestUrl },
   { name: 'LinkedIn', icon: FaLinkedin, url: CONTACT_INFO.linkedinUrl },
-  { name: 'Facebook', icon: FaFacebookF, url: CONTACT_INFO.facebookUrl },
-  { name: 'YouTube', icon: FaYoutube, url: CONTACT_INFO.youtubeUrl },
-  { name: 'WhatsApp', icon: FaWhatsapp, url: `https://wa.me/${CONTACT_INFO.whatsappRaw}` },
 ]
 
 export default function Layout() {

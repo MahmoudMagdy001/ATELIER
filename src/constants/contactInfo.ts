@@ -13,11 +13,7 @@ export interface ContactInfo {
   instagramUrl: string
   snapchatUrl: string
   tiktokUrl: string
-  twitterUrl: string
-  pinterestUrl: string
   linkedinUrl: string
-  facebookUrl: string
-  youtubeUrl: string
   workingHours: string
 }
 
@@ -33,13 +29,9 @@ export const CONTACT_INFO: ContactInfo = {
   email: 'concierge@si-atelier.com',
   address: 'الرياض / حي الصناعية / منطقة الشفاء',
   googleMapsUrl: 'https://maps.google.com/?q=Riyadh+Olaya+King+Fahd+Road',
-  instagramUrl: 'https://instagram.com/atelier_luxury',
-  snapchatUrl: 'https://snapchat.com/add/atelier_luxury',
-  tiktokUrl: 'https://tiktok.com/@atelier_luxury',
-  twitterUrl: 'https://x.com/atelier_luxury',
-  pinterestUrl: 'https://pinterest.com/atelier_luxury',
-  linkedinUrl: 'https://linkedin.com/company/atelier-luxury',
-  facebookUrl: 'https://facebook.com/atelierluxury',
-  youtubeUrl: 'https://youtube.com/@atelier_luxury',
+  instagramUrl: 'https://www.instagram.com/si.atelier.sa?stkn=YjI0ZGhzbTRkMzJ6&utm_source=qr',
+  snapchatUrl: 'https://snapchat.com/t/c5zUGVZw',
+  tiktokUrl: 'https://www.tiktok.com/@s.i_atelier?_r=1&_t=ZS-99tc49bYGRU',
+  linkedinUrl: 'https://www.linkedin.com/in/s-i-atelier-b1198a437/',
   workingHours: 'السبت - الخميس: 10:00 ص - 10:00 م | الجمعة: 4:00 م - 10:00 م'
 }
