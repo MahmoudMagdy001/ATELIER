@@ -44,9 +44,11 @@ export default function App() {
           <Route element={<Layout />}>
             <Route index element={<Home />} />
             
-            {/* 1. Limited Edition (Replaces /products) */}
+            {/* 1. Limited Edition & Projects */}
             <Route path="limited-edition" element={<Products />} />
             <Route path="limited-edition/:slug" element={<ProductDetail />} />
+            <Route path="projects" element={<Navigate to="/limited-edition" replace />} />
+            <Route path="projects/:slug" element={<ProductDetail />} />
             
             {/* 2. Bespoke Service Page */}
             <Route path="bespoke" element={<BespokeService />} />
@@ -55,12 +57,12 @@ export default function App() {
             <Route path="products" element={<Navigate to="/limited-edition" replace />} />
             <Route path="products/:slug" element={<ProductDetail />} />
             <Route path="services" element={<Navigate to="/bespoke" replace />} />
-            <Route path="services/:slug" element={<Navigate to="/bespoke" replace />} />
+            <Route path="services/:slug" element={<OfferDetail />} />
             <Route path="about" element={<Navigate to="/" replace />} />
             
-            {/* Offers Redirect to Collections & Blog */}
-            <Route path="offers" element={<Navigate to="/limited-edition" replace />} />
-            <Route path="offers/:slug" element={<Navigate to="/limited-edition" replace />} />
+            {/* Offers Collections & Blog */}
+            <Route path="offers" element={<Offers />} />
+            <Route path="offers/:slug" element={<OfferDetail />} />
             <Route path="blog" element={<Blog />} />
             <Route path="blog/:slug" element={<BlogDetail />} />
           </Route>

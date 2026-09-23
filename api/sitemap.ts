@@ -1,9 +1,15 @@
-export const config = {
-  runtime: 'edge',
-}
+import type { VercelRequest, VercelResponse } from '@vercel/node'
 
-const SUPABASE_URL = process.env.VITE_SUPABASE_URL ?? ''
-const SUPABASE_KEY = process.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? ''
+const SUPABASE_URL =
+  process.env.VITE_SUPABASE_URL ||
+  process.env.SUPABASE_URL ||
+  'https://edhhqwyjvbaomfgvzxuw.supabase.co'
+
+const SUPABASE_KEY =
+  process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
+  process.env.VITE_SUPABASE_ANON_KEY ||
+  process.env.SUPABASE_ANON_KEY ||
+  'sb_publishable_wJclZZrUlepKl18L-Shw2w_FfwTN9oZ'
 
 /** Escape XML special characters to prevent malformed output. */
 function escapeXml(str: string): string {
@@ -15,34 +21,43 @@ function escapeXml(str: string): string {
     .replace(/'/g, '&apos;')
 }
 
-interface SiteSettings {
-  site_url: string
-  sitemap_include_projects: boolean
-  sitemap_include_services: boolean
-  sitemap_include_posts: boolean
-  sitemap_change_freq: string
-  sitemap_priority_homepage: string
+interface SiteSettingsRow {
+  site_url?: string
+  default_canonical?: string
+  sitemap_include_projects?: boolean
+  sitemap_include_services?: boolean
+  sitemap_include_posts?: boolean
+  sitemap_change_freq?: string
+  sitemap_priority_homepage?: string
+  [key: string]: unknown
 }
 
-interface SlugRow {
+interface SlugItem {
   slug: string
   updated_at?: string
   created_at?: string
+  published_at?: string
 }
 
-function buildXmlUrl(loc: string, priority: string, changefreq: string, lastmod?: string): string {
+function buildXmlUrl(
+  loc: string,
+  priority: string,
+  changefreq: string,
+  lastmod?: string,
+): string {
   const today = new Date().toISOString().split('T')[0]
+  const dateStr = lastmod ? lastmod.split('T')[0] : today
   return [
     '  <url>',
     `    <loc>${escapeXml(loc)}</loc>`,
-    `    <lastmod>${lastmod ?? today}</lastmod>`,
+    `    <lastmod>${dateStr}</lastmod>`,
     `    <changefreq>${changefreq}</changefreq>`,
     `    <priority>${priority}</priority>`,
     '  </url>',
   ].join('\n')
 }
 
-function fallbackXml(siteUrl: string): string {
+function generateMinimalSitemap(siteUrl: string): string {
   const today = new Date().toISOString().split('T')[0]
   return (
     `<?xml version="1.0" encoding="UTF-8"?>\n` +
@@ -60,17 +75,40 @@ function fallbackXml(siteUrl: string): string {
   )
 }
 
-export default async function handler(_req: Request): Promise<Response> {
-  const xmlHeaders = {
-    'Content-Type': 'application/xml; charset=utf-8',
-    'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+async function fetchTableRows(
+  endpoint: string,
+  headers: Record<string, string>,
+): Promise<SlugItem[]> {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${endpoint}`, { headers })
+    if (!res.ok) return []
+    const data = await res.json()
+    return Array.isArray(data) ? (data as SlugItem[]) : []
+  } catch {
+    return []
   }
+}
 
-  // Guard: if env vars are missing, return minimal valid sitemap
+export default async function handler(
+  req: VercelRequest | Request,
+  res?: VercelResponse,
+) {
+  const defaultBaseUrl = 'https://www.si-atelier.com'
+
+  // Guard: if credentials are completely missing, return minimal valid sitemap
   if (!SUPABASE_URL || !SUPABASE_KEY) {
-    return new Response(fallbackXml('https://www.si-atelier.com'), {
+    const fallbackXml = generateMinimalSitemap(defaultBaseUrl)
+    if (res && typeof res.setHeader === 'function') {
+      res.setHeader('Content-Type', 'application/xml; charset=utf-8')
+      res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400')
+      return res.status(200).send(fallbackXml)
+    }
+    return new Response(fallbackXml, {
       status: 200,
-      headers: xmlHeaders,
+      headers: {
+        'Content-Type': 'application/xml; charset=utf-8',
+        'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+      },
     })
   }
 
@@ -80,80 +118,123 @@ export default async function handler(_req: Request): Promise<Response> {
   }
 
   try {
-    // Fetch site_settings (row id=1) and all published slugs in parallel
-    const [settingsRes, projectsRes, servicesRes, postsRes] = await Promise.all([
-      fetch(
-        `${SUPABASE_URL}/rest/v1/site_settings?select=site_url,sitemap_include_projects,sitemap_include_services,sitemap_include_posts,sitemap_change_freq,sitemap_priority_homepage&id=eq.1`,
-        { headers: fetchHeaders },
-      ).catch(() => null),
-      fetch(
-        `${SUPABASE_URL}/rest/v1/projects?select=slug,updated_at,created_at&status=eq.published`,
-        { headers: fetchHeaders },
-      ).catch(() => null),
-      fetch(
-        `${SUPABASE_URL}/rest/v1/services?select=slug,updated_at,created_at&status=eq.published`,
-        { headers: fetchHeaders },
-      ).catch(() => null),
-      fetch(
-        `${SUPABASE_URL}/rest/v1/posts?select=slug,updated_at,created_at&status=eq.published`,
-        { headers: fetchHeaders },
-      ).catch(() => null),
+    // 1. Fetch site_settings and all content tables in parallel with fault-tolerance
+    const [
+      settingsRes,
+      articles,
+      posts,
+      limitedEditions,
+      projects,
+      offers,
+      services,
+    ] = await Promise.all([
+      fetch(`${SUPABASE_URL}/rest/v1/site_settings?select=*&id=eq.1`, {
+        headers: fetchHeaders,
+      }).catch(() => null),
+      fetchTableRows('articles?select=slug,updated_at,created_at,published_at&status=eq.published', fetchHeaders),
+      fetchTableRows('posts?select=slug,updated_at,created_at&status=eq.published', fetchHeaders),
+      fetchTableRows('limited_editions?select=slug,created_at&status=eq.published', fetchHeaders),
+      fetchTableRows('projects?select=slug,updated_at,created_at&status=eq.published', fetchHeaders),
+      fetchTableRows('offers?select=slug,created_at&status=eq.published', fetchHeaders),
+      fetchTableRows('services?select=slug,updated_at,created_at&status=eq.published', fetchHeaders),
     ])
 
-    const settingsData: SiteSettings[] = settingsRes?.ok ? await settingsRes.json() : []
-    const projects: SlugRow[] = projectsRes?.ok ? await projectsRes.json() : []
-    const services: SlugRow[] = servicesRes?.ok ? await servicesRes.json() : []
-    const posts: SlugRow[] = postsRes?.ok ? await postsRes.json() : []
+    const settingsList: SiteSettingsRow[] = settingsRes?.ok ? await settingsRes.json() : []
+    const settings: SiteSettingsRow = settingsList[0] || {}
 
-    const settings: SiteSettings = settingsData[0] ?? {
-      site_url: 'https://www.si-atelier.com',
-      sitemap_include_projects: true,
-      sitemap_include_services: true,
-      sitemap_include_posts: true,
-      sitemap_change_freq: 'weekly',
-      sitemap_priority_homepage: '1.0',
-    }
+    const rawSiteUrl =
+      settings.site_url ||
+      settings.default_canonical ||
+      process.env.VITE_SITE_URL ||
+      defaultBaseUrl
 
-    const siteUrl = (settings.site_url ?? 'https://www.si-atelier.com').replace(/\/$/, '')
-    const changefreq = settings.sitemap_change_freq ?? 'weekly'
-    const homePriority = settings.sitemap_priority_homepage ?? '1.0'
+    const siteUrl = rawSiteUrl.replace(/\/$/, '')
+    const includeProjects = settings.sitemap_include_projects !== false
+    const includeServices = settings.sitemap_include_services !== false
+    const includePosts = settings.sitemap_include_posts !== false
+    const changefreq = settings.sitemap_change_freq || 'weekly'
+    const homePriority = settings.sitemap_priority_homepage || '1.0'
     const today = new Date().toISOString().split('T')[0]
 
+    const addedLocs = new Set<string>()
     const urls: string[] = []
 
-    // ── Homepage
-    urls.push(buildXmlUrl(`${siteUrl}/`, homePriority, 'daily', today))
-
-    // ── Static hash-anchor sections
-    const staticSections = ['/#services', '/#projects', '/#reels', '/#blog', '/#clients', '/#contact']
-    for (const section of staticSections) {
-      urls.push(buildXmlUrl(`${siteUrl}${section}`, '0.7', changefreq, today))
+    const addUrl = (loc: string, priority: string, freq: string, lastmod?: string) => {
+      if (addedLocs.has(loc)) return
+      addedLocs.add(loc)
+      urls.push(buildXmlUrl(loc, priority, freq, lastmod))
     }
 
-    // ── Dynamic: Projects
-    if (settings.sitemap_include_projects) {
+    // ── 1. Homepage
+    addUrl(`${siteUrl}/`, homePriority, 'daily', today)
+
+    // ── 2. Primary Public Pages
+    addUrl(`${siteUrl}/limited-edition`, '0.9', 'weekly', today)
+    addUrl(`${siteUrl}/bespoke`, '0.9', 'weekly', today)
+    addUrl(`${siteUrl}/blog`, '0.8', 'daily', today)
+    addUrl(`${siteUrl}/offers`, '0.85', 'weekly', today)
+
+    // ── 3. Static Hash-Anchor Sections
+    const staticSections = [
+      '/#services',
+      '/#projects',
+      '/#reels',
+      '/#blog',
+      '/#clients',
+      '/#contact',
+    ]
+    for (const section of staticSections) {
+      addUrl(`${siteUrl}${section}`, '0.7', changefreq, today)
+    }
+
+    // ── 4. Dynamic: Projects / Limited Editions
+    if (includeProjects) {
+      // From limited_editions (the atelier exclusive pieces)
+      for (const row of limitedEditions) {
+        if (!row.slug) continue
+        const lastmod = row.updated_at || row.created_at || today
+        addUrl(`${siteUrl}/limited-edition/${row.slug}`, '0.85', changefreq, lastmod)
+        addUrl(`${siteUrl}/projects/${row.slug}`, '0.8', changefreq, lastmod)
+      }
+      // From projects table (if defined in Supabase)
       for (const row of projects) {
         if (!row.slug) continue
-        const lastmod = (row.updated_at ?? row.created_at ?? '').split('T')[0] || today
-        urls.push(buildXmlUrl(`${siteUrl}/projects/${row.slug}`, '0.8', changefreq, lastmod))
+        const lastmod = row.updated_at || row.created_at || today
+        addUrl(`${siteUrl}/projects/${row.slug}`, '0.8', changefreq, lastmod)
       }
     }
 
-    // ── Dynamic: Services
-    if (settings.sitemap_include_services) {
+    // ── 5. Dynamic: Services / Offers / Suites
+    if (includeServices) {
+      addUrl(`${siteUrl}/services`, '0.8', changefreq, today)
+      // From offers table (the curated suites & bespoke packages)
+      for (const row of offers) {
+        if (!row.slug) continue
+        const lastmod = row.updated_at || row.created_at || today
+        addUrl(`${siteUrl}/services/${row.slug}`, '0.8', changefreq, lastmod)
+        addUrl(`${siteUrl}/offers/${row.slug}`, '0.8', changefreq, lastmod)
+      }
+      // From services table (if defined in Supabase)
       for (const row of services) {
         if (!row.slug) continue
-        const lastmod = (row.updated_at ?? row.created_at ?? '').split('T')[0] || today
-        urls.push(buildXmlUrl(`${siteUrl}/services/${row.slug}`, '0.8', changefreq, lastmod))
+        const lastmod = row.updated_at || row.created_at || today
+        addUrl(`${siteUrl}/services/${row.slug}`, '0.8', changefreq, lastmod)
       }
     }
 
-    // ── Dynamic: Posts (blog)
-    if (settings.sitemap_include_posts) {
+    // ── 6. Dynamic: Posts / Articles (المجلة المعمارية)
+    if (includePosts) {
+      // From articles table
+      for (const row of articles) {
+        if (!row.slug) continue
+        const lastmod = row.updated_at || row.published_at || row.created_at || today
+        addUrl(`${siteUrl}/blog/${row.slug}`, '0.75', changefreq, lastmod)
+      }
+      // From posts table (if defined in Supabase)
       for (const row of posts) {
         if (!row.slug) continue
-        const lastmod = (row.updated_at ?? row.created_at ?? '').split('T')[0] || today
-        urls.push(buildXmlUrl(`${siteUrl}/blog/${row.slug}`, '0.7', changefreq, lastmod))
+        const lastmod = row.updated_at || row.created_at || today
+        addUrl(`${siteUrl}/blog/${row.slug}`, '0.75', changefreq, lastmod)
       }
     }
 
@@ -166,12 +247,32 @@ export default async function handler(_req: Request): Promise<Response> {
       urls.join('\n') +
       `\n</urlset>\n`
 
-    return new Response(xml, { status: 200, headers: xmlHeaders })
-  } catch {
-    // Graceful fallback — return a minimal valid sitemap with just the homepage
-    return new Response(fallbackXml('https://www.si-atelier.com'), {
+    if (res && typeof res.setHeader === 'function') {
+      res.setHeader('Content-Type', 'application/xml; charset=utf-8')
+      res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400')
+      return res.status(200).send(xml)
+    }
+
+    return new Response(xml, {
       status: 200,
-      headers: xmlHeaders,
+      headers: {
+        'Content-Type': 'application/xml; charset=utf-8',
+        'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+      },
+    })
+  } catch {
+    const fallback = generateMinimalSitemap(defaultBaseUrl)
+    if (res && typeof res.setHeader === 'function') {
+      res.setHeader('Content-Type', 'application/xml; charset=utf-8')
+      res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400')
+      return res.status(200).send(fallback)
+    }
+    return new Response(fallback, {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/xml; charset=utf-8',
+        'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+      },
     })
   }
 }
