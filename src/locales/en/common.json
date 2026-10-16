@@ -3,19 +3,23 @@
   "brandSubtitle": "Bespoke Luxury Furniture & Interiors",
   "nav": {
     "home": "Home",
-    "limitedEdition": "Limited Edition",
-    "bespoke": "Bespoke Service",
-    "offers": "Exclusive Offers",
+    "limitedEdition": "Collections",
+    "bespoke": "Custom Made",
+    "offers": "Offers",
     "blog": "Journal",
-    "consultationBtn": "Request Design Consultation",
+    "consultationBtn": "Consultation",
     "menuAria": "Main Navigation"
   },
   "footer": {
-    "bio": "Crafting exceptional architectural spaces and bespoke furniture that reflect the grand identity of modern palaces and luxury villas, executed by master artisans.",
-    "quickLinks": "Quick Links",
-    "showroomContact": "Showroom & Inquiries",
-    "followUs": "Follow Us",
-    "copyright": "© {{year}} {{siteName}}. All rights reserved."
+    "bio": "Bespoke architectural furniture crafted specifically for your space.",
+    "quickLinks": "Collections & Services",
+    "showroomContact": "Showroom & Contact",
+    "followUs": "Follow",
+    "copyright": "© {{year}} {{siteName}}. All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "blog": "Journal & Articles",
+    "offers": "Special Offers"
   },
   "ribbon": {
     "luxury": "LUXURY",

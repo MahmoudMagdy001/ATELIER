@@ -128,7 +128,7 @@ export default function BlogDetail() {
     : (post.meta_description || postExcerpt)
 
   return (
-    <div className="bg-transparent text-[#F2EFE8] min-h-screen font-sans relative selection:bg-[#C4A070]/30 selection:text-[#F2EFE8]">
+    <div className="w-full max-w-full overflow-x-hidden bg-transparent text-[#F2EFE8] min-h-screen font-sans relative selection:bg-[#C4A070]/30 selection:text-[#F2EFE8]">
       {/* Dynamic Reading Progress Bar - GPU-accelerated scaleX, zero React re-renders */}
       <motion.div 
         className="fixed top-0 left-0 right-0 z-50 h-[3px] bg-gradient-to-r from-[#9E7939] via-[#C4A070] to-[#F0DEC8]"

@@ -60,8 +60,12 @@ export const PortfolioGallery: React.FC<PortfolioGalleryProps> = ({
     >
       <motion.div variants={fadeUp} className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-[#C4A070]/20 pb-4 sm:pb-6">
         <div className="text-start">
-          <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-[#F2EFE8]">
-            {t('portfolio_title_pre', 'معرض')} <span className="gold-gradient-text">{t('portfolio_title_highlight', 'الأعمال والمشاريع')}</span>
+          <h2 
+            dir={isRtl ? 'rtl' : 'ltr'}
+            className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-[#F2EFE8] text-start rtl:text-right ltr:text-left flex items-center gap-2"
+          >
+            <span>{t('portfolio_title_pre', 'معرض')}</span>
+            <span className="gold-gradient-text">{t('portfolio_title_highlight', 'الأعمال والمشاريع')}</span>
           </h2>
         </div>
 
@@ -98,29 +102,29 @@ export const PortfolioGallery: React.FC<PortfolioGalleryProps> = ({
           <p className="text-xs text-[#827771]">{t('portfolio_empty_desc')}</p>
         </div>
       ) : (
-        <div className="space-y-6 relative px-2 sm:px-12 lg:px-16">
+        <div className="space-y-6 relative px-0 sm:px-12 lg:px-16 w-full max-w-full">
           {/* Relative wrapper for Grid and Side Floating Arrows */}
           <div className="relative">
-            {/* Start Side Arrow (Previous Page) */}
+            {/* Start Side Arrow (Previous Page) - visible on tablet/desktop */}
             {totalPages > 1 && (
               <button
                 type="button"
                 onClick={() => onPageChange(Math.max(0, currentPage - 1))}
                 disabled={currentPage === 0}
-                className="absolute -start-2 sm:-start-10 lg:-start-14 top-1/2 -translate-y-1/2 z-20 w-11 h-11 sm:w-12 sm:h-12 rounded-full border border-[#C4A070]/40 bg-[#141110]/95 backdrop-blur-md text-[#C4A070] flex items-center justify-center hover:bg-[#C4A070] hover:text-[#141110] transition-all disabled:opacity-0 disabled:pointer-events-none cursor-pointer shadow-2xl hover:scale-105 focus-visible:ring-2 focus-visible:ring-[#C4A070] focus-visible:outline-none"
+                className="hidden sm:flex absolute sm:-start-10 lg:-start-14 top-1/2 -translate-y-1/2 z-20 w-11 h-11 sm:w-12 sm:h-12 rounded-full border border-[#C4A070]/40 bg-[#141110]/95 backdrop-blur-md text-[#C4A070] items-center justify-center hover:bg-[#C4A070] hover:text-[#141110] transition-all disabled:opacity-0 disabled:pointer-events-none cursor-pointer shadow-2xl hover:scale-105 focus-visible:ring-2 focus-visible:ring-[#C4A070] focus-visible:outline-none"
                 aria-label={t('portfolio_prev_page')}
               >
                 {isRtl ? <FaChevronRight className="w-4 h-4" /> : <FaChevronLeft className="w-4 h-4" />}
               </button>
             )}
 
-            {/* End Side Arrow (Next Page) */}
+            {/* End Side Arrow (Next Page) - visible on tablet/desktop */}
             {totalPages > 1 && (
               <button
                 type="button"
                 onClick={() => onPageChange(Math.min(totalPages - 1, currentPage + 1))}
                 disabled={currentPage >= totalPages - 1}
-                className="absolute -end-2 sm:-end-10 lg:-end-14 top-1/2 -translate-y-1/2 z-20 w-11 h-11 sm:w-12 sm:h-12 rounded-full border border-[#C4A070]/40 bg-[#141110]/95 backdrop-blur-md text-[#C4A070] flex items-center justify-center hover:bg-[#C4A070] hover:text-[#141110] transition-all disabled:opacity-0 disabled:pointer-events-none cursor-pointer shadow-2xl hover:scale-105 focus-visible:ring-2 focus-visible:ring-[#C4A070] focus-visible:outline-none"
+                className="hidden sm:flex absolute sm:-end-10 lg:-end-14 top-1/2 -translate-y-1/2 z-20 w-11 h-11 sm:w-12 sm:h-12 rounded-full border border-[#C4A070]/40 bg-[#141110]/95 backdrop-blur-md text-[#C4A070] items-center justify-center hover:bg-[#C4A070] hover:text-[#141110] transition-all disabled:opacity-0 disabled:pointer-events-none cursor-pointer shadow-2xl hover:scale-105 focus-visible:ring-2 focus-visible:ring-[#C4A070] focus-visible:outline-none"
                 aria-label={t('portfolio_next_page')}
               >
                 {isRtl ? <FaChevronLeft className="w-4 h-4" /> : <FaChevronRight className="w-4 h-4" />}
@@ -185,21 +189,45 @@ export const PortfolioGallery: React.FC<PortfolioGalleryProps> = ({
 
           {/* Pagination Indicators centered below */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-center gap-2 pt-4" role="navigation" aria-label={t('portfolio_pagination_aria', 'تصفح صفحات المعرض')}>
-              {Array.from({ length: totalPages }).map((_, pIdx) => (
-                <button
-                  key={pIdx}
-                  type="button"
-                  onClick={() => onPageChange(pIdx)}
-                  className={`h-2 rounded-full transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-[#C4A070] focus-visible:outline-none ${
-                    currentPage === pIdx
-                      ? 'w-8 bg-[#C4A070]'
-                      : 'w-2 bg-white/20 hover:bg-white/40'
-                  }`}
-                  aria-label={t('portfolio_goto_page', { page: pIdx + 1 })}
-                  aria-current={currentPage === pIdx ? 'page' : undefined}
-                />
-              ))}
+            <div className="flex items-center justify-center gap-3 pt-4" role="navigation" aria-label={t('portfolio_pagination_aria', 'تصفح صفحات المعرض')}>
+              {/* Mobile Prev Arrow */}
+              <button
+                type="button"
+                onClick={() => onPageChange(Math.max(0, currentPage - 1))}
+                disabled={currentPage === 0}
+                className="sm:hidden w-8 h-8 rounded-full border border-[#C4A070]/40 bg-[#141110] text-[#C4A070] flex items-center justify-center transition-all disabled:opacity-20 disabled:pointer-events-none cursor-pointer active:scale-95"
+                aria-label={t('portfolio_prev_page')}
+              >
+                {isRtl ? <FaChevronRight className="w-3.5 h-3.5" /> : <FaChevronLeft className="w-3.5 h-3.5" />}
+              </button>
+
+              <div className="flex items-center gap-2">
+                {Array.from({ length: totalPages }).map((_, pIdx) => (
+                  <button
+                    key={pIdx}
+                    type="button"
+                    onClick={() => onPageChange(pIdx)}
+                    className={`h-2 rounded-full transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-[#C4A070] focus-visible:outline-none ${
+                      currentPage === pIdx
+                        ? 'w-8 bg-[#C4A070]'
+                        : 'w-2 bg-white/20 hover:bg-white/40'
+                    }`}
+                    aria-label={t('portfolio_goto_page', { page: pIdx + 1 })}
+                    aria-current={currentPage === pIdx ? 'page' : undefined}
+                  />
+                ))}
+              </div>
+
+              {/* Mobile Next Arrow */}
+              <button
+                type="button"
+                onClick={() => onPageChange(Math.min(totalPages - 1, currentPage + 1))}
+                disabled={currentPage >= totalPages - 1}
+                className="sm:hidden w-8 h-8 rounded-full border border-[#C4A070]/40 bg-[#141110] text-[#C4A070] flex items-center justify-center transition-all disabled:opacity-20 disabled:pointer-events-none cursor-pointer active:scale-95"
+                aria-label={t('portfolio_next_page')}
+              >
+                {isRtl ? <FaChevronLeft className="w-3.5 h-3.5" /> : <FaChevronRight className="w-3.5 h-3.5" />}
+              </button>
             </div>
           )}
         </div>

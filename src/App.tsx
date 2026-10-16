@@ -19,6 +19,7 @@ const Offers = lazy(() => import('./features/offers/pages/Offers'))
 const OfferDetail = lazy(() => import('./features/offers/pages/OfferDetail'))
 const Blog = lazy(() => import('./features/blog/pages/Blog'))
 const BlogDetail = lazy(() => import('./features/blog/pages/BlogDetail'))
+const PrivacyPolicy = lazy(() => import('./features/legal/pages/PrivacyPolicy'))
 
 // Admin Pages
 const Login = lazy(() => import('./features/admin/pages/Login'))
@@ -65,6 +66,11 @@ export default function App() {
             <Route path="offers/:slug" element={<OfferDetail />} />
             <Route path="blog" element={<Blog />} />
             <Route path="blog/:slug" element={<BlogDetail />} />
+
+            {/* Legal Pages */}
+            <Route path="privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="privacy" element={<Navigate to="/privacy-policy" replace />} />
+            <Route path="terms" element={<Navigate to="/privacy-policy" replace />} />
           </Route>
 
           {/* Admin Login */}

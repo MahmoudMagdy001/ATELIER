@@ -2,8 +2,19 @@
 @import "../design-system/tokens.css";
 
 html {
-  scrollbar-gutter: stable;
   scroll-behavior: smooth;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Desktop-only scrollbar gutter to prevent layout shift without breaking mobile overlays */
+@media (min-width: 768px) {
+  html {
+    scrollbar-gutter: stable;
+  }
 }
 
 /* Language & Direction-aware Typography */
@@ -24,6 +35,19 @@ body {
   letter-spacing: -0.015em;
   min-height: 100vh;
   position: relative;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+#root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  position: relative;
+  min-height: 100vh;
 }
 
 /* GPU-accelerated background pattern: avoids CPU repaint during scrolling */

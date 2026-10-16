@@ -5,7 +5,7 @@ export interface AtelierMonogramProps {
   alt?: string
 }
 
-export function AtelierMonogram({ className = 'w-10 h-10', alt = 'S&I Atelier Logo' }: AtelierMonogramProps) {
+export function AtelierMonogram({ className = 'w-8 h-8 sm:w-10 sm:h-10', alt = 'S&I Atelier Logo' }: AtelierMonogramProps) {
   return (
     <img 
       src={logoImg} 
@@ -17,6 +17,7 @@ export function AtelierMonogram({ className = 'w-10 h-10', alt = 'S&I Atelier Lo
 
 export interface BrandLogoProps {
   showSubtitle?: boolean
+  hideSubtitleOnMobile?: boolean
   isLight?: boolean
   size?: 'sm' | 'md' | 'lg' | 'xl'
   className?: string
@@ -27,6 +28,7 @@ export interface BrandLogoProps {
 
 export default function BrandLogo({ 
   showSubtitle = true, 
+  hideSubtitleOnMobile = false,
   isLight = false, 
   size = 'md',
   className = '',
@@ -37,24 +39,24 @@ export default function BrandLogo({
   const logoSource = customLogo || logoImg
 
   const imgSizes: Record<string, string> = {
-    sm: 'h-9 md:h-10 w-auto',
-    md: 'h-12 md:h-14 w-auto',
-    lg: 'h-16 md:h-20 w-auto',
-    xl: 'h-24 md:h-28 w-auto',
+    sm: 'h-6 sm:h-7 md:h-8 w-auto',
+    md: 'h-7 sm:h-8 md:h-10 w-auto',
+    lg: 'h-8 sm:h-10 md:h-13 w-auto',
+    xl: 'h-11 sm:h-14 md:h-18 w-auto',
   }
 
   const titleSizes: Record<string, string> = {
-    sm: 'text-base tracking-[0.24em]',
-    md: 'text-xl md:text-2xl tracking-[0.26em]',
-    lg: 'text-2xl md:text-3xl tracking-[0.28em]',
-    xl: 'text-3xl md:text-4xl tracking-[0.32em]',
+    sm: 'text-[11px] sm:text-xs md:text-sm tracking-[0.15em] sm:tracking-[0.18em]',
+    md: 'text-xs sm:text-sm md:text-lg tracking-[0.14em] sm:tracking-[0.18em] md:tracking-[0.22em]',
+    lg: 'text-sm sm:text-base md:text-xl tracking-[0.15em] sm:tracking-[0.19em] md:tracking-[0.24em]',
+    xl: 'text-base sm:text-xl md:text-2xl tracking-[0.18em] sm:tracking-[0.22em] md:tracking-[0.28em]',
   }
 
   const subSizes: Record<string, string> = {
-    sm: 'text-[7.5px] tracking-[0.2em]',
-    md: 'text-[9px] md:text-[10px] tracking-[0.24em]',
-    lg: 'text-[11px] md:text-[12px] tracking-[0.26em]',
-    xl: 'text-[13px] md:text-[14px] tracking-[0.28em]',
+    sm: 'text-[6px] sm:text-[7px] tracking-[0.12em] sm:tracking-[0.15em]',
+    md: 'text-[6.5px] sm:text-[7.5px] md:text-[8.5px] tracking-[0.12em] sm:tracking-[0.16em] md:tracking-[0.2em]',
+    lg: 'text-[7px] sm:text-[8px] md:text-[9.5px] tracking-[0.13em] sm:tracking-[0.17em] md:tracking-[0.22em]',
+    xl: 'text-[8px] sm:text-[9.5px] md:text-[11px] tracking-[0.15em] sm:tracking-[0.19em] md:tracking-[0.24em]',
   }
 
   if (imgOnly) {
@@ -62,7 +64,7 @@ export default function BrandLogo({
       <img
         src={logoSource}
         alt="S&I Atelier Logo"
-        className={`${imgSizes[size] || 'h-12 md:h-14 w-auto'} object-contain ${className}`}
+        className={`${imgSizes[size] || 'h-7 sm:h-8 md:h-10 w-auto'} object-contain ${className}`}
       />
     )
   }
@@ -73,7 +75,7 @@ export default function BrandLogo({
         <img 
           src={logoSource} 
           alt="S&I Atelier Monogram" 
-          className={`${imgSizes[size] || 'h-16 md:h-20 w-auto'} object-contain mb-3 transition-transform duration-300 hover:scale-105 drop-shadow-[0_4px_16px_rgba(196,160,112,0.25)]`} 
+          className={`${imgSizes[size] || 'h-10 sm:h-12 md:h-16 w-auto'} object-contain mb-2 sm:mb-3 transition-transform duration-300 hover:scale-105 drop-shadow-[0_4px_16px_rgba(196,160,112,0.25)]`} 
         />
         <span 
           className={`font-['Cinzel'] font-bold leading-none uppercase whitespace-nowrap ${titleSizes[size]} ${
@@ -87,7 +89,9 @@ export default function BrandLogo({
 
         {showSubtitle && (
           <span 
-            className={`font-sans uppercase font-medium text-[#C4A070] mt-2 whitespace-nowrap ${subSizes[size]}`}
+            className={`font-sans uppercase font-medium text-[#C4A070] mt-1 sm:mt-1.5 whitespace-nowrap ${
+              hideSubtitleOnMobile ? 'hidden sm:block' : ''
+            } ${subSizes[size]}`}
             style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             dir="ltr"
           >
@@ -99,14 +103,14 @@ export default function BrandLogo({
   }
 
   return (
-    <div className={`flex items-center gap-3.5 select-none ${className}`}>
+    <div className={`flex items-center gap-2 sm:gap-2.5 md:gap-3.5 select-none ${className}`}>
       <img 
         src={logoSource} 
         alt="S&I Atelier Logo" 
-        className={`${imgSizes[size] || 'h-12 md:h-14 w-auto'} object-contain shrink-0 transition-transform duration-300 group-hover:scale-105 drop-shadow-[0_2px_10px_rgba(196,160,112,0.18)]`} 
+        className={`${imgSizes[size] || 'h-7 sm:h-8 md:h-10 w-auto'} object-contain shrink-0 transition-transform duration-300 group-hover:scale-105 drop-shadow-[0_2px_10px_rgba(196,160,112,0.18)]`} 
       />
       
-      <div className="flex flex-col text-start justify-center">
+      <div className="flex flex-col text-start justify-center min-w-0">
         <span 
           className={`font-['Cinzel'] font-bold leading-none uppercase whitespace-nowrap ${titleSizes[size]} ${
             isLight ? 'text-[#1C1816]' : 'text-[#F2EFE8]'
@@ -119,7 +123,9 @@ export default function BrandLogo({
 
         {showSubtitle && (
           <span 
-            className={`font-sans uppercase font-semibold text-[#C4A070] mt-1.5 whitespace-nowrap ${subSizes[size]}`}
+            className={`font-sans uppercase font-semibold text-[#C4A070] mt-1 sm:mt-1.5 whitespace-nowrap ${
+              hideSubtitleOnMobile ? 'hidden sm:block' : ''
+            } ${subSizes[size]}`}
             style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             dir="ltr"
           >

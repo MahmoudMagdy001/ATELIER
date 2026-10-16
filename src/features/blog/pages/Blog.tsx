@@ -49,7 +49,7 @@ export default function Blog() {
     : posts.filter(p => p.category_id === selectedCategory)
 
   return (
-    <div className="bg-transparent text-[#F2EFE8] min-h-screen font-sans">
+    <div className="w-full max-w-full overflow-x-hidden bg-transparent text-[#F2EFE8] min-h-screen font-sans">
       <SEO
         title={t('meta_title')}
         description={t('meta_description')}

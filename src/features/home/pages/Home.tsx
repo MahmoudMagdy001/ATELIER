@@ -69,7 +69,7 @@ export default function Home() {
     : (settings?.default_meta_description || t('meta_description'))
 
   return (
-    <div className="space-y-16 md:space-y-24 pb-12 md:pb-20 bg-transparent text-[#F2EFE8] font-sans">
+    <div className="w-full max-w-full overflow-x-hidden space-y-16 md:space-y-24 pb-12 md:pb-20 bg-transparent text-[#F2EFE8] font-sans">
       <SEO
         title={homeMetaTitle}
         description={homeMetaDesc}
@@ -80,8 +80,12 @@ export default function Home() {
       {/* 1. HERO SHOWCASE */}
       <HeroSection heroImage="/hero-banner.jpg" />
 
-      {/* 2. SERVICES DUAL CARDS (Limited Edition & Bespoke) */}
-      <ServicesDualCards productsCount={products?.length || 0} />
+      {/* 2. THE TWO EDITORIAL PORTALS (Collections & Bespoke) */}
+      <ServicesDualCards 
+        productsCount={products?.length || 0}
+        collectionsImage={products[0]?.main_image || heroBannerImg}
+        bespokeImage={portfolio[0]?.image_url || heroBannerImg}
+      />
 
       {/* 3. PRODUCT CATEGORIES SHOWCASE */}
       <ProductCategoriesSection

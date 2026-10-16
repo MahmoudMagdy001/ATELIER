@@ -86,7 +86,11 @@ export default function Layout() {
     : 'مرحباً S&I Atelier، أود الاستفسار عن تفصيل قطع أثاث خاصة'
 
   return (
-    <div className="min-h-screen bg-transparent text-[#F2EFE8] flex flex-col selection:bg-[#C4A070]/30 selection:text-[#F2EFE8] font-sans relative">
+    <div 
+      dir={isEn ? 'ltr' : 'rtl'} 
+      lang={isEn ? 'en' : 'ar'} 
+      className="min-h-screen w-full max-w-full overflow-x-hidden bg-transparent text-[#F2EFE8] flex flex-col selection:bg-[#C4A070]/30 selection:text-[#F2EFE8] font-sans relative"
+    >
       {/* Skip to Main Content Link for Keyboard Accessibility */}
       <a
         href="#main-content"
@@ -110,7 +114,7 @@ export default function Layout() {
             onClick={(e) => handleNavClick(e, '/')}
             aria-label="S&I Atelier Home"
           >
-            <BrandLogo size="md" customLogo={settings?.logo_url} />
+            <BrandLogo size="md" customLogo={settings?.logo_url} hideSubtitleOnMobile={true} />
           </Link>
 
           {/* Desktop Navigation with Framer Motion Layout Transition */}
@@ -225,7 +229,7 @@ export default function Layout() {
       </header>
 
       {/* Main Content with bottom padding on mobile for fixed tab bar */}
-      <main id="main-content" tabIndex={-1} className="flex-1 outline-none pb-20 md:pb-0">
+      <main id="main-content" tabIndex={-1} className="flex-1 w-full max-w-full overflow-x-hidden outline-none pb-20 md:pb-0">
         <Outlet />
       </main>
 
@@ -252,7 +256,7 @@ export default function Layout() {
             <ul className="space-y-2.5 text-xs">
               <li><Link to="/limited-edition" className="hover:text-[#C4A070] transition-colors">{t('nav.limitedEdition')}</Link></li>
               <li><Link to="/bespoke" className="hover:text-[#C4A070] transition-colors">{t('nav.bespoke')}</Link></li>
-              <li><Link to="/blog" className="hover:text-[#C4A070] transition-colors">{t('nav.blog')}</Link></li>
+              <li><Link to="/blog" className="hover:text-[#C4A070] transition-colors">{t('footer.blog')}</Link></li>
             </ul>
           </div>
 
@@ -284,9 +288,20 @@ export default function Layout() {
           </div>
         </div>
 
-        {/* Footer Bottom / Copyright */}
+        {/* Footer Bottom / Copyright & Legal */}
         <div className="max-w-7xl mx-auto mt-12 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between text-xs text-[#B3A9A3] gap-4">
           <p>{t('footer.copyright', { year: new Date().getFullYear(), siteName: settings?.site_name || 'S&I ATELIER' })}</p>
+
+          <div className="flex items-center gap-4 text-xs">
+            <Link to="/privacy-policy" className="hover:text-[#C4A070] transition-colors">
+              {t('footer.privacy')}
+            </Link>
+            <span className="text-white/20">•</span>
+            <Link to="/privacy-policy" className="hover:text-[#C4A070] transition-colors">
+              {t('footer.terms')}
+            </Link>
+          </div>
+
           <div className="text-[11px] text-[#827771]">
             <span>Haute Furniture & Bespoke Living</span>
           </div>

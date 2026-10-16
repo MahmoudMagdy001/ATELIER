@@ -33,8 +33,12 @@ export const ProductCategoriesSection: React.FC<ProductCategoriesSectionProps> =
     >
       <motion.div variants={fadeUp} className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 border-b border-[#C4A070]/20 pb-4 sm:pb-6">
         <div className="text-start">
-          <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-[#F2EFE8]">
-            {t('categories_title_pre')} <span className="gold-gradient-text">{t('categories_title_highlight')}</span>
+          <h2 
+            dir={isEn ? 'ltr' : 'rtl'}
+            className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-[#F2EFE8] text-start rtl:text-right ltr:text-left flex items-center gap-2"
+          >
+            <span>{t('categories_title_pre')}</span>
+            <span className="gold-gradient-text">{t('categories_title_highlight')}</span>
           </h2>
         </div>
 

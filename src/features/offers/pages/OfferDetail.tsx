@@ -173,7 +173,7 @@ export default function OfferDetail() {
   const contactPhone = CONTACT_INFO.phone
 
   return (
-    <div className="bg-transparent text-[#F2EFE8] min-h-screen font-sans pt-28 md:pt-32">
+    <div className="w-full max-w-full overflow-x-hidden bg-transparent text-[#F2EFE8] min-h-screen font-sans pt-28 md:pt-32">
       <SEO
         title={offerMetaTitle}
         description={offerMetaDesc}
@@ -262,9 +262,9 @@ export default function OfferDetail() {
 
           {/* Details & Interactive Offer Variant Selector */}
           <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1, ease: [0.25, 1, 0.5, 1] }}
             className="lg:col-span-5 space-y-6 bg-[#141110] p-8 rounded-3xl border border-[#C4A070]/20 shadow-xl text-start"
           >
             

@@ -49,13 +49,19 @@ export const HeroSection: React.FC<HeroSectionProps> = memo(({ heroImage }) => {
           </span>
         </motion.h1>
 
-        {/* Clean Showcase Discovery CTA */}
-        <motion.div variants={fadeUp} className="flex items-center justify-center pt-2">
+        {/* Dual Luxury CTAs: The Two Pillars */}
+        <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-2">
           <Link
             to="/limited-edition"
-            className="px-7 sm:px-9 py-3 sm:py-3.5 rounded-full gold-btn-primary text-xs sm:text-sm font-bold flex items-center justify-center shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all"
+            className="w-full sm:w-auto px-7 sm:px-9 py-3 sm:py-3.5 rounded-full gold-btn-primary text-xs sm:text-sm font-bold flex items-center justify-center shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all"
           >
-            <span>{t('hero_cta_limited')}</span>
+            <span>{t('hero_cta_limited', 'المجموعات الحصرية')}</span>
+          </Link>
+          <Link
+            to="/bespoke"
+            className="w-full sm:w-auto px-7 sm:px-9 py-3 sm:py-3.5 rounded-full gold-btn-secondary text-xs sm:text-sm font-bold flex items-center justify-center shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all"
+          >
+            <span>{t('hero_cta_bespoke', 'تصنيع حسب الطلب')}</span>
           </Link>
         </motion.div>
       </motion.div>
